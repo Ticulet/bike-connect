@@ -1,4 +1,6 @@
 import { BrowserRouter, Route, Routes } from 'react-router';
+import { AuthProvider } from './features/auth/context/AuthProvider.js';
+import { LoginPage } from './features/auth/pages/LoginPage.js';
 import { Layout } from './components/layout/Layout.js';
 import { ProtectedRoute } from './components/layout/ProtectedRoute.js';
 import { HomePage } from './pages/HomePage.js';
@@ -15,77 +17,79 @@ function Placeholder({ title }: { title: string }): React.JSX.Element {
 export default function App(): React.JSX.Element {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route element={<Layout />}>
-          {/* Public routes */}
-          <Route index element={<HomePage />} />
-          <Route path="posts" element={<Placeholder title="Post List" />} />
-          <Route
-            path="posts/:slug"
-            element={<Placeholder title="Post Detail" />}
-          />
-          <Route
-            path="users/:id"
-            element={<Placeholder title="User Profile" />}
-          />
-          <Route
-            path="bikes/:id"
-            element={<Placeholder title="Bike Detail" />}
-          />
-          <Route path="login" element={<Placeholder title="Login" />} />
+      <AuthProvider>
+        <Routes>
+          <Route element={<Layout />}>
+            {/* Public routes */}
+            <Route index element={<HomePage />} />
+            <Route path="posts" element={<Placeholder title="Post List" />} />
+            <Route
+              path="posts/:slug"
+              element={<Placeholder title="Post Detail" />}
+            />
+            <Route
+              path="users/:id"
+              element={<Placeholder title="User Profile" />}
+            />
+            <Route
+              path="bikes/:id"
+              element={<Placeholder title="Bike Detail" />}
+            />
+            <Route path="login" element={<LoginPage />} />
 
-          {/* Protected routes */}
-          <Route element={<ProtectedRoute />}>
-            <Route
-              path="dashboard"
-              element={<Placeholder title="Dashboard" />}
-            />
-            <Route
-              path="my-posts"
-              element={<Placeholder title="My Posts" />}
-            />
-            <Route
-              path="posts/new"
-              element={<Placeholder title="New Post" />}
-            />
-            <Route
-              path="posts/:id/edit"
-              element={<Placeholder title="Edit Post" />}
-            />
-            <Route
-              path="my-bikes"
-              element={<Placeholder title="My Bikes" />}
-            />
-            <Route
-              path="my-bikes/new"
-              element={<Placeholder title="New Bike" />}
-            />
-            <Route
-              path="my-bikes/:id"
-              element={<Placeholder title="Bike Detail (Owner)" />}
-            />
-            <Route
-              path="my-bikes/:id/edit"
-              element={<Placeholder title="Edit Bike" />}
-            />
-            <Route
-              path="my-bikes/:bikeId/maintenance/new"
-              element={<Placeholder title="New Maintenance" />}
-            />
-            <Route
-              path="my-bikes/:bikeId/maintenance/:logId/edit"
-              element={<Placeholder title="Edit Maintenance" />}
-            />
-            <Route
-              path="settings"
-              element={<Placeholder title="Settings" />}
-            />
+            {/* Protected routes */}
+            <Route element={<ProtectedRoute />}>
+              <Route
+                path="dashboard"
+                element={<Placeholder title="Dashboard" />}
+              />
+              <Route
+                path="my-posts"
+                element={<Placeholder title="My Posts" />}
+              />
+              <Route
+                path="posts/new"
+                element={<Placeholder title="New Post" />}
+              />
+              <Route
+                path="posts/:id/edit"
+                element={<Placeholder title="Edit Post" />}
+              />
+              <Route
+                path="my-bikes"
+                element={<Placeholder title="My Bikes" />}
+              />
+              <Route
+                path="my-bikes/new"
+                element={<Placeholder title="New Bike" />}
+              />
+              <Route
+                path="my-bikes/:id"
+                element={<Placeholder title="Bike Detail (Owner)" />}
+              />
+              <Route
+                path="my-bikes/:id/edit"
+                element={<Placeholder title="Edit Bike" />}
+              />
+              <Route
+                path="my-bikes/:bikeId/maintenance/new"
+                element={<Placeholder title="New Maintenance" />}
+              />
+              <Route
+                path="my-bikes/:bikeId/maintenance/:logId/edit"
+                element={<Placeholder title="Edit Maintenance" />}
+              />
+              <Route
+                path="settings"
+                element={<Placeholder title="Settings" />}
+              />
+            </Route>
+
+            {/* Catch-all */}
+            <Route path="*" element={<NotFoundPage />} />
           </Route>
-
-          {/* Catch-all */}
-          <Route path="*" element={<NotFoundPage />} />
-        </Route>
-      </Routes>
+        </Routes>
+      </AuthProvider>
     </BrowserRouter>
   );
 }

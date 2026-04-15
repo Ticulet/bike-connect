@@ -2,6 +2,8 @@ import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
+import passport from 'passport';
+import './modules/auth/passport.config.js';
 import { env } from './config/env.js';
 import { globalLimiter } from './middleware/rate-limit.js';
 import { errorHandler } from './middleware/error-handler.js';
@@ -21,6 +23,9 @@ app.use(globalLimiter);
 
 // Cookie parser
 app.use(cookieParser());
+
+// Passport (session: false — stateless JWT auth)
+app.use(passport.initialize());
 
 // JSON body parser (conservative global limit; routes needing more override per-route)
 app.use(express.json({ limit: '100kb' }));
