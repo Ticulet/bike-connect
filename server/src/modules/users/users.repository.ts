@@ -1,3 +1,4 @@
+import { sql } from 'kysely';
 import { db } from '../../db/index.js';
 import type { User } from '../../db/types.js';
 
@@ -28,7 +29,7 @@ export const usersRepository = {
         oc.column('google_id').doUpdateSet({
           display_name: profile.displayName,
           avatar_url: profile.avatarUrl,
-          updated_at: new Date().toISOString(),
+          updated_at: sql`now()`,
         }),
       )
       .returningAll()

@@ -1,8 +1,6 @@
-export {};
+import type { Profile } from 'passport-google-oauth20';
 
-// Augment passport's Express.User interface so that req.user is typed as
-// our full database User record everywhere in the application.
-// passport sets req.user to Express.User after authentication.
+export {};
 
 declare global {
   namespace Express {
@@ -15,6 +13,10 @@ declare global {
       bio: string | null;
       created_at: Date;
       updated_at: Date;
+    }
+
+    interface Request {
+      googleProfile?: Profile;
     }
   }
 }

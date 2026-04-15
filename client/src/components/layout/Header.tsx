@@ -46,7 +46,11 @@ export function Header(): React.JSX.Element {
               <button
                 type="button"
                 className="site-nav__logout"
-                onClick={() => void logout()}
+                onClick={() => {
+                  logout().catch((err: unknown) => {
+                    console.error('Logout failed:', err);
+                  });
+                }}
               >
                 Logout
               </button>

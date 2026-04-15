@@ -20,22 +20,24 @@ export function AuthProvider({ children }: AuthProviderProps): React.JSX.Element
   useEffect(() => {
     let cancelled = false;
 
-    fetchCurrentUser()
-      .then((fetchedUser) => {
+    async function checkAuth(): Promise<void> {
+      try {
+        const fetchedUser = await fetchCurrentUser();
         if (!cancelled) {
           setUser(fetchedUser);
         }
-      })
-      .catch(() => {
+      } catch {
         if (!cancelled) {
           setUser(null);
         }
-      })
-      .finally(() => {
+      } finally {
         if (!cancelled) {
           setIsLoading(false);
         }
-      });
+      }
+    }
+
+    void checkAuth();
 
     return () => {
       cancelled = true;
@@ -47,9 +49,14 @@ export function AuthProvider({ children }: AuthProviderProps): React.JSX.Element
   }, []);
 
   const logout = useCallback(async (): Promise<void> => {
-    await logoutUser();
-    setUser(null);
-    navigate('/');
+    try {
+      await logoutUser();
+    } catch {
+      // Server-side logout failed; still clear local state
+    } finally {
+      setUser(null);
+      navigate('/');
+    }
   }, [navigate]);
 
   const value = useMemo<AuthContextValue>(

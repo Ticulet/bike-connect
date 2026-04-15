@@ -10,7 +10,7 @@ const envSchema = z.object({
   GOOGLE_CLIENT_ID: isProduction ? z.string().min(1) : z.string().default('google-client-id-placeholder'),
   GOOGLE_CLIENT_SECRET: isProduction ? z.string().min(1) : z.string().default('google-client-secret-placeholder'),
   JWT_SECRET: isProduction ? z.string().min(32) : z.string().min(32).default('development-jwt-secret-min-32-chars-long!!'),
-  JWT_EXPIRY: z.string().default('7d'),
+  JWT_EXPIRY: z.string().regex(/^\d+[smhdwy]$/, 'JWT_EXPIRY must be a valid duration (e.g. 7d, 1h)').default('7d'),
   CORS_ORIGIN: z.string().default('http://localhost:5173'),
   IMAGE_STORAGE: z.enum(['cloudinary', 'local']).default('local'),
   CLOUDINARY_URL: z.string().optional(),

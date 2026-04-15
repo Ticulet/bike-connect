@@ -23,7 +23,8 @@ export async function requireAuth(req: Request, res: Response, next: NextFunctio
 
     req.user = user;
     next();
-  } catch {
+  } catch (err) {
+    console.error('Auth token verification failed:', err);
     clearTokenCookie(res);
     next(ApiError.unauthorized());
   }
@@ -46,7 +47,8 @@ export async function optionalAuth(req: Request, res: Response, next: NextFuncti
     }
 
     next();
-  } catch {
+  } catch (err) {
+    console.error('Optional auth token verification failed:', err);
     clearTokenCookie(res);
     next();
   }
