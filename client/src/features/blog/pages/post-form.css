@@ -1,0 +1,142 @@
+.post-form-page {
+  max-width: 52rem;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.post-form-page__heading {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin: 0 0 2rem;
+}
+
+.post-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+
+.post-form__field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.post-form__label {
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: #374151;
+}
+
+.post-form__label--required::after {
+  content: ' *';
+  color: #b91c1c;
+}
+
+.post-form__input,
+.post-form__select {
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  padding: 0.5rem 0.75rem;
+  font-size: 1rem;
+  color: #111827;
+  background: #fff;
+  width: 100%;
+  box-sizing: border-box;
+  transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.post-form__input:focus,
+.post-form__select:focus {
+  outline: none;
+  border-color: #1a6da5;
+  box-shadow: 0 0 0 3px rgba(26, 109, 165, 0.15);
+}
+
+.post-form__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.375rem;
+}
+
+.post-form__tag-chip {
+  background: #f3f4f6;
+  border: 1px solid #d1d5db;
+  border-radius: 999px;
+  padding: 0.25rem 0.75rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+  color: #374151;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.post-form__tag-chip:hover {
+  background: #e5e7eb;
+}
+
+.post-form__tag-chip:focus-visible {
+  outline: 2px solid #1a6da5;
+  outline-offset: 2px;
+}
+
+.post-form__tag-chip--selected {
+  background: #dbeafe;
+  border-color: #1a6da5;
+  color: #1a6da5;
+  font-weight: 600;
+}
+
+.post-form__editor-wrapper {
+  border: 1px solid #d1d5db;
+  border-radius: 0.375rem;
+  overflow: hidden;
+}
+
+.post-form__actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.post-form__submit {
+  padding: 0.625rem 1.5rem;
+  font-size: 1rem;
+  background: #1a6da5;
+  color: #fff;
+  border: none;
+  border-radius: 0.375rem;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.post-form__submit:hover {
+  background: #155a8a;
+}
+
+.post-form__submit:focus-visible {
+  outline: 2px solid #1a6da5;
+  outline-offset: 2px;
+}
+
+.post-form__submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.post-form__error {
+  color: #b91c1c;
+  background: #fef2f2;
+  border: 1px solid #fca5a5;
+  border-radius: 0.375rem;
+  padding: 0.75rem 1rem;
+  font-size: 0.9375rem;
+}
+
+.post-form__conflict {
+  color: #92400e;
+  background: #fffbeb;
+  border: 1px solid #fcd34d;
+  border-radius: 0.375rem;
+  padding: 0.75rem 1rem;
+  font-size: 0.9375rem;
+}

@@ -5,6 +5,11 @@ import { Layout } from './components/layout/Layout.js';
 import { ProtectedRoute } from './components/layout/ProtectedRoute.js';
 import { HomePage } from './pages/HomePage.js';
 import { NotFoundPage } from './pages/NotFoundPage.js';
+import { PostListPage } from './features/blog/pages/PostListPage.js';
+import { PostDetailPage } from './features/blog/pages/PostDetailPage.js';
+import { PostCreatePage } from './features/blog/pages/PostCreatePage.js';
+import { PostEditPage } from './features/blog/pages/PostEditPage.js';
+import { MyPostsPage } from './features/blog/pages/MyPostsPage.js';
 
 function Placeholder({ title }: { title: string }): React.JSX.Element {
   return (
@@ -22,10 +27,10 @@ export default function App(): React.JSX.Element {
           <Route element={<Layout />}>
             {/* Public routes */}
             <Route index element={<HomePage />} />
-            <Route path="posts" element={<Placeholder title="Post List" />} />
+            <Route path="posts" element={<PostListPage />} />
             <Route
               path="posts/:slug"
-              element={<Placeholder title="Post Detail" />}
+              element={<PostDetailPage />}
             />
             <Route
               path="users/:id"
@@ -45,15 +50,15 @@ export default function App(): React.JSX.Element {
               />
               <Route
                 path="my-posts"
-                element={<Placeholder title="My Posts" />}
+                element={<MyPostsPage />}
               />
               <Route
                 path="posts/new"
-                element={<Placeholder title="New Post" />}
+                element={<PostCreatePage />}
               />
               <Route
                 path="posts/:id/edit"
-                element={<Placeholder title="Edit Post" />}
+                element={<PostEditPage />}
               />
               <Route
                 path="my-bikes"

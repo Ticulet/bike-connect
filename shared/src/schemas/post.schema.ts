@@ -12,7 +12,9 @@ export const createPostSchema = z.object({
   tag_ids: z.array(z.number().int().positive()).optional(),
 });
 
-export const updatePostSchema = createPostSchema.partial();
+export const updatePostSchema = createPostSchema.partial().extend({
+  expected_updated_at: z.string().datetime(),
+});
 
 export const postQuerySchema = z.object({
   cursor: z.string().optional(),
