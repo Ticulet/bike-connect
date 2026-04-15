@@ -10,7 +10,10 @@ export const createBikeSchema = z.object({
     .number()
     .int()
     .min(VALIDATION_LIMITS.BIKE_YEAR_MIN)
-    .max(new Date().getFullYear() + 1),
+    .refine(
+      (y) => y <= new Date().getFullYear() + 1,
+      'Year cannot be more than one year in the future',
+    ),
   type: z.enum(BIKE_TYPES),
   description: z.string().max(VALIDATION_LIMITS.BIKE_DESCRIPTION_MAX).optional(),
   is_public: z.boolean().default(false),

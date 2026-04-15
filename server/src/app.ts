@@ -22,8 +22,8 @@ app.use(globalLimiter);
 // Cookie parser
 app.use(cookieParser());
 
-// JSON body parser (10 MB limit)
-app.use(express.json({ limit: '10mb' }));
+// JSON body parser (conservative global limit; routes needing more override per-route)
+app.use(express.json({ limit: '100kb' }));
 
 // Health check
 app.get('/api/health', (_req, res) => {

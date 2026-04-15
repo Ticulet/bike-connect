@@ -12,9 +12,21 @@ async function main() {
     console.error('Database connection failed (server will still start):', err);
   }
 
-  app.listen(env.PORT, () => {
+  const server = app.listen(env.PORT, () => {
     console.log(`Server listening on port ${String(env.PORT)} [${env.NODE_ENV}]`);
   });
+
+  function shutdown(): void {
+    console.log('Shutting down gracefully...');
+    server.close(() => {
+      db.destroy()
+        .then(() => process.exit(0))
+        .catch(() => process.exit(1));
+    });
+  }
+
+  process.on('SIGTERM', shutdown);
+  process.on('SIGINT', shutdown);
 }
 
 main().catch((err: unknown) => {

@@ -80,7 +80,7 @@ export interface MaintenanceLogsTable {
   type: MaintenanceType;
   title: string;
   description: string | null;
-  cost: string | null;
+  cost: ColumnType<string | null, number | null, number | null>;
   mileage_at_service: number | null;
   performed_at: string;
   created_at: ColumnType<Date, string | undefined, never>;
@@ -91,7 +91,7 @@ export interface PostsTable {
   author_id: string;
   title: string;
   slug: string;
-  content: ColumnType<unknown, string, string>;
+  content: ColumnType<Record<string, unknown>, Record<string, unknown>, Record<string, unknown>>;
   excerpt: string | null;
   cover_image_url: string | null;
   category: PostCategory;

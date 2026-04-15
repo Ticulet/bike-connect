@@ -14,8 +14,7 @@ export const authUserSchema = z.object({
   created_at: z.string().datetime(),
 });
 
+// Auth uses httpOnly cookies — tokens are not exposed in response body
 export const loginResponseSchema = z.object({
   user: authUserSchema,
-  access_token: z.string(),
-  refresh_token: z.string(),
 });
