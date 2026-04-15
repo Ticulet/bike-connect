@@ -14,13 +14,22 @@
   },
   "dependencies": {
     "@bike-connect/shared": "*",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.6",
+    "dotenv": "^17.4.2",
     "express": "^5.0.0",
+    "express-rate-limit": "^8.3.2",
+    "helmet": "^8.1.0",
     "kysely": "^0.27.0",
-    "pg": "^8.13.0"
+    "pg": "^8.13.0",
+    "zod": "^3.25.76"
   },
   "devDependencies": {
+    "@types/cookie-parser": "^1.4.10",
+    "@types/cors": "^2.8.19",
     "@types/express": "^5.0.0",
     "@types/node": "^22.0.0",
+    "@types/pg": "^8.20.0",
     "tsx": "^4.19.0"
   }
 }

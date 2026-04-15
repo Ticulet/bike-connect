@@ -1,0 +1,338 @@
+/* ============================================================
+   Base CSS — Bike Connect
+   Mobile-first, WCAG 2.1 AA compliant
+   ============================================================ */
+
+/* ------------------------------------------------------------
+   CSS Custom Properties
+   ------------------------------------------------------------ */
+:root {
+  /* Colors */
+  --color-primary: #1a6b3c;
+  --color-primary-dark: #134f2d;
+  --color-primary-light: #e8f5ed;
+  --color-secondary: #f57c00;
+  --color-secondary-dark: #bf6000;
+  --color-text: #1a1a1a;
+  --color-text-muted: #5a5a5a;
+  --color-text-inverse: #ffffff;
+  --color-background: #fafafa;
+  --color-surface: #ffffff;
+  --color-border: #d1d5db;
+  --color-border-light: #e5e7eb;
+  --color-error: #c62828;
+  --color-error-bg: #ffebee;
+  --color-success: #2e7d32;
+  --color-success-bg: #e8f5e9;
+  --color-focus: #1a6b3c;
+
+  /* Spacing (8px base unit) */
+  --spacing-xs: 0.25rem;   /* 4px */
+  --spacing-sm: 0.5rem;    /* 8px */
+  --spacing-md: 1rem;      /* 16px */
+  --spacing-lg: 1.5rem;    /* 24px */
+  --spacing-xl: 2rem;      /* 32px */
+  --spacing-2xl: 3rem;     /* 48px */
+  --spacing-3xl: 4rem;     /* 64px */
+
+  /* Typography */
+  --font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  --font-family-mono: 'Courier New', Courier, monospace;
+
+  --font-size-xs: 0.75rem;   /* 12px */
+  --font-size-sm: 0.875rem;  /* 14px */
+  --font-size-md: 1rem;      /* 16px */
+  --font-size-lg: 1.125rem;  /* 18px */
+  --font-size-xl: 1.25rem;   /* 20px */
+  --font-size-2xl: 1.5rem;   /* 24px */
+  --font-size-3xl: 1.875rem; /* 30px */
+  --font-size-4xl: 2.25rem;  /* 36px */
+
+  --line-height-tight: 1.25;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.75;
+
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /* Layout */
+  --max-width-content: 72rem;  /* 1152px */
+  --max-width-narrow: 48rem;   /* 768px */
+  --header-height: 4rem;       /* 64px */
+
+  /* Border radius */
+  --radius-sm: 0.25rem;
+  --radius-md: 0.375rem;
+  --radius-lg: 0.5rem;
+  --radius-full: 9999px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-normal: 250ms ease;
+}
+
+/* ------------------------------------------------------------
+   CSS Reset
+   ------------------------------------------------------------ */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 100%; /* 16px base */
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-family);
+  font-size: var(--font-size-md);
+  line-height: var(--line-height-normal);
+  color: var(--color-text);
+  background-color: var(--color-background);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+img,
+picture,
+video,
+canvas,
+svg {
+  display: block;
+  max-width: 100%;
+}
+
+input,
+button,
+textarea,
+select {
+  font: inherit;
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  overflow-wrap: break-word;
+}
+
+ul,
+ol {
+  list-style: none;
+}
+
+a {
+  color: var(--color-primary);
+  text-decoration: underline;
+}
+
+a:hover {
+  color: var(--color-primary-dark);
+}
+
+/* ------------------------------------------------------------
+   Accessibility: Focus indicators (WCAG 2.1 AA)
+   ------------------------------------------------------------ */
+:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+  border-radius: var(--radius-sm);
+}
+
+/* Remove default focus ring in favor of :focus-visible */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* ------------------------------------------------------------
+   Accessibility: Screen reader only
+   ------------------------------------------------------------ */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* Skip link — becomes visible on focus */
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: var(--spacing-md);
+  z-index: 9999;
+  padding: var(--spacing-sm) var(--spacing-md);
+  background-color: var(--color-primary);
+  color: var(--color-text-inverse);
+  font-weight: var(--font-weight-semibold);
+  text-decoration: none;
+  border-radius: var(--radius-md);
+  transition: top var(--transition-fast);
+}
+
+.skip-link:focus-visible {
+  top: var(--spacing-md);
+  outline: 2px solid var(--color-text-inverse);
+  outline-offset: 2px;
+}
+
+/* ------------------------------------------------------------
+   Layout: App shell
+   ------------------------------------------------------------ */
+.app-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.main-content {
+  flex-grow: 1;
+  padding: var(--spacing-lg) var(--spacing-md);
+  width: 100%;
+  max-width: var(--max-width-content);
+  margin-inline: auto;
+}
+
+/* ------------------------------------------------------------
+   Header
+   ------------------------------------------------------------ */
+.site-header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background-color: var(--color-surface);
+  border-bottom: 1px solid var(--color-border-light);
+  box-shadow: var(--shadow-sm);
+}
+
+.site-header__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: var(--header-height);
+  padding-inline: var(--spacing-md);
+  max-width: var(--max-width-content);
+  margin-inline: auto;
+  gap: var(--spacing-md);
+}
+
+.site-header__logo {
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+.site-header__logo:hover {
+  color: var(--color-primary-dark);
+}
+
+.site-nav {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.site-nav__link {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text);
+  text-decoration: none;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-md);
+  transition: background-color var(--transition-fast), color var(--transition-fast);
+}
+
+.site-nav__link:hover {
+  background-color: var(--color-primary-light);
+  color: var(--color-primary);
+}
+
+.site-nav__link.active {
+  color: var(--color-primary);
+  font-weight: var(--font-weight-semibold);
+}
+
+/* ------------------------------------------------------------
+   Footer
+   ------------------------------------------------------------ */
+.site-footer {
+  background-color: var(--color-surface);
+  border-top: 1px solid var(--color-border-light);
+  padding: var(--spacing-lg) var(--spacing-md);
+}
+
+.site-footer__inner {
+  max-width: var(--max-width-content);
+  margin-inline: auto;
+  text-align: center;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
+}
+
+/* ------------------------------------------------------------
+   Responsive breakpoints (mobile-first)
+   ------------------------------------------------------------ */
+@media (min-width: 48rem) {
+  /* 768px — tablet */
+  .main-content {
+    padding: var(--spacing-xl) var(--spacing-lg);
+  }
+
+  .site-header__inner {
+    padding-inline: var(--spacing-lg);
+  }
+
+  .site-nav__link {
+    font-size: var(--font-size-md);
+  }
+}
+
+@media (min-width: 64rem) {
+  /* 1024px — desktop */
+  .main-content {
+    padding: var(--spacing-2xl) var(--spacing-xl);
+  }
+
+  .site-header__inner {
+    padding-inline: var(--spacing-xl);
+  }
+}
+
+/* ------------------------------------------------------------
+   Utility classes
+   ------------------------------------------------------------ */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}

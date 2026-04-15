@@ -1,0 +1,15 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: bike-connect-db
+    environment:
+      POSTGRES_DB: bike_connect
+      POSTGRES_USER: bike_connect
+      POSTGRES_PASSWORD: bike_connect_dev
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
