@@ -1,0 +1,109 @@
+/* ===========================
+   Photo Gallery
+   =========================== */
+
+.photo-gallery {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.photo-gallery__hero {
+  width: 100%;
+  max-height: 400px;
+  object-fit: cover;
+  border-radius: 0.5rem;
+  display: block;
+}
+
+.photo-gallery__placeholder {
+  width: 100%;
+  max-height: 400px;
+  min-height: 200px;
+  background: var(--color-surface-hover, #f8f9fa);
+  border: 2px dashed var(--color-border, #dee2e6);
+  border-radius: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  color: var(--color-text-muted, #6c757d);
+  font-size: 2.5rem;
+}
+
+.photo-gallery__placeholder-text {
+  font-size: 0.9375rem;
+  font-weight: 500;
+}
+
+.photo-gallery__upload {
+  display: flex;
+  align-items: flex-start;
+}
+
+/* ===========================
+   Image Uploader
+   =========================== */
+
+.image-uploader {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.image-uploader__input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.image-uploader__btn {
+  padding: 0.4375rem 1rem;
+  background: var(--color-primary, #0d6efd);
+  color: #fff;
+  border: none;
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: opacity 0.15s;
+  white-space: nowrap;
+}
+
+.image-uploader__btn:hover:not(:disabled) {
+  opacity: 0.9;
+}
+
+.image-uploader__btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.image-uploader__btn:focus-visible {
+  outline: 2px solid var(--color-primary, #0d6efd);
+  outline-offset: 2px;
+}
+
+.image-uploader__status {
+  font-size: 0.875rem;
+  color: var(--color-text-muted, #6c757d);
+}
+
+.image-uploader__error {
+  font-size: 0.875rem;
+  color: #dc3545;
+  padding: 0.25rem 0.5rem;
+  background: #f8d7da;
+  border: 1px solid #f5c2c7;
+  border-radius: 0.25rem;
+}

@@ -1,6 +1,6 @@
 import { sql } from 'kysely';
 import { db } from '../../db/index.js';
-import type { User } from '../../db/types.js';
+import type { User, UserUpdate } from '../../db/types.js';
 
 export const usersRepository = {
   async findById(id: string): Promise<User | undefined> {
@@ -32,6 +32,15 @@ export const usersRepository = {
           updated_at: sql`now()`,
         }),
       )
+      .returningAll()
+      .executeTakeFirstOrThrow();
+  },
+
+  async update(id: string, data: UserUpdate): Promise<User> {
+    return db
+      .updateTable('users')
+      .set({ ...data, updated_at: sql`now()` })
+      .where('id', '=', id)
       .returningAll()
       .executeTakeFirstOrThrow();
   },

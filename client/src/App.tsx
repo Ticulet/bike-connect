@@ -1,15 +1,22 @@
 import { BrowserRouter, Route, Routes } from 'react-router';
 import { AuthProvider } from './features/auth/context/AuthProvider.js';
 import { LoginPage } from './features/auth/pages/LoginPage.js';
+import { SettingsPage } from './features/auth/pages/SettingsPage.js';
 import { Layout } from './components/layout/Layout.js';
 import { ProtectedRoute } from './components/layout/ProtectedRoute.js';
 import { HomePage } from './pages/HomePage.js';
 import { NotFoundPage } from './pages/NotFoundPage.js';
+import { UserProfilePage } from './pages/UserProfilePage.js';
 import { PostListPage } from './features/blog/pages/PostListPage.js';
 import { PostDetailPage } from './features/blog/pages/PostDetailPage.js';
 import { PostCreatePage } from './features/blog/pages/PostCreatePage.js';
 import { PostEditPage } from './features/blog/pages/PostEditPage.js';
 import { MyPostsPage } from './features/blog/pages/MyPostsPage.js';
+import { MyBikesPage } from './features/bikes/pages/MyBikesPage.js';
+import { BikeCreatePage } from './features/bikes/pages/BikeCreatePage.js';
+import { BikeDetailPage } from './features/bikes/pages/BikeDetailPage.js';
+import { BikeEditPage } from './features/bikes/pages/BikeEditPage.js';
+import { PublicBikePage } from './features/bikes/pages/PublicBikePage.js';
 
 function Placeholder({ title }: { title: string }): React.JSX.Element {
   return (
@@ -34,11 +41,11 @@ export default function App(): React.JSX.Element {
             />
             <Route
               path="users/:id"
-              element={<Placeholder title="User Profile" />}
+              element={<UserProfilePage />}
             />
             <Route
               path="bikes/:id"
-              element={<Placeholder title="Bike Detail" />}
+              element={<PublicBikePage />}
             />
             <Route path="login" element={<LoginPage />} />
 
@@ -62,19 +69,19 @@ export default function App(): React.JSX.Element {
               />
               <Route
                 path="my-bikes"
-                element={<Placeholder title="My Bikes" />}
+                element={<MyBikesPage />}
               />
               <Route
                 path="my-bikes/new"
-                element={<Placeholder title="New Bike" />}
+                element={<BikeCreatePage />}
               />
               <Route
                 path="my-bikes/:id"
-                element={<Placeholder title="Bike Detail (Owner)" />}
+                element={<BikeDetailPage />}
               />
               <Route
                 path="my-bikes/:id/edit"
-                element={<Placeholder title="Edit Bike" />}
+                element={<BikeEditPage />}
               />
               <Route
                 path="my-bikes/:bikeId/maintenance/new"
@@ -86,7 +93,7 @@ export default function App(): React.JSX.Element {
               />
               <Route
                 path="settings"
-                element={<Placeholder title="Settings" />}
+                element={<SettingsPage />}
               />
             </Route>
 

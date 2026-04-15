@@ -3,6 +3,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
 import passport from 'passport';
+import path from 'node:path';
 import './modules/auth/passport.config.js';
 import { env } from './config/env.js';
 import { globalLimiter } from './middleware/rate-limit.js';
@@ -37,6 +38,11 @@ app.get('/api/health', (_req, res) => {
 
 // API routes
 app.use('/api', router);
+
+// Local upload static serving — only when storage is local
+if (env.IMAGE_STORAGE === 'local') {
+  app.use('/uploads', express.static(path.resolve(env.LOCAL_UPLOAD_DIR)));
+}
 
 // 404 handler — must come after all routes
 app.use((_req, _res, next) => {
