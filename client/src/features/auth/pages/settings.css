@@ -1,107 +1,161 @@
+/* ===========================
+   Settings Page
+   =========================== */
+
 .settings-page {
-  max-width: 560px;
+  max-width: 36rem;
   margin: 0 auto;
-  padding: 2rem 1rem;
+  padding: var(--spacing-xl) var(--spacing-md);
 }
 
 .settings-page__title {
-  font-size: 1.5rem;
-  font-weight: 700;
-  margin-bottom: 1.5rem;
+  font-family: var(--font-display);
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+  letter-spacing: var(--letter-spacing-tight);
+  color: var(--color-text);
+  margin-bottom: var(--spacing-xl);
+  line-height: var(--line-height-snug);
 }
 
 .settings-page__form {
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap: var(--spacing-lg);
 }
 
 .settings-page__field {
   display: flex;
   flex-direction: column;
-  gap: 0.375rem;
+  gap: 0;
 }
 
 .settings-page__label {
-  font-size: 0.875rem;
-  font-weight: 600;
-  color: #333;
+  display: block;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text);
+  margin-bottom: 0.4rem;
 }
 
+/* Input and textarea — mirrors .input / .textarea global style */
 .settings-page__input,
 .settings-page__textarea {
-  padding: 0.5rem 0.75rem;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  font-size: 1rem;
-  font-family: inherit;
-  transition: border-color 0.15s;
+  display: block;
   width: 100%;
+  font-family: var(--font-body);
+  font-size: var(--font-size-md);
+  line-height: var(--line-height-normal);
+  color: var(--color-text);
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  padding: 0.625rem 0.875rem;
   box-sizing: border-box;
+  transition:
+    border-color var(--transition-fast),
+    box-shadow var(--transition-fast),
+    background-color var(--transition-fast);
+}
+
+.settings-page__input:hover,
+.settings-page__textarea:hover {
+  border-color: var(--color-border-strong);
 }
 
 .settings-page__input:focus,
 .settings-page__textarea:focus {
   outline: none;
-  border-color: #4f46e5;
-  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-primary-light);
 }
 
 .settings-page__input[aria-invalid='true'],
 .settings-page__textarea[aria-invalid='true'] {
-  border-color: #dc2626;
+  border-color: var(--color-error);
 }
 
 .settings-page__textarea {
   resize: vertical;
-  min-height: 100px;
+  min-height: 6.25rem;
 }
 
 .settings-page__hint {
-  font-size: 0.75rem;
-  color: #666;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-subtle);
+  margin-top: 0.25rem;
 }
 
 .settings-page__error {
-  font-size: 0.8125rem;
-  color: #dc2626;
+  font-size: var(--font-size-xs);
+  color: var(--color-error);
+  margin-top: 0.25rem;
 }
 
 .settings-page__actions {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  margin-top: 0.5rem;
+  gap: var(--spacing-md);
+  margin-top: var(--spacing-sm);
 }
 
+/* Submit button — primary green style */
 .settings-page__submit {
-  padding: 0.5rem 1.25rem;
-  background-color: #4f46e5;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  font-size: 1rem;
-  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.625rem 1.25rem;
+  font-family: var(--font-body);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  line-height: 1.2;
+  background-color: var(--color-primary);
+  color: var(--color-text-inverse);
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
   cursor: pointer;
-  transition: background-color 0.15s;
+  box-shadow: var(--shadow-sm);
+  transition:
+    background-color var(--transition-fast),
+    box-shadow var(--transition-fast),
+    transform 80ms ease;
 }
 
 .settings-page__submit:hover:not(:disabled) {
-  background-color: #4338ca;
+  background-color: var(--color-primary-dark);
+  box-shadow: var(--shadow-md);
+}
+
+.settings-page__submit:active:not(:disabled) {
+  transform: translateY(1px);
 }
 
 .settings-page__submit:disabled {
-  opacity: 0.6;
+  opacity: 0.55;
   cursor: not-allowed;
 }
 
+/* Success message — green-tinted callout */
 .settings-page__success {
-  font-size: 0.875rem;
-  color: #16a34a;
-  font-weight: 500;
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-success);
+  background-color: var(--color-success-bg);
+  border-radius: var(--radius-md);
+  padding: 0.75rem 1rem;
 }
 
+/* Server-level error message */
 .settings-page__server-error {
-  font-size: 0.875rem;
-  color: #dc2626;
+  font-size: var(--font-size-sm);
+  color: var(--color-error);
+  background-color: var(--color-error-bg);
+  border-radius: var(--radius-md);
+  padding: 0.75rem 1rem;
+}
+
+@media (min-width: 48rem) {
+  .settings-page {
+    padding: var(--spacing-2xl) var(--spacing-lg);
+  }
 }

@@ -1,22 +1,22 @@
-:root {
-  --card-radius: 0.5rem;
-  --card-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
-  --card-shadow-hover: 0 4px 12px rgba(0, 0, 0, 0.18);
-  --card-transition: box-shadow 0.2s ease, transform 0.2s ease;
-}
+/* ============================================================
+   Post Card — outdoor/nature design system
+   ============================================================ */
 
 .post-card {
-  background: #fff;
-  border-radius: var(--card-radius);
-  box-shadow: var(--card-shadow);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  transition: var(--card-transition);
+  transition: box-shadow var(--transition-normal), transform var(--transition-normal),
+              border-color var(--transition-normal);
 }
 
 .post-card:hover {
-  box-shadow: var(--card-shadow-hover);
+  box-shadow: var(--shadow-md);
+  border-color: var(--color-border);
   transform: translateY(-2px);
 }
 
@@ -25,14 +25,15 @@
   aspect-ratio: 16 / 9;
   object-fit: cover;
   display: block;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
 }
 
 .post-card__body {
-  padding: 1rem;
+  padding: var(--spacing-md);
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: var(--spacing-sm);
 }
 
 .post-card__meta {
@@ -43,49 +44,53 @@
 }
 
 .post-card__category {
-  font-size: 0.75rem;
-  font-weight: 600;
+  font-family: var(--font-body);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  background: #e8f4fd;
-  color: #1a6da5;
-  padding: 0.125rem 0.5rem;
-  border-radius: 999px;
+  letter-spacing: var(--letter-spacing-wide);
+  background: var(--color-primary-light);
+  color: var(--color-primary-dark);
+  padding: 0.2rem 0.625rem;
+  border-radius: var(--radius-full);
+  line-height: 1.4;
 }
 
 .post-card__date {
-  font-size: 0.8125rem;
-  color: #6b7280;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-subtle);
+  font-family: var(--font-body);
 }
 
 .post-card__title {
-  font-size: 1.125rem;
-  font-weight: 600;
-  line-height: 1.35;
+  font-family: var(--font-display);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--letter-spacing-tight);
+  line-height: var(--line-height-snug);
   margin: 0;
 }
 
 .post-card__title-link {
-  color: inherit;
+  color: var(--color-text);
   text-decoration: none;
+  transition: color var(--transition-fast);
 }
 
 .post-card__title-link:hover,
 .post-card__title-link:focus-visible {
-  color: #1a6da5;
+  color: var(--color-primary);
   text-decoration: underline;
-}
-
-.post-card__title-link:focus-visible {
-  outline: 2px solid #1a6da5;
-  outline-offset: 2px;
-  border-radius: 2px;
+  text-decoration-color: color-mix(in srgb, var(--color-primary) 40%, transparent);
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 2px;
 }
 
 .post-card__excerpt {
-  font-size: 0.9375rem;
-  color: #4b5563;
-  line-height: 1.5;
+  font-family: var(--font-body);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  line-height: var(--line-height-normal);
   margin: 0;
   flex: 1;
 }
@@ -93,14 +98,14 @@
 .post-card__author {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  margin-top: 0.25rem;
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-xs);
 }
 
 .post-card__avatar {
   width: 1.75rem;
   height: 1.75rem;
-  border-radius: 50%;
+  border-radius: var(--radius-full);
   object-fit: cover;
   flex-shrink: 0;
 }
@@ -108,18 +113,19 @@
 .post-card__avatar-placeholder {
   width: 1.75rem;
   height: 1.75rem;
-  border-radius: 50%;
-  background: #d1d5db;
+  border-radius: var(--radius-full);
+  background: var(--color-primary-soft);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: #6b7280;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-primary-dark);
   flex-shrink: 0;
 }
 
 .post-card__author-name {
-  font-size: 0.875rem;
-  color: #374151;
+  font-family: var(--font-body);
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
 }
