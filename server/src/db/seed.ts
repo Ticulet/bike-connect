@@ -299,7 +299,7 @@ const POSTS: SeedPost[] = [
     author_id: USERS[1].id,
     title: 'Replacing a chain: step-by-step, with torque specs',
     excerpt: "It takes 15 minutes and saves you from replacing the whole drivetrain six months later. If you can use a multi-tool, you can do this.",
-    cover_image_url: 'https://images.unsplash.com/photo-1593709707280-dcd28ee2f7a8?w=1600&q=80',
+    cover_image_url: 'https://images.unsplash.com/photo-1541625602330-2277a4c46182?w=1600&q=80',
     category: 'maintenance_guide',
     published_days_ago: 21,
     tag_slugs: ['maintenance', 'drivetrain'],
