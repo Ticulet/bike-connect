@@ -1,5 +1,6 @@
 import { Link } from 'react-router';
 import type { BikeItem } from '../api/bikes.api.js';
+import { isSafeImageUrl } from '../../../lib/safe-url.js';
 import './bikes.css';
 
 interface BikeCardProps {
@@ -14,7 +15,7 @@ export function BikeCard({ bike }: BikeCardProps): React.JSX.Element {
         className="bike-card__link"
         aria-label={`View ${bike.name}`}
       >
-        {bike.hero_image_url ? (
+        {isSafeImageUrl(bike.hero_image_url) ? (
           <img
             className="bike-card__image"
             src={bike.hero_image_url}

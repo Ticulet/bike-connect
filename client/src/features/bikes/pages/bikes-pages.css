@@ -299,3 +299,112 @@
   margin: 0.5rem 0 1.5rem;
   font-size: 0.9375rem;
 }
+
+/* ===========================
+   Explore Bikes Page
+   =========================== */
+
+.explore-bikes-page__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.explore-bikes-page__filters {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.explore-bikes-page__filter-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.explore-bikes-page__filter-select {
+  padding: 0.375rem 0.625rem;
+  border: 1px solid var(--color-border, #dee2e6);
+  border-radius: 0.375rem;
+  font-size: 0.875rem;
+  background: #fff;
+  cursor: pointer;
+}
+
+.explore-bikes-page__filter-select:focus {
+  outline: none;
+  border-color: var(--color-primary, #0d6efd);
+  box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.15);
+}
+
+.explore-bikes-page__load-more {
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.explore-bikes-page__load-more-btn {
+  padding: 0.5625rem 1.75rem;
+  background: #fff;
+  border: 1px solid var(--color-border, #dee2e6);
+  border-radius: 0.375rem;
+  font-size: 0.9375rem;
+  cursor: pointer;
+  color: inherit;
+  transition: background 0.15s;
+}
+
+.explore-bikes-page__load-more-btn:hover {
+  background: var(--color-surface-hover, #f8f9fa);
+}
+
+.explore-bikes-page__load-more-btn:focus-visible {
+  outline: 2px solid var(--color-primary, #0d6efd);
+  outline-offset: 2px;
+}
+
+.explore-bikes-page__load-more-btn:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+/* ===========================
+   Explore Bike Card (owner info)
+   =========================== */
+
+.explore-bike-card__owner {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.explore-bike-card__owner-avatar {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.explore-bike-card__owner-avatar-placeholder {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 50%;
+  background: #dee2e6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  flex-shrink: 0;
+  color: #495057;
+}
+
+.explore-bike-card__owner-name {
+  font-size: 0.8125rem;
+  color: var(--color-text-muted, #6c757d);
+}

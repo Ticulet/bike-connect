@@ -11,6 +11,9 @@ export * from './schemas/bike.schema.js';
 export * from './schemas/component.schema.js';
 export * from './schemas/maintenance.schema.js';
 export * from './schemas/tag.schema.js';
+export * from './schemas/comment.schema.js';
+export * from './schemas/ride.schema.js';
+export * from './schemas/search.schema.js';
 
 // Types
 export * from './types/index.js';

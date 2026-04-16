@@ -1,6 +1,13 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useParams } from 'react-router';
 import { apiClient, ApiClientError } from '../lib/api-client.js';
+import { useAuth } from '../features/auth/hooks/useAuth.js';
+import {
+  fetchFollowStats,
+  type FollowStats as FollowStatsData,
+} from '../features/follows/api/follows.api.js';
+import { FollowButton } from '../features/follows/components/FollowButton.js';
+import { FollowStats } from '../features/follows/components/FollowStats.js';
 import './user-profile.css';
 
 interface UserProfile {
@@ -20,10 +27,23 @@ function formatMemberSince(dateString: string): string {
 
 export function UserProfilePage(): React.JSX.Element {
   const { id } = useParams<{ id: string }>();
+  const { user: currentUser, isAuthenticated } = useAuth();
+
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const [followStats, setFollowStats] = useState<FollowStatsData | null>(null);
+
+  const loadFollowStats = useCallback(async (userId: string): Promise<void> => {
+    try {
+      const stats = await fetchFollowStats(userId);
+      setFollowStats(stats);
+    } catch {
+      // Non-critical: follow stats failure should not block the profile page
+    }
+  }, []);
 
   useEffect(() => {
     if (!id) return;
@@ -32,11 +52,13 @@ export function UserProfilePage(): React.JSX.Element {
     setIsLoading(true);
     setNotFound(false);
     setError(null);
+    setFollowStats(null);
 
     apiClient<UserProfile>(`/users/${id}`, { signal: controller.signal })
       .then((result) => {
         if (!controller.signal.aborted) {
           setProfile(result);
+          void loadFollowStats(id);
         }
       })
       .catch((err: unknown) => {
@@ -56,7 +78,29 @@ export function UserProfilePage(): React.JSX.Element {
     return () => {
       controller.abort();
     };
-  }, [id]);
+  }, [id, loadFollowStats]);
+
+  function handleFollowStatsChange(update: Partial<FollowStatsData>): void {
+    setFollowStats((prev) => {
+      if (!prev) return prev;
+
+      const isFollowingChanged = update.is_following !== undefined && update.is_following !== prev.is_following;
+      const followersDelta = isFollowingChanged
+        ? update.is_following
+          ? 1
+          : -1
+        : 0;
+
+      return {
+        ...prev,
+        ...update,
+        followers_count: prev.followers_count + followersDelta,
+      };
+    });
+  }
+
+  const isOwnProfile = Boolean(currentUser && id && currentUser.id === id);
+  const showFollowButton = isAuthenticated && !isOwnProfile && followStats !== null;
 
   if (isLoading) {
     return (
@@ -110,6 +154,20 @@ export function UserProfilePage(): React.JSX.Element {
         )}
 
         <h1 className="user-profile-page__name">{profile.display_name}</h1>
+
+        {followStats !== null && (
+          <div className="user-profile-page__follow-row">
+            <FollowStats stats={followStats} />
+            {showFollowButton && (
+              <FollowButton
+                userId={id ?? ''}
+                isFollowing={followStats.is_following}
+                isAuthenticated={isAuthenticated}
+                onStatsChange={handleFollowStatsChange}
+              />
+            )}
+          </div>
+        )}
 
         {profile.bio && (
           <p className="user-profile-page__bio">{profile.bio}</p>

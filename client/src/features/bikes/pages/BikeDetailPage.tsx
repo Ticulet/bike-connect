@@ -21,6 +21,17 @@ import {
   type MaintenanceLogItem,
 } from '../../maintenance/api/maintenance.api.js';
 import { MaintenanceTimeline } from '../../maintenance/components/MaintenanceTimeline.js';
+import {
+  fetchRides,
+  fetchRideStats,
+  deleteRide,
+  type RideItem,
+  type RideStats as RideStatsData,
+} from '../../rides/api/rides.api.js';
+import { RideList } from '../../rides/components/RideList.js';
+import { RideStats } from '../../rides/components/RideStats.js';
+import { fetchReminders, type ComponentReminder } from '../../reminders/api/reminders.api.js';
+import { ReminderList } from '../../reminders/components/ReminderList.js';
 import './bikes-pages.css';
 
 type ComponentFormMode =
@@ -46,6 +57,15 @@ export function BikeDetailPage(): React.JSX.Element {
   const [maintenanceLogs, setMaintenanceLogs] = useState<MaintenanceLogItem[]>([]);
   const [maintenanceError, setMaintenanceError] = useState<string | null>(null);
 
+  const [rides, setRides] = useState<RideItem[]>([]);
+  const [rideStats, setRideStats] = useState<RideStatsData | null>(null);
+  const [ridesError, setRidesError] = useState<string | null>(null);
+  const [deleteRideId, setDeleteRideId] = useState<string | null>(null);
+  const [isDeletingRide, setIsDeletingRide] = useState(false);
+
+  const [reminders, setReminders] = useState<ComponentReminder[]>([]);
+  const [remindersError, setRemindersError] = useState<string | null>(null);
+
   const [deleteBikeOpen, setDeleteBikeOpen] = useState(false);
   const [isDeletingBike, setIsDeletingBike] = useState(false);
   const [deleteComponentId, setDeleteComponentId] = useState<string | null>(null);
@@ -65,10 +85,13 @@ export function BikeDetailPage(): React.JSX.Element {
     setIsNotFound(false);
 
     try {
-      const [bikeResult, componentsResult, maintenanceResult] = await Promise.all([
+      const [bikeResult, componentsResult, maintenanceResult, ridesResult, rideStatsResult, remindersResult] = await Promise.all([
         fetchBike(id),
         fetchComponents(id),
         fetchMaintenanceLogs(id),
+        fetchRides(id).catch((): RideItem[] | 'error' => 'error'),
+        fetchRideStats(id).catch((): RideStatsData | null | 'error' => 'error'),
+        fetchReminders(id).catch((): ComponentReminder[] | 'error' => 'error'),
       ]);
 
       if (controller.signal.aborted) return;
@@ -76,6 +99,26 @@ export function BikeDetailPage(): React.JSX.Element {
       setBike(bikeResult);
       setComponents(componentsResult);
       setMaintenanceLogs(maintenanceResult);
+
+      if (ridesResult === 'error') {
+        setRides([]);
+        setRidesError('Could not load ride history.');
+      } else {
+        setRides(ridesResult);
+      }
+
+      if (rideStatsResult === 'error') {
+        setRideStats(null);
+      } else {
+        setRideStats(rideStatsResult);
+      }
+
+      if (remindersResult === 'error') {
+        setReminders([]);
+        setRemindersError('Could not load maintenance reminders.');
+      } else {
+        setReminders(remindersResult);
+      }
     } catch (err: unknown) {
       if (controller.signal.aborted) return;
       if (err instanceof ApiClientError && err.status === 404) {
@@ -115,6 +158,31 @@ export function BikeDetailPage(): React.JSX.Element {
       setMaintenanceLogs((prev) => prev.filter((l) => l.id !== logId));
     } catch {
       setMaintenanceError('Failed to delete maintenance entry. Please try again.');
+    }
+  }
+
+  async function handleDeleteRideConfirm(): Promise<void> {
+    if (!id || !deleteRideId) return;
+    setIsDeletingRide(true);
+    setRidesError(null);
+
+    const previousRides = rides;
+    // Optimistic update
+    setRides((prev) => prev.filter((r) => r.id !== deleteRideId));
+
+    try {
+      await deleteRide(id, deleteRideId);
+      setDeleteRideId(null);
+      // Refresh stats after deletion
+      const updatedStats = await fetchRideStats(id).catch(() => null);
+      setRideStats(updatedStats);
+    } catch {
+      // Rollback
+      setRides(previousRides);
+      setRidesError('Failed to delete ride. Please try again.');
+      setDeleteRideId(null);
+    } finally {
+      setIsDeletingRide(false);
     }
   }
 
@@ -336,6 +404,49 @@ export function BikeDetailPage(): React.JSX.Element {
         />
       </section>
 
+      <section className="bike-detail__section" aria-labelledby="rides-heading">
+        <div className="bike-detail__section-header">
+          <h2 id="rides-heading" className="bikes-page__subheading">
+            Rides
+          </h2>
+          {isOwner && (
+            <Link
+              to={`/my-bikes/${bike.id}/rides/new`}
+              className="bike-detail__add-component-btn"
+              aria-label="Log a new ride"
+            >
+              + Log Ride
+            </Link>
+          )}
+        </div>
+
+        {ridesError && (
+          <p className="bikes-page__error" role="alert">{ridesError}</p>
+        )}
+
+        {rideStats !== null && <RideStats stats={rideStats} />}
+
+        <RideList
+          rides={rides}
+          bikeId={id ?? ''}
+          isOwner={isOwner}
+          onDeleteRequest={(rideId) => setDeleteRideId(rideId)}
+        />
+      </section>
+
+      <section className="bike-detail__section" aria-labelledby="reminders-heading">
+        <div className="bike-detail__section-header">
+          <h2 id="reminders-heading" className="bikes-page__subheading">
+            Maintenance Reminders
+          </h2>
+        </div>
+
+        {remindersError && (
+          <p className="bikes-page__error" role="alert">{remindersError}</p>
+        )}
+        <ReminderList reminders={reminders} />
+      </section>
+
       <section className="bike-detail__section" aria-labelledby="maintenance-heading">
         <div className="bike-detail__section-header">
           <h2 id="maintenance-heading" className="bikes-page__subheading">
@@ -373,6 +484,15 @@ export function BikeDetailPage(): React.JSX.Element {
         confirmLabel={isDeletingComponent ? 'Deleting...' : 'Delete'}
         onConfirm={() => void handleDeleteComponentConfirm()}
         onCancel={() => setDeleteComponentId(null)}
+      />
+
+      <ConfirmDialog
+        isOpen={deleteRideId !== null}
+        title="Delete Ride"
+        message="Are you sure you want to delete this ride? This action cannot be undone."
+        confirmLabel={isDeletingRide ? 'Deleting...' : 'Delete'}
+        onConfirm={() => void handleDeleteRideConfirm()}
+        onCancel={() => setDeleteRideId(null)}
       />
     </main>
   );

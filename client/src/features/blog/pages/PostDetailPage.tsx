@@ -3,8 +3,14 @@ import { useParams } from 'react-router';
 import type { JSONContent } from '@tiptap/react';
 import { fetchPostBySlug, type PostDetail } from '../api/posts.api.js';
 import { PostContent } from '../components/PostContent.js';
+import { LikeButton } from '../components/LikeButton.js';
+import { BookmarkButton } from '../components/BookmarkButton.js';
+import { CommentList } from '../components/CommentList.js';
 import { ApiClientError } from '../../../lib/api-client.js';
+import { isSafeImageUrl } from '../../../lib/safe-url.js';
+import { useAuth } from '../../auth/hooks/useAuth.js';
 import './post-detail.css';
+import '../components/blog-social.css';
 
 function formatDate(dateString: string): string {
   return new Date(dateString).toLocaleDateString('en-US', {
@@ -20,6 +26,7 @@ function formatCategoryLabel(category: string): string {
 
 export function PostDetailPage(): React.JSX.Element {
   const { slug } = useParams<{ slug: string }>();
+  const { isAuthenticated, user } = useAuth();
   const [post, setPost] = useState<PostDetail | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
@@ -96,7 +103,7 @@ export function PostDetailPage(): React.JSX.Element {
 
   return (
     <main id="main" className="post-detail-page">
-      {post.cover_image_url && (
+      {isSafeImageUrl(post.cover_image_url) && (
         <img
           src={post.cover_image_url}
           alt={`Cover image for ${post.title}`}
@@ -113,7 +120,7 @@ export function PostDetailPage(): React.JSX.Element {
 
         <div className="post-detail-page__meta">
           <div className="post-detail-page__author-info">
-            {post.author_avatar_url ? (
+            {isSafeImageUrl(post.author_avatar_url) ? (
               <img
                 src={post.author_avatar_url}
                 alt=""
@@ -152,6 +159,17 @@ export function PostDetailPage(): React.JSX.Element {
       <div className="post-detail-page__body">
         <PostContent content={post.content as JSONContent} />
       </div>
+
+      <div className="post-detail-social">
+        <LikeButton postId={post.id} isAuthenticated={isAuthenticated} />
+        <BookmarkButton postId={post.id} isAuthenticated={isAuthenticated} />
+      </div>
+
+      <CommentList
+        postId={post.id}
+        isAuthenticated={isAuthenticated}
+        currentUserId={user?.id ?? null}
+      />
     </main>
   );
 }

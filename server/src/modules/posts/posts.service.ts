@@ -104,6 +104,10 @@ export const postsService = {
     return updated;
   },
 
+  async searchPosts(query: string, limit: number): Promise<PostWithAuthor[]> {
+    return postsRepository.search(query, limit);
+  },
+
   async deletePost(postId: string, userId: string): Promise<void> {
     const existing = await postsRepository.findById(postId);
     if (!existing) throw ApiError.notFound('Post');

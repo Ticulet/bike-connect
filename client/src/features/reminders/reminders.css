@@ -1,0 +1,120 @@
+/* ===========================
+   Reminder Badge
+   =========================== */
+
+.reminder-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3125rem;
+  font-size: 0.6875rem;
+  font-weight: 600;
+  padding: 0.1875rem 0.5rem;
+  border-radius: 1rem;
+  white-space: nowrap;
+  text-transform: capitalize;
+  cursor: default;
+}
+
+.reminder-badge--ok {
+  background: #d1e7dd;
+  color: #0f5132;
+}
+
+.reminder-badge--due_soon {
+  background: #fff3cd;
+  color: #664d03;
+}
+
+.reminder-badge--overdue {
+  background: #f8d7da;
+  color: #842029;
+}
+
+.reminder-badge--no_threshold,
+.reminder-badge--no_service_yet {
+  background: #e9ecef;
+  color: #495057;
+}
+
+.reminder-badge__dot {
+  width: 0.4375rem;
+  height: 0.4375rem;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.reminder-badge--ok .reminder-badge__dot {
+  background: #198754;
+}
+
+.reminder-badge--due_soon .reminder-badge__dot {
+  background: #ffc107;
+}
+
+.reminder-badge--overdue .reminder-badge__dot {
+  background: #dc3545;
+}
+
+.reminder-badge--no_threshold .reminder-badge__dot,
+.reminder-badge--no_service_yet .reminder-badge__dot {
+  background: #adb5bd;
+}
+
+/* ===========================
+   Reminder List
+   =========================== */
+
+.reminder-list__empty {
+  color: var(--color-text-muted, #6c757d);
+  font-size: 0.9375rem;
+  padding: 1rem 0;
+}
+
+.reminder-list__items {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.reminder-item {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid var(--color-border, #dee2e6);
+}
+
+.reminder-item:last-child {
+  border-bottom: none;
+}
+
+.reminder-item__info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+.reminder-item__name {
+  font-size: 0.9375rem;
+  font-weight: 500;
+}
+
+.reminder-item__category {
+  font-size: 0.8125rem;
+  color: var(--color-text-muted, #6c757d);
+  text-transform: capitalize;
+}
+
+.reminder-item__detail {
+  font-size: 0.8125rem;
+  color: var(--color-text-muted, #6c757d);
+  margin-top: 0.125rem;
+}
+
+.reminder-item__badge-col {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+}

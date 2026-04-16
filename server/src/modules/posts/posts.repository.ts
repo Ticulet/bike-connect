@@ -1,3 +1,4 @@
+import { sql } from 'kysely';
 import { db } from '../../db/index.js';
 import { decodeCursor } from '../../lib/pagination.js';
 import type { NewPost, Post, PostUpdate, Tag } from '../../db/types.js';
@@ -179,5 +180,21 @@ export const postsRepository = {
 
   async findById(id: string): Promise<Post | undefined> {
     return db.selectFrom('posts').selectAll().where('id', '=', id).executeTakeFirst();
+  },
+
+  async search(query: string, limit: number): Promise<PostWithAuthor[]> {
+    return db
+      .selectFrom('posts')
+      .innerJoin('users', 'users.id', 'posts.author_id')
+      .selectAll('posts')
+      .select([
+        'users.display_name as author_display_name',
+        'users.avatar_url as author_avatar_url',
+      ])
+      .where('posts.status', '=', 'published')
+      .where(sql<boolean>`posts.search_vector @@ plainto_tsquery('english', ${query})`)
+      .orderBy(sql`ts_rank(posts.search_vector, plainto_tsquery('english', ${query}))`, 'desc')
+      .limit(limit)
+      .execute();
   },
 };

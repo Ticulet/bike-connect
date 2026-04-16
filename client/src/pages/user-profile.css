@@ -66,3 +66,10 @@
   font-size: 0.875rem;
   color: #777;
 }
+
+.user-profile-page__follow-row {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+}

@@ -57,8 +57,47 @@ export interface BikesTable {
   description: string | null;
   hero_image_url: string | null;
   is_public: ColumnType<boolean, boolean | undefined, boolean>;
+  total_mileage_km: ColumnType<string, string | number | undefined, string | number>;
   created_at: ColumnType<Date, string | undefined, never>;
   updated_at: ColumnType<Date, string | undefined, string>;
+}
+
+export interface CommentsTable {
+  id: Generated<string>;
+  post_id: string;
+  user_id: string;
+  parent_id: string | null;
+  content: string;
+  created_at: ColumnType<Date, string | undefined, never>;
+}
+
+export interface LikesTable {
+  user_id: string;
+  post_id: string;
+  created_at: ColumnType<Date, string | undefined, never>;
+}
+
+export interface BookmarksTable {
+  user_id: string;
+  post_id: string;
+  created_at: ColumnType<Date, string | undefined, never>;
+}
+
+export interface FollowsTable {
+  follower_id: string;
+  following_id: string;
+  created_at: ColumnType<Date, string | undefined, never>;
+}
+
+export interface RidesTable {
+  id: Generated<string>;
+  user_id: string;
+  bike_id: string;
+  distance_km: ColumnType<string, string | number, string | number>;
+  duration_min: number | null;
+  date: string;
+  notes: string | null;
+  created_at: ColumnType<Date, string | undefined, never>;
 }
 
 export interface BikeComponentsTable {
@@ -121,6 +160,11 @@ export interface Database {
   posts: PostsTable;
   tags: TagsTable;
   post_tags: PostTagsTable;
+  comments: CommentsTable;
+  likes: LikesTable;
+  bookmarks: BookmarksTable;
+  follows: FollowsTable;
+  rides: RidesTable;
 }
 
 // Selectable, Insertable, Updateable type exports per table
@@ -151,3 +195,20 @@ export type TagUpdate = Updateable<TagsTable>;
 export type PostTag = Selectable<PostTagsTable>;
 export type NewPostTag = Insertable<PostTagsTable>;
 export type PostTagUpdate = Updateable<PostTagsTable>;
+
+export type Comment = Selectable<CommentsTable>;
+export type NewComment = Insertable<CommentsTable>;
+export type CommentUpdate = Updateable<CommentsTable>;
+
+export type Like = Selectable<LikesTable>;
+export type NewLike = Insertable<LikesTable>;
+
+export type Bookmark = Selectable<BookmarksTable>;
+export type NewBookmark = Insertable<BookmarksTable>;
+
+export type Follow = Selectable<FollowsTable>;
+export type NewFollow = Insertable<FollowsTable>;
+
+export type Ride = Selectable<RidesTable>;
+export type NewRide = Insertable<RidesTable>;
+export type RideUpdate = Updateable<RidesTable>;

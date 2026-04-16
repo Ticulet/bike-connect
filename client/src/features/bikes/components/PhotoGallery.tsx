@@ -1,4 +1,5 @@
 import { ImageUploader } from './ImageUploader.js';
+import { isSafeImageUrl } from '../../../lib/safe-url.js';
 import './photo-gallery.css';
 
 interface PhotoGalleryProps {
@@ -20,7 +21,7 @@ export function PhotoGallery({
 
   return (
     <div className="photo-gallery">
-      {heroImageUrl ? (
+      {isSafeImageUrl(heroImageUrl) ? (
         <img
           className="photo-gallery__hero"
           src={heroImageUrl}

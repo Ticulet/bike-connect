@@ -38,6 +38,10 @@ import type {
 
 import type { createTagSchema, updateTagSchema } from '../schemas/tag.schema.js';
 
+import type { createRideSchema, updateRideSchema } from '../schemas/ride.schema.js';
+
+import type { searchQuerySchema, exploreBikesQuerySchema } from '../schemas/search.schema.js';
+
 // Common types
 export type Uuid = z.infer<typeof uuidSchema>;
 export type Slug = z.infer<typeof slugSchema>;
@@ -72,3 +76,11 @@ export type UpdateMaintenanceLog = z.infer<typeof updateMaintenanceLogSchema>;
 // Tag types
 export type CreateTag = z.infer<typeof createTagSchema>;
 export type UpdateTag = z.infer<typeof updateTagSchema>;
+
+// Ride types
+export type CreateRide = z.infer<typeof createRideSchema>;
+export type UpdateRide = z.infer<typeof updateRideSchema>;
+
+// Search types
+export type SearchQuery = z.infer<typeof searchQuerySchema>;
+export type ExploreBikesQuery = z.infer<typeof exploreBikesQuerySchema>;

@@ -12,6 +12,7 @@ import { PostDetailPage } from './features/blog/pages/PostDetailPage.js';
 import { PostCreatePage } from './features/blog/pages/PostCreatePage.js';
 import { PostEditPage } from './features/blog/pages/PostEditPage.js';
 import { MyPostsPage } from './features/blog/pages/MyPostsPage.js';
+import { BookmarksPage } from './features/blog/pages/BookmarksPage.js';
 import { MyBikesPage } from './features/bikes/pages/MyBikesPage.js';
 import { BikeCreatePage } from './features/bikes/pages/BikeCreatePage.js';
 import { BikeDetailPage } from './features/bikes/pages/BikeDetailPage.js';
@@ -19,14 +20,11 @@ import { BikeEditPage } from './features/bikes/pages/BikeEditPage.js';
 import { PublicBikePage } from './features/bikes/pages/PublicBikePage.js';
 import { MaintenanceCreatePage } from './features/maintenance/pages/MaintenanceCreatePage.js';
 import { MaintenanceEditPage } from './features/maintenance/pages/MaintenanceEditPage.js';
+import { ExploreBikesPage } from './features/bikes/pages/ExploreBikesPage.js';
+import { FeedPage } from './features/feed/pages/FeedPage.js';
+import { RideCreatePage } from './features/rides/pages/RideCreatePage.js';
+import { RideEditPage } from './features/rides/pages/RideEditPage.js';
 
-function Placeholder({ title }: { title: string }): React.JSX.Element {
-  return (
-    <article>
-      <h1>{title}</h1>
-    </article>
-  );
-}
 
 export default function App(): React.JSX.Element {
   return (
@@ -49,13 +47,18 @@ export default function App(): React.JSX.Element {
               path="bikes/:id"
               element={<PublicBikePage />}
             />
+            <Route path="explore/bikes" element={<ExploreBikesPage />} />
             <Route path="login" element={<LoginPage />} />
 
             {/* Protected routes */}
             <Route element={<ProtectedRoute />}>
               <Route
                 path="dashboard"
-                element={<Placeholder title="Dashboard" />}
+                element={<FeedPage />}
+              />
+              <Route
+                path="feed"
+                element={<FeedPage />}
               />
               <Route
                 path="my-posts"
@@ -92,6 +95,18 @@ export default function App(): React.JSX.Element {
               <Route
                 path="my-bikes/:bikeId/maintenance/:logId/edit"
                 element={<MaintenanceEditPage />}
+              />
+              <Route
+                path="my-bikes/:bikeId/rides/new"
+                element={<RideCreatePage />}
+              />
+              <Route
+                path="my-bikes/:bikeId/rides/:rideId/edit"
+                element={<RideEditPage />}
+              />
+              <Route
+                path="me/bookmarks"
+                element={<BookmarksPage />}
               />
               <Route
                 path="settings"

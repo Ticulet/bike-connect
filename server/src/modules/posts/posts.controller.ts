@@ -66,6 +66,16 @@ export async function update(req: Request, res: Response, next: NextFunction): P
   }
 }
 
+export async function search(req: Request, res: Response, next: NextFunction): Promise<void> {
+  try {
+    const query = req.query as unknown as { q: string; limit: number };
+    const posts = await postsService.searchPosts(query.q, query.limit);
+    res.json(posts);
+  } catch (err) {
+    next(err);
+  }
+}
+
 export async function remove(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
     const id = req.params['id'] as string;

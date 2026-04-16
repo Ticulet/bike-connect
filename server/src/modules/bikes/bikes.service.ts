@@ -1,7 +1,13 @@
 import { bikesRepository } from './bikes.repository.js';
+import type { BikeWithOwner } from './bikes.repository.js';
 import { ApiError } from '../../lib/api-error.js';
-import type { Bike } from '../../db/types.js';
+import type { Bike, BikeType } from '../../db/types.js';
 import type { CreateBike, UpdateBike } from '@bike-connect/shared';
+
+interface PaginatedBikes {
+  data: BikeWithOwner[];
+  pagination: { next_cursor: string | null; has_more: boolean };
+}
 
 export const bikesService = {
   async listMyBikes(userId: string): Promise<Bike[]> {
@@ -42,6 +48,18 @@ export const bikesService = {
     if (!updated) throw ApiError.notFound('Bike');
 
     return updated;
+  },
+
+  async listExplore(params: { cursor?: string; limit: number; type?: BikeType }): Promise<PaginatedBikes> {
+    const rows = await bikesRepository.findPublic(params);
+    const hasMore = rows.length > params.limit;
+    const data = hasMore ? rows.slice(0, params.limit) : rows;
+    const last = data[data.length - 1];
+    const next_cursor =
+      hasMore && last
+        ? Buffer.from(JSON.stringify({ created_at: last.created_at.toISOString(), id: last.id })).toString('base64url')
+        : null;
+    return { data, pagination: { next_cursor, has_more: hasMore } };
   },
 
   async deleteBike(bikeId: string, userId: string): Promise<void> {
