@@ -3,6 +3,7 @@
    ============================================================ */
 
 .post-card {
+  position: relative;
   background: var(--color-surface);
   border: 1px solid var(--color-border-light);
   border-radius: var(--radius-lg);
@@ -77,13 +78,30 @@
   transition: color var(--transition-fast);
 }
 
-.post-card__title-link:hover,
+/* Expand the title link's hit area over the entire card.
+   The card becomes fully clickable while keeping the link semantic
+   (screen readers still announce the post title as the link label). */
+.post-card__title-link::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+}
+
+.post-card:hover .post-card__title-link,
 .post-card__title-link:focus-visible {
   color: var(--color-primary);
-  text-decoration: underline;
-  text-decoration-color: color-mix(in srgb, var(--color-primary) 40%, transparent);
-  text-decoration-thickness: 1.5px;
-  text-underline-offset: 2px;
+}
+
+.post-card__title-link:focus-visible::after {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+/* Suppress the browser default focus ring on the text itself —
+   the pseudo-element's outline covers the full card, which is clearer. */
+.post-card__title-link:focus {
+  outline: none;
 }
 
 .post-card__excerpt {
