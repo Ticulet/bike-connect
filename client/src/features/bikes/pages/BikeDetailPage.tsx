@@ -107,22 +107,12 @@ export function BikeDetailPage(): React.JSX.Element {
     }
   }, [id]);
 
-  const refreshMaintenanceLogs = useCallback(async () => {
-    if (!id) return;
-    try {
-      const result = await fetchMaintenanceLogs(id);
-      setMaintenanceLogs(result);
-    } catch {
-      // Non-critical refresh — silently ignore
-    }
-  }, [id]);
-
   async function handleDeleteLog(logId: string): Promise<void> {
     if (!id) return;
     setMaintenanceError(null);
     try {
       await deleteMaintenanceLog(id, logId);
-      await refreshMaintenanceLogs();
+      setMaintenanceLogs((prev) => prev.filter((l) => l.id !== logId));
     } catch {
       setMaintenanceError('Failed to delete maintenance entry. Please try again.');
     }

@@ -47,7 +47,6 @@ export function MaintenanceTimeline({
               key={log.id}
               log={log}
               isOwner={isOwner}
-              onEdit={() => undefined}
               onDelete={() => handleDeleteRequest(log.id)}
             />
           ))

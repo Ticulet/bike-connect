@@ -15,7 +15,6 @@ interface MaintenanceFormValues {
 }
 
 interface MaintenanceFormProps {
-  bikeId: string;
   components: ComponentItem[];
   initialData?: MaintenanceLogItem;
   onSubmit: (data: CreateMaintenancePayload) => Promise<void>;
@@ -72,14 +71,14 @@ function validate(
 
   if (values.cost !== '') {
     const costValue = parseFloat(values.cost);
-    if (isNaN(costValue) || costValue < 0) {
+    if (Number.isNaN(costValue) || costValue < 0) {
       errors.cost = 'Cost must be a non-negative number.';
     }
   }
 
   if (values.mileage_at_service !== '') {
     const mileage = parseInt(values.mileage_at_service, 10);
-    if (isNaN(mileage) || mileage < 0) {
+    if (Number.isNaN(mileage) || mileage < 0) {
       errors.mileage_at_service = 'Mileage must be a non-negative whole number.';
     }
   }

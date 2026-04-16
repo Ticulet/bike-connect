@@ -4,7 +4,6 @@ import type { MaintenanceLogItem } from '../api/maintenance.api.js';
 
 interface MaintenanceEntryProps {
   log: MaintenanceLogItem;
-  onEdit: () => void;
   onDelete: () => void;
   isOwner: boolean;
 }
@@ -28,7 +27,6 @@ function formatDate(dateStr: string): string {
 
 export function MaintenanceEntry({
   log,
-  onEdit,
   onDelete,
   isOwner,
 }: MaintenanceEntryProps): React.JSX.Element {
@@ -92,7 +90,6 @@ export function MaintenanceEntry({
           <Link
             to={`/my-bikes/${log.bike_id}/maintenance/${log.id}/edit`}
             className="maintenance-entry__edit-btn"
-            onClick={onEdit}
             aria-label={`Edit ${log.title}`}
           >
             Edit

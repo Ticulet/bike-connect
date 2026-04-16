@@ -140,7 +140,6 @@ export function MaintenanceEditPage(): React.JSX.Element {
 
       {log !== null && (
         <MaintenanceForm
-          bikeId={bikeId ?? ''}
           components={components}
           initialData={log}
           onSubmit={handleSubmit}

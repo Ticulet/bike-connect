@@ -128,7 +128,6 @@ export function MaintenanceCreatePage(): React.JSX.Element {
       )}
 
       <MaintenanceForm
-        bikeId={bikeId ?? ''}
         components={components}
         onSubmit={handleSubmit}
         isSubmitting={isSubmitting}
