@@ -11,7 +11,10 @@
     "typecheck": "tsc --noEmit",
     "db:migrate": "tsx src/db/migrate.ts",
     "db:migrate:create": "tsx src/db/create-migration.ts",
-    "db:seed": "tsx src/db/seed.ts"
+    "db:seed": "tsx src/db/seed.ts",
+    "test": "NODE_ENV=test vitest run",
+    "test:watch": "NODE_ENV=test vitest",
+    "test:coverage": "NODE_ENV=test vitest run --coverage"
   },
   "dependencies": {
     "@bike-connect/shared": "*",
@@ -40,6 +43,8 @@
     "@types/passport": "^1.0.17",
     "@types/passport-google-oauth20": "^2.0.17",
     "@types/pg": "^8.20.0",
-    "tsx": "^4.19.0"
+    "@vitest/coverage-v8": "^4.1.4",
+    "tsx": "^4.19.0",
+    "vitest": "^4.1.4"
   }
 }

@@ -25,6 +25,7 @@ Thumbs.db
 *.log
 npm-debug.log*
 
-# Coverage
+# Coverage + test output
 coverage/
+test-results/
 backups/
