@@ -4,6 +4,7 @@ import { validate } from '../../middleware/validate.js';
 import { createBikeSchema, updateBikeSchema } from '@bike-connect/shared';
 import * as bikesController from './bikes.controller.js';
 import { componentsRouter } from './components.routes.js';
+import { maintenanceRouter } from '../maintenance/maintenance.routes.js';
 
 export const bikesRouter = Router();
 
@@ -14,3 +15,4 @@ bikesRouter.patch('/:id', requireAuth, validate(updateBikeSchema, 'body'), bikes
 bikesRouter.delete('/:id', requireAuth, bikesController.remove);
 
 bikesRouter.use('/:id/components', componentsRouter);
+bikesRouter.use('/:id/maintenance', maintenanceRouter);

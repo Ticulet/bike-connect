@@ -15,6 +15,12 @@ import { PhotoGallery } from '../components/PhotoGallery.js';
 import { useAuth } from '../../auth/hooks/useAuth.js';
 import { apiClient, ApiClientError } from '../../../lib/api-client.js';
 import type { CreateComponent } from '@bike-connect/shared';
+import {
+  fetchMaintenanceLogs,
+  deleteMaintenanceLog,
+  type MaintenanceLogItem,
+} from '../../maintenance/api/maintenance.api.js';
+import { MaintenanceTimeline } from '../../maintenance/components/MaintenanceTimeline.js';
 import './bikes-pages.css';
 
 type ComponentFormMode =
@@ -37,6 +43,9 @@ export function BikeDetailPage(): React.JSX.Element {
   const [isSubmittingComponent, setIsSubmittingComponent] = useState(false);
   const [componentError, setComponentError] = useState<string | null>(null);
 
+  const [maintenanceLogs, setMaintenanceLogs] = useState<MaintenanceLogItem[]>([]);
+  const [maintenanceError, setMaintenanceError] = useState<string | null>(null);
+
   const [deleteBikeOpen, setDeleteBikeOpen] = useState(false);
   const [isDeletingBike, setIsDeletingBike] = useState(false);
   const [deleteComponentId, setDeleteComponentId] = useState<string | null>(null);
@@ -56,15 +65,17 @@ export function BikeDetailPage(): React.JSX.Element {
     setIsNotFound(false);
 
     try {
-      const [bikeResult, componentsResult] = await Promise.all([
+      const [bikeResult, componentsResult, maintenanceResult] = await Promise.all([
         fetchBike(id),
         fetchComponents(id),
+        fetchMaintenanceLogs(id),
       ]);
 
       if (controller.signal.aborted) return;
 
       setBike(bikeResult);
       setComponents(componentsResult);
+      setMaintenanceLogs(maintenanceResult);
     } catch (err: unknown) {
       if (controller.signal.aborted) return;
       if (err instanceof ApiClientError && err.status === 404) {
@@ -95,6 +106,27 @@ export function BikeDetailPage(): React.JSX.Element {
       setComponentError('Could not refresh component list.');
     }
   }, [id]);
+
+  const refreshMaintenanceLogs = useCallback(async () => {
+    if (!id) return;
+    try {
+      const result = await fetchMaintenanceLogs(id);
+      setMaintenanceLogs(result);
+    } catch {
+      // Non-critical refresh — silently ignore
+    }
+  }, [id]);
+
+  async function handleDeleteLog(logId: string): Promise<void> {
+    if (!id) return;
+    setMaintenanceError(null);
+    try {
+      await deleteMaintenanceLog(id, logId);
+      await refreshMaintenanceLogs();
+    } catch {
+      setMaintenanceError('Failed to delete maintenance entry. Please try again.');
+    }
+  }
 
   const isOwner = Boolean(user && bike && user.id === bike.user_id);
 
@@ -311,6 +343,23 @@ export function BikeDetailPage(): React.JSX.Element {
             setComponentError(null);
           }}
           onDelete={(componentId) => setDeleteComponentId(componentId)}
+        />
+      </section>
+
+      <section className="bike-detail__section" aria-labelledby="maintenance-heading">
+        <div className="bike-detail__section-header">
+          <h2 id="maintenance-heading" className="bikes-page__subheading">
+            Maintenance
+          </h2>
+        </div>
+        {maintenanceError && (
+          <p className="bikes-page__error" role="alert">{maintenanceError}</p>
+        )}
+        <MaintenanceTimeline
+          logs={maintenanceLogs}
+          bikeId={id ?? ''}
+          isOwner={isOwner}
+          onDelete={(logId) => void handleDeleteLog(logId)}
         />
       </section>
 

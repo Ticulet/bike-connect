@@ -17,6 +17,8 @@ import { BikeCreatePage } from './features/bikes/pages/BikeCreatePage.js';
 import { BikeDetailPage } from './features/bikes/pages/BikeDetailPage.js';
 import { BikeEditPage } from './features/bikes/pages/BikeEditPage.js';
 import { PublicBikePage } from './features/bikes/pages/PublicBikePage.js';
+import { MaintenanceCreatePage } from './features/maintenance/pages/MaintenanceCreatePage.js';
+import { MaintenanceEditPage } from './features/maintenance/pages/MaintenanceEditPage.js';
 
 function Placeholder({ title }: { title: string }): React.JSX.Element {
   return (
@@ -85,11 +87,11 @@ export default function App(): React.JSX.Element {
               />
               <Route
                 path="my-bikes/:bikeId/maintenance/new"
-                element={<Placeholder title="New Maintenance" />}
+                element={<MaintenanceCreatePage />}
               />
               <Route
                 path="my-bikes/:bikeId/maintenance/:logId/edit"
-                element={<Placeholder title="Edit Maintenance" />}
+                element={<MaintenanceEditPage />}
               />
               <Route
                 path="settings"
