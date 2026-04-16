@@ -11,8 +11,14 @@ export function validate(schema: ZodSchema, source: RequestSource) {
       next(ApiError.badRequest('Validation failed', result.error.flatten()));
       return;
     }
-    // Replace source data with the parsed (and coerced) result
-    req[source] = result.data as typeof req[typeof source];
+    // Express 5: req.query is a read-only getter, so use defineProperty.
+    // body and params remain regular writable properties.
+    Object.defineProperty(req, source, {
+      value: result.data,
+      writable: true,
+      configurable: true,
+      enumerable: true,
+    });
     next();
   };
 }
