@@ -8,6 +8,9 @@ const { Pool } = pg;
 const dialect = new PostgresDialect({
   pool: new Pool({
     connectionString: env.DATABASE_URL,
+    max: 10,
+    idleTimeoutMillis: 30_000,
+    connectionTimeoutMillis: 5_000,
   }),
 });
 
