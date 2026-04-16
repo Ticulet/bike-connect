@@ -19,7 +19,7 @@ export function LoginPage(): React.JSX.Element {
   }
 
   return (
-    <div className="login-page" id="main">
+    <div className="login-page">
       <section className="login-page__intro" aria-labelledby="login-welcome">
         <p className="login-page__eyebrow">
           <span className="login-page__dot" aria-hidden="true" />

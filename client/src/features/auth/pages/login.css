@@ -217,7 +217,8 @@
   text-decoration: none;
 }
 
-.login-page__guest-link:hover span {
+.login-page__guest-link:hover span,
+.login-page__guest-link:focus-visible span {
   transform: translateX(3px);
 }
 
