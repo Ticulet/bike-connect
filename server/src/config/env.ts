@@ -1,5 +1,13 @@
-import 'dotenv/config';
+import dotenv from 'dotenv';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { z } from 'zod';
+
+// Load .env from the repo root so a single file serves all workspaces,
+// regardless of which cwd tsx is invoked from.
+const __filename = fileURLToPath(import.meta.url);
+const repoRootEnv = path.resolve(path.dirname(__filename), '..', '..', '..', '.env');
+dotenv.config({ path: repoRootEnv });
 
 const isProduction = process.env['NODE_ENV'] === 'production';
 

@@ -14,8 +14,34 @@ export function Header(): React.JSX.Element {
           Bike Connect
         </NavLink>
         <nav className="site-nav" aria-label="Main navigation">
+          {/* Public discovery links — always visible */}
+          <NavLink
+            to="/posts"
+            className={({ isActive }) =>
+              isActive ? 'site-nav__link active' : 'site-nav__link'
+            }
+          >
+            Blog
+          </NavLink>
+          <NavLink
+            to="/explore/bikes"
+            className={({ isActive }) =>
+              isActive ? 'site-nav__link active' : 'site-nav__link'
+            }
+          >
+            Explore
+          </NavLink>
+
           {isAuthenticated ? (
             <>
+              <NavLink
+                to="/dashboard"
+                className={({ isActive }) =>
+                  isActive ? 'site-nav__link active' : 'site-nav__link'
+                }
+              >
+                Feed
+              </NavLink>
               <NavLink
                 to="/my-posts"
                 className={({ isActive }) =>
@@ -31,14 +57,6 @@ export function Header(): React.JSX.Element {
                 }
               >
                 My Bikes
-              </NavLink>
-              <NavLink
-                to="/dashboard"
-                className={({ isActive }) =>
-                  isActive ? 'site-nav__link active' : 'site-nav__link'
-                }
-              >
-                Dashboard
               </NavLink>
               <span className="site-nav__user" aria-label={`Signed in as ${user?.display_name}`}>
                 {user?.display_name}
@@ -56,24 +74,14 @@ export function Header(): React.JSX.Element {
               </button>
             </>
           ) : (
-            <>
-              <NavLink
-                to="/posts"
-                className={({ isActive }) =>
-                  isActive ? 'site-nav__link active' : 'site-nav__link'
-                }
-              >
-                Posts
-              </NavLink>
-              <NavLink
-                to="/login"
-                className={({ isActive }) =>
-                  isActive ? 'site-nav__link active' : 'site-nav__link'
-                }
-              >
-                Login
-              </NavLink>
-            </>
+            <NavLink
+              to="/login"
+              className={({ isActive }) =>
+                isActive ? 'site-nav__link active' : 'site-nav__link'
+              }
+            >
+              Sign in
+            </NavLink>
           )}
         </nav>
       </div>
