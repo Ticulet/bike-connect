@@ -61,7 +61,8 @@ export function CommentItem({
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
   const isOwner = currentUserId === comment.user_id;
-  const authorInitial = comment.author_display_name.charAt(0).toUpperCase();
+  const authorDisplayName = comment.author_display_name ?? 'Unknown';
+  const authorInitial = authorDisplayName.charAt(0).toUpperCase() || '?';
 
   async function handleSaveEdit(): Promise<void> {
     const trimmed = editContent.trim();
@@ -109,7 +110,7 @@ export function CommentItem({
 
       <div className="comment-item__body">
         <div className="comment-item__header">
-          <span className="comment-item__author">{comment.author_display_name}</span>
+          <span className="comment-item__author">{authorDisplayName}</span>
           <time
             className="comment-item__date"
             dateTime={comment.created_at}
@@ -169,7 +170,7 @@ export function CommentItem({
                 type="button"
                 className="comment-item__action-btn"
                 onClick={() => onReply(comment.id)}
-                aria-label={`Reply to ${comment.author_display_name}`}
+                aria-label={`Reply to ${authorDisplayName}`}
               >
                 Reply
               </button>
@@ -204,7 +205,7 @@ export function CommentItem({
               parentId={comment.id}
               onSubmit={(content) => onReplySubmit(content, comment.id)}
               onCancel={onCancelReply}
-              placeholder={`Reply to ${comment.author_display_name}…`}
+              placeholder={`Reply to ${authorDisplayName}…`}
             />
           </div>
         )}

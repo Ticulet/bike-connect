@@ -2,7 +2,7 @@ import { commentsRepository } from './comments.repository.js';
 import type { CommentWithAuthor } from './comments.repository.js';
 import { postsRepository } from '../posts/posts.repository.js';
 import { ApiError } from '../../lib/api-error.js';
-import type { Comment, NewComment } from '../../db/types.js';
+import type { NewComment } from '../../db/types.js';
 
 export const commentsService = {
   async listForPost(postId: string): Promise<CommentWithAuthor[]> {
@@ -15,7 +15,7 @@ export const commentsService = {
     postId: string,
     userId: string,
     data: { content: string; parent_id?: string | null },
-  ): Promise<Comment> {
+  ): Promise<CommentWithAuthor> {
     const post = await postsRepository.findById(postId);
     if (!post) throw ApiError.notFound('Post');
 
@@ -39,7 +39,11 @@ export const commentsService = {
     return commentsRepository.create(newComment);
   },
 
-  async updateComment(commentId: string, userId: string, content: string): Promise<Comment> {
+  async updateComment(
+    commentId: string,
+    userId: string,
+    content: string,
+  ): Promise<CommentWithAuthor> {
     const comment = await commentsRepository.findById(commentId);
     if (!comment) throw ApiError.notFound('Comment');
     if (comment.user_id !== userId) throw ApiError.forbidden();

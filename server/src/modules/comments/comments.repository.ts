@@ -29,21 +29,56 @@ export const commentsRepository = {
       .executeTakeFirst();
   },
 
-  async create(data: NewComment): Promise<Comment> {
+  async findByIdWithAuthor(id: string): Promise<CommentWithAuthor | undefined> {
     return db
-      .insertInto('comments')
-      .values(data)
-      .returningAll()
-      .executeTakeFirstOrThrow();
+      .selectFrom('comments')
+      .innerJoin('users', 'users.id', 'comments.user_id')
+      .selectAll('comments')
+      .select([
+        'users.display_name as author_display_name',
+        'users.avatar_url as author_avatar_url',
+      ])
+      .where('comments.id', '=', id)
+      .executeTakeFirst();
   },
 
-  async update(id: string, content: string): Promise<Comment | undefined> {
-    return db
+  async create(data: NewComment): Promise<CommentWithAuthor> {
+    const inserted = await db
+      .insertInto('comments')
+      .values(data)
+      .returning('id')
+      .executeTakeFirstOrThrow();
+    const row = await db
+      .selectFrom('comments')
+      .innerJoin('users', 'users.id', 'comments.user_id')
+      .selectAll('comments')
+      .select([
+        'users.display_name as author_display_name',
+        'users.avatar_url as author_avatar_url',
+      ])
+      .where('comments.id', '=', inserted.id)
+      .executeTakeFirstOrThrow();
+    return row;
+  },
+
+  async update(id: string, content: string): Promise<CommentWithAuthor | undefined> {
+    const updated = await db
       .updateTable('comments')
       .set({ content })
       .where('id', '=', id)
-      .returningAll()
+      .returning('id')
       .executeTakeFirst();
+    if (!updated) return undefined;
+    return db
+      .selectFrom('comments')
+      .innerJoin('users', 'users.id', 'comments.user_id')
+      .selectAll('comments')
+      .select([
+        'users.display_name as author_display_name',
+        'users.avatar_url as author_avatar_url',
+      ])
+      .where('comments.id', '=', updated.id)
+      .executeTakeFirstOrThrow();
   },
 
   async deleteById(id: string): Promise<void> {
