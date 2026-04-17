@@ -48,5 +48,13 @@ export async function apiClient<T>(
     throw new ApiClientError(response.status, 'UNKNOWN_ERROR');
   }
 
-  return response.json() as Promise<T>;
+  // 204 No Content and empty bodies — do not try to JSON.parse an empty string.
+  if (response.status === 204) {
+    return undefined as T;
+  }
+  const text = await response.text();
+  if (text.length === 0) {
+    return undefined as T;
+  }
+  return JSON.parse(text) as T;
 }
