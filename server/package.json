@@ -34,6 +34,7 @@
     "zod": "^3.25.76"
   },
   "devDependencies": {
+    "@testcontainers/postgresql": "^10.28.0",
     "@types/cookie-parser": "^1.4.10",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.0",
@@ -44,7 +45,9 @@
     "@types/passport-google-oauth20": "^2.0.17",
     "@types/pg": "^8.20.0",
     "@vitest/coverage-v8": "^4.1.4",
+    "testcontainers": "^10.28.0",
     "tsx": "^4.19.0",
+    "undici": "^7.25.0",
     "vitest": "^4.1.4"
   }
 }

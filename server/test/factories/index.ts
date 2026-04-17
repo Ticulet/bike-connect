@@ -1,0 +1,9 @@
+export { makeUser } from './user.factory.js';
+export { makePost } from './post.factory.js';
+export { makeBike } from './bike.factory.js';
+export { makeBikeComponent } from './component.factory.js';
+export { makeComment } from './comment.factory.js';
+export { makeRide } from './ride.factory.js';
+export { makeMaintenanceLog } from './maintenance.factory.js';
+export { makeTag } from './tag.factory.js';
+export { makeReminder } from './reminder.factory.js';

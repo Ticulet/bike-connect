@@ -8,6 +8,10 @@ export default defineConfig({
   test: {
     pool: 'threads',
     maxWorkers: isCI ? ciMaxWorkers : undefined,
+    // Testcontainer first-start adds 5-10s; hook setup can run up to 60s on a
+    // cold image pull. Keep generous timeouts for integration tests.
+    testTimeout: 30_000,
+    hookTimeout: 60_000,
     environment: 'node',
     globals: false,
     setupFiles: ['./test/setup.ts'],
