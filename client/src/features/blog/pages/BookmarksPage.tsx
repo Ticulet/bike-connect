@@ -7,6 +7,7 @@ import '../components/blog-social.css';
 function bookmarkedPostToSummary(bp: BookmarkedPost): PostSummary {
   return {
     id: bp.id,
+    author_id: bp.author_id,
     title: bp.title,
     slug: bp.slug,
     excerpt: bp.excerpt,
@@ -14,8 +15,8 @@ function bookmarkedPostToSummary(bp: BookmarkedPost): PostSummary {
     category: bp.category,
     status: 'published',
     published_at: bp.published_at,
-    created_at: bp.created_at,
-    updated_at: bp.created_at,
+    created_at: bp.bookmarked_at,
+    updated_at: bp.bookmarked_at,
     author_display_name: bp.author_display_name,
     author_avatar_url: bp.author_avatar_url,
   };

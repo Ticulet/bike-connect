@@ -2,6 +2,7 @@ import { apiClient } from '../../../lib/api-client.js';
 
 export interface BookmarkedPost {
   id: string;
+  author_id: string;
   title: string;
   slug: string;
   excerpt: string | null;
@@ -10,7 +11,7 @@ export interface BookmarkedPost {
   published_at: string | null;
   author_display_name: string;
   author_avatar_url: string | null;
-  created_at: string;
+  bookmarked_at: string;
 }
 
 export interface ToggleBookmarkResult {

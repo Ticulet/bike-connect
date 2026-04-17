@@ -108,9 +108,24 @@
 }
 
 .post-detail-page__author-info {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: var(--spacing-sm);
+  color: inherit;
+  text-decoration: none;
+  padding: 0.2rem 0.4rem;
+  margin-left: -0.4rem;
+  border-radius: var(--radius-md);
+  transition: background-color var(--transition-fast), color var(--transition-fast);
+}
+
+.post-detail-page__author-info:hover {
+  background-color: var(--color-bg-subtle);
+  text-decoration: none;
+}
+
+.post-detail-page__author-info:hover .post-detail-page__author-name {
+  color: var(--color-primary);
 }
 
 .post-detail-page__author-name {

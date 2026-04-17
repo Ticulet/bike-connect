@@ -53,7 +53,11 @@ export function PostCard({ post }: PostCardProps): React.JSX.Element {
           <p className="post-card__excerpt">{post.excerpt}</p>
         )}
 
-        <div className="post-card__author">
+        <Link
+          to={`/users/${post.author_id}`}
+          className="post-card__author"
+          aria-label={`View ${post.author_display_name}'s profile`}
+        >
           {isSafeImageUrl(post.author_avatar_url) ? (
             <img
               src={post.author_avatar_url}
@@ -67,7 +71,7 @@ export function PostCard({ post }: PostCardProps): React.JSX.Element {
             </div>
           )}
           <span className="post-card__author-name">{post.author_display_name}</span>
-        </div>
+        </Link>
       </div>
     </article>
   );

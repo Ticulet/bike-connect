@@ -111,6 +111,26 @@
   font-weight: var(--font-weight-semibold);
   font-size: var(--font-size-sm);
   color: var(--color-text);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+.comment-item__author:hover {
+  color: var(--color-primary);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--color-primary) 40%, transparent);
+  text-underline-offset: 2px;
+}
+
+.comment-item__avatar-link {
+  display: inline-flex;
+  flex-shrink: 0;
+  border-radius: var(--radius-full);
+  transition: opacity var(--transition-fast);
+}
+
+.comment-item__avatar-link:hover {
+  opacity: 0.85;
 }
 
 .comment-item__date {

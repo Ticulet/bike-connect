@@ -2,6 +2,7 @@ import { apiClient } from '../../../lib/api-client.js';
 
 export interface PostSummary {
   id: string;
+  author_id: string;
   title: string;
   slug: string;
   excerpt: string | null;

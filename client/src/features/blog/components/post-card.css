@@ -114,10 +114,30 @@
 }
 
 .post-card__author {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: var(--spacing-sm);
   margin-top: var(--spacing-xs);
+  /* Lift above the title-link ::after overlay so clicks on the author
+     go to the profile instead of the post. */
+  position: relative;
+  z-index: 1;
+  align-self: flex-start;
+  color: inherit;
+  text-decoration: none;
+  padding: 0.15rem 0.35rem;
+  margin-left: -0.35rem;
+  border-radius: var(--radius-md);
+  transition: background-color var(--transition-fast);
+}
+
+.post-card__author:hover {
+  background-color: var(--color-bg-subtle);
+  text-decoration: none;
+}
+
+.post-card__author:hover .post-card__author-name {
+  color: var(--color-primary);
 }
 
 .post-card__avatar {

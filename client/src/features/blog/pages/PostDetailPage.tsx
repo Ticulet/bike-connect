@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router';
+import { Link, useParams } from 'react-router';
 import type { JSONContent } from '@tiptap/react';
 import { fetchPostBySlug, type PostDetail } from '../api/posts.api.js';
 import { PostContent } from '../components/PostContent.js';
@@ -119,7 +119,11 @@ export function PostDetailPage(): React.JSX.Element {
         <h1 className="post-detail-page__title">{post.title}</h1>
 
         <div className="post-detail-page__meta">
-          <div className="post-detail-page__author-info">
+          <Link
+            to={`/users/${post.author_id}`}
+            className="post-detail-page__author-info"
+            aria-label={`View ${post.author_display_name}'s profile`}
+          >
             {isSafeImageUrl(post.author_avatar_url) ? (
               <img
                 src={post.author_avatar_url}
@@ -138,7 +142,7 @@ export function PostDetailPage(): React.JSX.Element {
             <span className="post-detail-page__author-name">
               {post.author_display_name}
             </span>
-          </div>
+          </Link>
 
           <span className="post-detail-page__divider" aria-hidden="true">·</span>
 

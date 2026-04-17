@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router';
 import { ConfirmDialog } from '../../../components/ui/ConfirmDialog.js';
 import { updateComment } from '../api/comments.api.js';
 import type { CommentItem as CommentItemData } from '../api/comments.api.js';
@@ -94,23 +95,31 @@ export function CommentItem({
 
   return (
     <div className="comment-item">
-      {comment.author_avatar_url ? (
-        <img
-          src={comment.author_avatar_url}
-          alt=""
-          className="comment-item__avatar"
-          aria-hidden="true"
-          loading="lazy"
-        />
-      ) : (
-        <div className="comment-item__avatar-placeholder" aria-hidden="true">
-          {authorInitial}
-        </div>
-      )}
+      <Link
+        to={`/users/${comment.user_id}`}
+        className="comment-item__avatar-link"
+        aria-label={`View ${authorDisplayName}'s profile`}
+      >
+        {comment.author_avatar_url ? (
+          <img
+            src={comment.author_avatar_url}
+            alt=""
+            className="comment-item__avatar"
+            aria-hidden="true"
+            loading="lazy"
+          />
+        ) : (
+          <div className="comment-item__avatar-placeholder" aria-hidden="true">
+            {authorInitial}
+          </div>
+        )}
+      </Link>
 
       <div className="comment-item__body">
         <div className="comment-item__header">
-          <span className="comment-item__author">{authorDisplayName}</span>
+          <Link to={`/users/${comment.user_id}`} className="comment-item__author">
+            {authorDisplayName}
+          </Link>
           <time
             className="comment-item__date"
             dateTime={comment.created_at}

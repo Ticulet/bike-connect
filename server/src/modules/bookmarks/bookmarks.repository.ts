@@ -2,8 +2,9 @@ import { db } from '../../db/index.js';
 import type { Post } from '../../db/types.js';
 
 export interface BookmarkedPost {
-  post_id: string;
+  id: string;
   bookmarked_at: Date;
+  author_id: string;
   title: string;
   slug: string;
   excerpt: string | null;
@@ -58,8 +59,9 @@ export const bookmarksRepository = {
       .innerJoin('users', 'users.id', 'posts.author_id')
       .where('bookmarks.user_id', '=', userId)
       .select([
-        'bookmarks.post_id',
+        'posts.id',
         'bookmarks.created_at as bookmarked_at',
+        'posts.author_id',
         'posts.title',
         'posts.slug',
         'posts.excerpt',
