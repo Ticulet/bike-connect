@@ -20,3 +20,14 @@
   background-color: var(--color-accent);
   border-radius: var(--radius-sm);
 }
+
+/* Display-cover — for hero / article H1 at optical size 144.
+   Apply to an element containing a Fraunces display heading
+   to enable the opsz variation axis for maximum optical quality. */
+.display-cover {
+  font-family: var(--font-display);
+  font-optical-sizing: auto;
+  font-variation-settings: 'opsz' 144;
+  letter-spacing: var(--letter-spacing-display);
+  line-height: var(--line-height-display);
+}

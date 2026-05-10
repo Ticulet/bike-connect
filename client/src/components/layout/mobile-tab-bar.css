@@ -1,0 +1,81 @@
+/* mobile-tab-bar.css — bottom tab bar visible only at ≤640px */
+
+.mobile-tab-bar {
+  /* Hidden by default — only visible at mobile widths */
+  display: none;
+}
+
+@media (max-width: 640px) {
+  .mobile-tab-bar {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 8000;
+    background-color: color-mix(in srgb, var(--color-surface-1) 92%, transparent);
+    backdrop-filter: blur(24px) saturate(200%);
+    -webkit-backdrop-filter: blur(24px) saturate(200%);
+    border-top: 1px solid var(--color-border);
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .mobile-tab-bar__list {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+  }
+
+  .mobile-tab-bar__item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    /* Minimum touch target: 64px wide × 48px tall — exceeds REQ-034 (44×44) */
+    min-height: 48px;
+    height: 64px;
+    padding: var(--spacing-xs);
+    color: var(--color-text-muted);
+    text-decoration: none;
+    transition: color var(--motion-duration-fast) var(--motion-easing-standard),
+                background-color var(--motion-duration-fast) var(--motion-easing-standard);
+    position: relative;
+  }
+
+  .mobile-tab-bar__item:hover {
+    background-color: var(--color-surface-2);
+  }
+
+  .mobile-tab-bar__item.active {
+    color: var(--color-accent);
+  }
+
+  /* Sign in CTA variant */
+  .mobile-tab-bar__item--cta {
+    color: var(--color-primary);
+    font-weight: var(--font-weight-semibold);
+  }
+
+  .mobile-tab-bar__item:focus-visible {
+    outline: 2px solid var(--color-focus-ring);
+    outline-offset: -2px;
+  }
+
+  .mobile-tab-bar__label {
+    font-family: var(--font-body);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
+    line-height: 1;
+  }
+
+  /* Ensure icons are proper size */
+  .mobile-tab-bar__item svg {
+    width: 24px;
+    height: 24px;
+    flex-shrink: 0;
+  }
+}

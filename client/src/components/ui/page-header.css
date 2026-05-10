@@ -1,0 +1,78 @@
+/* page-header.css — PageHeader component */
+
+.page-header {
+  margin-bottom: var(--spacing-2xl);
+}
+
+.page-header__eyebrow {
+  font-family: var(--font-body);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--letter-spacing-eyebrow);
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  margin: 0 0 var(--spacing-sm) 0;
+}
+
+.page-header__row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--spacing-md);
+  flex-wrap: wrap;
+}
+
+.page-header__title-block {
+  flex: 1;
+  min-width: 0;
+}
+
+.page-header__title {
+  margin: 0;
+  line-height: var(--line-height-display);
+}
+
+.page-header__subtitle {
+  font-family: var(--font-body);
+  font-size: var(--font-size-lg);
+  color: var(--color-text-muted);
+  margin: var(--spacing-sm) 0 0 0;
+  line-height: var(--line-height-body);
+}
+
+.page-header__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+
+/* Editorial variant — Fraunces display */
+.page-header--editorial .page-header__title {
+  font-family: var(--font-display);
+  font-size: var(--font-size-display-md);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--letter-spacing-display);
+  font-optical-sizing: auto;
+  font-variation-settings: 'opsz' 72;
+}
+
+/* Workshop variant — uppercase eyebrow + smaller Fraunces heading */
+.page-header--workshop .page-header__title {
+  font-family: var(--font-display);
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--letter-spacing-tight);
+}
+
+/* Mobile: actions wrap below title */
+@media (max-width: 640px) {
+  .page-header__row {
+    flex-direction: column;
+  }
+
+  .page-header--editorial .page-header__title {
+    font-size: var(--font-size-display-sm);
+  }
+}

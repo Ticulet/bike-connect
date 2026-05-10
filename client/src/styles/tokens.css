@@ -43,6 +43,7 @@
   --color-secondary-dark: var(--color-accent-dark);
 
   /* Spacing (4/8/16 rhythm) */
+  --spacing-2xs: 0.125rem;  /* 2 px — hairline gaps */
   --spacing-xs: 0.25rem;
   --spacing-sm: 0.5rem;
   --spacing-md: 1rem;
@@ -51,6 +52,7 @@
   --spacing-2xl: 3rem;
   --spacing-3xl: 4rem;
   --spacing-4xl: 6rem;
+  --spacing-5xl: 8rem;      /* editorial breathing room */
 
   /* Typography */
   --font-display: 'Fraunces', Georgia, 'Times New Roman', serif;
@@ -100,6 +102,8 @@
   --radius-xl: 1rem;
   --radius-2xl: 1.5rem;
   --radius-full: 9999px;
+  --radius-pill: var(--radius-full);    /* semantic alias — pills and avatars */
+  --radius-card: var(--radius-lg);      /* semantic alias — card border radius */
 
   /* Shadows (warm-tinted, paper-like) */
   --shadow-xs: 0 1px 1px 0 rgb(42 38 32 / 0.04);
@@ -162,7 +166,8 @@
 
   /* Neutrals — warm stone ramp (9 stops, 50 lightest → 900 darkest)
      Use for charts, table zebra, dividers, code blocks, muted backgrounds.
-     All values verified against --color-bg and --color-surface-* for ≥4.5:1 (text) / ≥3:1 (UI). */
+     CONTRAST NOTE: stone-50 through stone-300 are decorative-only (below 3:1 on cream --color-bg).
+     Use stone-400+ for UI boundaries; stone-600+ for text on --color-bg / --color-surface-*. */
   --color-stone-50:  #faf7f2;
   --color-stone-100: #f1ece4;
   --color-stone-200: #e3dccf;

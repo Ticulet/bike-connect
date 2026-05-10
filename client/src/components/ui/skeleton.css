@@ -1,0 +1,57 @@
+/* skeleton.css — Skeleton loading component */
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--color-stone-100) 0%,
+    var(--color-stone-200) 50%,
+    var(--color-stone-100) 100%
+  );
+  background-size: 200% 100%;
+  animation: skeleton-shimmer 1.4s linear infinite;
+  border-radius: var(--radius-sm);
+  display: block;
+}
+
+@keyframes skeleton-shimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skeleton {
+    animation: none;
+    background: var(--color-stone-100);
+    background-image: none;
+  }
+}
+
+/* Variants */
+.skeleton--text {
+  height: 1em;
+  border-radius: var(--radius-xs);
+}
+
+.skeleton--circle {
+  border-radius: var(--radius-full);
+}
+
+.skeleton--card {
+  height: 200px;
+  border-radius: var(--radius-card, var(--radius-lg));
+}
+
+/* Multi-line text wrapper */
+.skeleton__lines {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.skeleton__lines .skeleton:last-child {
+  width: 80%;
+}

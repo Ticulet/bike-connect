@@ -1,6 +1,7 @@
 import { Outlet } from 'react-router';
 import { Footer } from './Footer.js';
 import { Header } from './Header.js';
+import { MobileTabBar } from './MobileTabBar.js';
 
 export function Layout(): React.JSX.Element {
   return (
@@ -10,6 +11,8 @@ export function Layout(): React.JSX.Element {
         <Outlet />
       </main>
       <Footer />
+      {/* MobileTabBar is CSS-hidden on desktop (>640px) */}
+      <MobileTabBar />
     </div>
   );
 }
