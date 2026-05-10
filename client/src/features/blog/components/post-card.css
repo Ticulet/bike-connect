@@ -167,3 +167,59 @@
   font-size: var(--font-size-sm);
   color: var(--color-text-muted);
 }
+
+/* ---- Variant: featured ---- */
+.post-card--featured .post-card__title {
+  font-size: var(--font-size-display-sm);
+}
+@media (min-width: 1024px) {
+  .post-card--featured {
+    flex-direction: row;
+    align-items: stretch;
+  }
+  .post-card--featured .post-card__cover {
+    width: 50%;
+    aspect-ratio: unset;
+    border-radius: var(--radius-lg) 0 0 var(--radius-lg);
+  }
+  .post-card--featured .post-card__body {
+    flex: 1;
+    padding: var(--spacing-xl);
+  }
+}
+
+/* ---- Variant: medium ---- */
+.post-card--medium .post-card__title {
+  font-size: var(--font-size-3xl);
+}
+
+/* ---- Variant: compact ---- */
+.post-card--compact .post-card__title {
+  font-size: var(--font-size-xl);
+}
+.post-card--compact .post-card__cover {
+  aspect-ratio: 21 / 9;
+}
+
+/* Drop cap on excerpt */
+.post-card__excerpt--drop-cap::first-letter {
+  float: left;
+  font-family: var(--font-display);
+  font-size: 3.5em;
+  line-height: 0.85;
+  margin: 0.05em 0.1em 0 0;
+  color: var(--color-primary);
+}
+
+/* Chip pop animation (filter chips) */
+.chip[aria-pressed="true"] {
+  animation: chip-pop var(--motion-duration-fast) var(--motion-easing-spring);
+}
+@keyframes chip-pop {
+  0%   { transform: scale(0.95); }
+  50%  { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .chip[aria-pressed="true"] { animation: none; }
+}

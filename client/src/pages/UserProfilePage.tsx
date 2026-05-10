@@ -1,5 +1,5 @@
-import { useState, useEffect, useCallback } from 'react';
-import { useParams } from 'react-router';
+import { useState, useEffect, useCallback, useId } from 'react';
+import { useParams, Link } from 'react-router';
 import { apiClient, ApiClientError } from '../lib/api-client.js';
 import { useAuth } from '../features/auth/hooks/useAuth.js';
 import {
@@ -10,6 +10,9 @@ import { FollowButton } from '../features/follows/components/FollowButton.js';
 import { FollowStats } from '../features/follows/components/FollowStats.js';
 import { fetchPosts, type PostSummary } from '../features/blog/api/posts.api.js';
 import { PostCard } from '../features/blog/components/PostCard.js';
+import { Tabs } from '../components/ui/Tabs.js';
+import { EmptyState } from '../components/ui/EmptyState.js';
+import { Skeleton } from '../components/ui/Skeleton.js';
 import './user-profile.css';
 
 interface UserProfile {
@@ -27,31 +30,67 @@ function formatMemberSince(dateString: string): string {
   });
 }
 
+function PenEmptyIcon(): React.JSX.Element {
+  return (
+    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" aria-hidden="true">
+      <rect x="8" y="8" width="24" height="28" rx="2" stroke="currentColor" strokeWidth="1.5" />
+      <line x1="13" y1="16" x2="27" y2="16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+      <line x1="13" y1="21" x2="27" y2="21" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+      <line x1="13" y1="26" x2="21" y2="26" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function BikeEmptyIcon(): React.JSX.Element {
+  return (
+    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" aria-hidden="true">
+      <circle cx="12" cy="28" r="6" stroke="currentColor" strokeWidth="1.5" />
+      <circle cx="28" cy="28" r="6" stroke="currentColor" strokeWidth="1.5" />
+      <path d="M12 28L20 14L28 28" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M16 14H22" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function ActivityEmptyIcon(): React.JSX.Element {
+  return (
+    <svg width="40" height="40" viewBox="0 0 40 40" fill="none" aria-hidden="true">
+      <polyline points="4,20 12,12 20,24 28,8 36,20" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+const TAB_IDS = ['posts', 'bikes', 'activity'] as const;
+
 export function UserProfilePage(): React.JSX.Element {
   const { id } = useParams<{ id: string }>();
   const { user: currentUser, isAuthenticated } = useAuth();
+  const tabsBaseId = useId();
 
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [notFound, setNotFound] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
   const [followStats, setFollowStats] = useState<FollowStatsData | null>(null);
-
   const [authorPosts, setAuthorPosts] = useState<PostSummary[]>([]);
   const [postsLoading, setPostsLoading] = useState(false);
+
+  const [activeTab, setActiveTab] = useState<string>(() => {
+    const hash = window.location.hash.replace('#', '');
+    return (TAB_IDS as readonly string[]).includes(hash) ? hash : 'posts';
+  });
+
+  useEffect(() => {
+    window.history.replaceState(null, '', `#${activeTab}`);
+  }, [activeTab]);
 
   const loadFollowStats = useCallback(
     async (userId: string, signal: AbortSignal): Promise<void> => {
       if (signal.aborted) return;
       try {
         const stats = await fetchFollowStats(userId);
-        if (!signal.aborted) {
-          setFollowStats(stats);
-        }
-      } catch {
-        // Non-critical: follow stats failure should not block the profile page
-      }
+        if (!signal.aborted) setFollowStats(stats);
+      } catch { /* non-critical */ }
     },
     [],
   );
@@ -62,17 +101,11 @@ export function UserProfilePage(): React.JSX.Element {
       setPostsLoading(true);
       try {
         const result = await fetchPosts({ author: userId, limit: 12 });
-        if (!signal.aborted) {
-          setAuthorPosts(result.data);
-        }
+        if (!signal.aborted) setAuthorPosts(result.data);
       } catch {
-        if (!signal.aborted) {
-          setAuthorPosts([]);
-        }
+        if (!signal.aborted) setAuthorPosts([]);
       } finally {
-        if (!signal.aborted) {
-          setPostsLoading(false);
-        }
+        if (!signal.aborted) setPostsLoading(false);
       }
     },
     [],
@@ -98,39 +131,22 @@ export function UserProfilePage(): React.JSX.Element {
       })
       .catch((err: unknown) => {
         if (controller.signal.aborted) return;
-        if (err instanceof ApiClientError && err.status === 404) {
-          setNotFound(true);
-        } else {
-          setError(err instanceof Error ? err.message : 'Failed to load user profile');
-        }
+        if (err instanceof ApiClientError && err.status === 404) setNotFound(true);
+        else setError(err instanceof Error ? err.message : 'Failed to load user profile');
       })
       .finally(() => {
-        if (!controller.signal.aborted) {
-          setIsLoading(false);
-        }
+        if (!controller.signal.aborted) setIsLoading(false);
       });
 
-    return () => {
-      controller.abort();
-    };
+    return () => { controller.abort(); };
   }, [id, loadFollowStats, loadAuthorPosts]);
 
   function handleFollowStatsChange(update: Partial<FollowStatsData>): void {
     setFollowStats((prev) => {
       if (!prev) return prev;
-
       const isFollowingChanged = update.is_following !== undefined && update.is_following !== prev.is_following;
-      const followersDelta = isFollowingChanged
-        ? update.is_following
-          ? 1
-          : -1
-        : 0;
-
-      return {
-        ...prev,
-        ...update,
-        followers_count: prev.followers_count + followersDelta,
-      };
+      const delta = isFollowingChanged ? (update.is_following ? 1 : -1) : 0;
+      return { ...prev, ...update, followers_count: prev.followers_count + delta };
     });
   }
 
@@ -139,20 +155,22 @@ export function UserProfilePage(): React.JSX.Element {
 
   if (isLoading) {
     return (
-      <main id="main" className="user-profile-page">
-        <p className="user-profile-page__loading" role="status" aria-live="polite">
-          Loading profile...
-        </p>
+      <main id="main" className="user-profile">
+        <div className="user-profile__loading">
+          <Skeleton variant="circle" width={96} height={96} />
+          <Skeleton variant="text" lines={2} />
+        </div>
       </main>
     );
   }
 
   if (notFound) {
     return (
-      <main id="main" className="user-profile-page">
-        <div className="user-profile-page__not-found">
+      <main id="main" className="user-profile">
+        <div className="user-profile__not-found">
           <h1>User not found</h1>
           <p>The user you are looking for does not exist.</p>
+          <Link to="/" className="btn btn-primary">Go home</Link>
         </div>
       </main>
     );
@@ -160,8 +178,8 @@ export function UserProfilePage(): React.JSX.Element {
 
   if (error || !profile) {
     return (
-      <main id="main" className="user-profile-page">
-        <p className="user-profile-page__error" role="alert">
+      <main id="main" className="user-profile">
+        <p className="user-profile__error" role="alert">
           {error ?? 'An unexpected error occurred.'}
         </p>
       </main>
@@ -170,74 +188,105 @@ export function UserProfilePage(): React.JSX.Element {
 
   const initial = profile.display_name.charAt(0).toUpperCase();
 
+  const tabItems = [
+    { id: 'posts', label: 'Posts', badge: authorPosts.length > 0 ? authorPosts.length : undefined },
+    { id: 'bikes', label: 'Bikes' },
+    { id: 'activity', label: 'Activity' },
+  ];
+
   return (
-    <main id="main" className="user-profile-page">
-      <article className="user-profile-page__card">
-        {profile.avatar_url ? (
-          <img
-            src={profile.avatar_url}
-            alt={`${profile.display_name}'s avatar`}
-            className="user-profile-page__avatar"
+    <main id="main" className="user-profile">
+      <div className="user-profile__layout">
+        {/* Left: identity card */}
+        <aside className="user-profile__identity-card">
+          {profile.avatar_url ? (
+            <img
+              src={profile.avatar_url}
+              alt={`${profile.display_name}'s avatar`}
+              className="user-profile__avatar"
+            />
+          ) : (
+            <div className="user-profile__avatar-fallback" aria-hidden="true">
+              {initial}
+            </div>
+          )}
+          <h1 className="user-profile__display-name">{profile.display_name}</h1>
+          {profile.bio && <p className="user-profile__bio">{profile.bio}</p>}
+          <p className="user-profile__joined">Member since {formatMemberSince(profile.created_at)}</p>
+
+          {followStats !== null && (
+            <div className="user-profile__follow">
+              <FollowStats stats={followStats} />
+              {showFollowButton && (
+                <FollowButton
+                  userId={id ?? ''}
+                  isFollowing={followStats.is_following}
+                  isAuthenticated={isAuthenticated}
+                  onStatsChange={handleFollowStatsChange}
+                />
+              )}
+            </div>
+          )}
+        </aside>
+
+        {/* Right: tabs + content */}
+        <div className="user-profile__content">
+          <Tabs
+            label="User content"
+            items={tabItems}
+            activeId={activeTab}
+            onChange={setActiveTab}
+            baseId={tabsBaseId}
           />
-        ) : (
+
           <div
-            className="user-profile-page__avatar-placeholder"
-            aria-hidden="true"
+            role="tabpanel"
+            id={`${tabsBaseId}-panel-${activeTab}`}
+            aria-labelledby={`${tabsBaseId}-tab-${activeTab}`}
+            className="user-profile__panel"
           >
-            {initial}
-          </div>
-        )}
+            {activeTab === 'posts' && (
+              postsLoading ? (
+                <div className="user-profile__posts-grid">
+                  {Array.from({ length: 3 }, (_, i) => (
+                    <Skeleton key={i} variant="card" height={200} />
+                  ))}
+                </div>
+              ) : authorPosts.length === 0 ? (
+                <EmptyState
+                  icon={<PenEmptyIcon />}
+                  title="No posts yet"
+                  description={isOwnProfile ? "You haven't published any posts yet." : `${profile.display_name} hasn't published yet.`}
+                />
+              ) : (
+                <ul role="list" className="user-profile__posts-grid">
+                  {authorPosts.map((post) => (
+                    <li key={post.id}>
+                      <PostCard post={post} variant="compact" />
+                    </li>
+                  ))}
+                </ul>
+              )
+            )}
 
-        <h1 className="user-profile-page__name">{profile.display_name}</h1>
+            {activeTab === 'bikes' && (
+              <EmptyState
+                icon={<BikeEmptyIcon />}
+                title="No public bikes"
+                description="None of their bikes are visible publicly."
+              />
+            )}
 
-        {followStats !== null && (
-          <div className="user-profile-page__follow-row">
-            <FollowStats stats={followStats} />
-            {showFollowButton && (
-              <FollowButton
-                userId={id ?? ''}
-                isFollowing={followStats.is_following}
-                isAuthenticated={isAuthenticated}
-                onStatsChange={handleFollowStatsChange}
+            {activeTab === 'activity' && (
+              <EmptyState
+                icon={<ActivityEmptyIcon />}
+                title="Quiet for now"
+                description="Activity will appear here."
               />
             )}
           </div>
-        )}
-
-        {profile.bio && (
-          <p className="user-profile-page__bio">{profile.bio}</p>
-        )}
-
-        <p className="user-profile-page__joined">
-          Member since {formatMemberSince(profile.created_at)}
-        </p>
-      </article>
-
-      <section className="user-profile-page__posts" aria-labelledby="author-posts-heading">
-        <h2 id="author-posts-heading" className="user-profile-page__posts-heading">
-          {isOwnProfile ? 'Your posts' : `Posts by ${profile.display_name}`}
-        </h2>
-
-        {postsLoading ? (
-          <p className="user-profile-page__posts-status" role="status" aria-live="polite">
-            Loading posts...
-          </p>
-        ) : authorPosts.length === 0 ? (
-          <p className="user-profile-page__posts-empty" role="status" aria-live="polite">
-            {isOwnProfile
-              ? "You haven't published any posts yet."
-              : `${profile.display_name} hasn't published any posts yet.`}
-          </p>
-        ) : (
-          <ul role="list" className="user-profile-page__posts-grid">
-            {authorPosts.map((post) => (
-              <li key={post.id}>
-                <PostCard post={post} />
-              </li>
-            ))}
-          </ul>
-        )}
-      </section>
+        </div>
+      </div>
     </main>
   );
 }

@@ -16,6 +16,13 @@ interface TabsProps {
   label: string;
   /** Optional. Defaults to "horizontal". */
   orientation?: 'horizontal' | 'vertical';
+  /**
+   * Optional shared base id. When provided, callers can derive matching
+   * tabpanel ids via `getTabPanelProps(baseId, itemId)` so aria-controls /
+   * aria-labelledby resolve to real DOM nodes. When omitted, an internal
+   * useId() is used (panels then cannot be linked from outside the component).
+   */
+  baseId?: string;
 }
 
 export function Tabs({
@@ -24,8 +31,10 @@ export function Tabs({
   onChange,
   label,
   orientation = 'horizontal',
+  baseId: providedBaseId,
 }: TabsProps): React.JSX.Element {
-  const baseId = useId();
+  const generatedBaseId = useId();
+  const baseId = providedBaseId ?? generatedBaseId;
 
   const tabId = useCallback(
     (id: string): string => `${baseId}-tab-${id}`,

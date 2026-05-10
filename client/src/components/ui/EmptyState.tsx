@@ -22,7 +22,7 @@ export function EmptyState({
   secondaryAction,
 }: EmptyStateProps): React.JSX.Element {
   return (
-    <div className="empty-state">
+    <div className="empty-state" role="status">
       <div className="empty-state__icon" aria-hidden="true">
         {icon}
       </div>

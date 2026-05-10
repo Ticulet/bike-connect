@@ -1,160 +1,134 @@
-/* ===========================
-   User Profile Page
-   =========================== */
+/* ============================================================
+   User Profile Page — editorial two-column layout
+   Tokens only. No raw colours, durations, or shadows.
+   ============================================================ */
 
-.user-profile-page {
-  max-width: 48rem;
-  margin: 0 auto;
+.user-profile {
+  max-width: var(--max-width-content);
+  margin-inline: auto;
   padding: var(--spacing-xl) var(--spacing-md);
 }
 
-.user-profile-page__loading,
-.user-profile-page__error {
-  text-align: center;
-  padding: var(--spacing-2xl) var(--spacing-md);
-  color: var(--color-text-muted);
-  font-size: var(--font-size-md);
-}
-
-.user-profile-page__not-found {
-  text-align: center;
-  padding: var(--spacing-2xl) var(--spacing-md);
-}
-
-.user-profile-page__not-found h1 {
-  font-family: var(--font-display);
-  font-size: var(--font-size-3xl);
-  font-weight: var(--font-weight-bold);
-  letter-spacing: var(--letter-spacing-tight);
-  color: var(--color-text);
-  margin-bottom: var(--spacing-sm);
-}
-
-/* Profile card — centered column layout */
-.user-profile-page__card {
+/* Loading / error */
+.user-profile__loading {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: var(--spacing-md);
-  max-width: 48rem;
-  margin: 0 auto;
+  padding: var(--spacing-3xl) 0;
+}
+.user-profile__not-found,
+.user-profile__error {
+  text-align: center;
+  padding: var(--spacing-4xl) var(--spacing-md);
+}
+.user-profile__not-found h1 {
+  font-family: var(--font-display);
+  font-size: var(--font-size-2xl);
+  margin-block-end: var(--spacing-md);
+}
+.user-profile__error {
+  color: var(--color-error);
+  background: var(--color-error-bg);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-md);
+}
+
+/* Two-column layout */
+.user-profile__layout {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  gap: var(--spacing-3xl);
+  align-items: start;
+}
+@media (max-width: 1023px) {
+  .user-profile__layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Identity card (left column) */
+.user-profile__identity-card {
+  position: sticky;
+  top: calc(var(--header-height) + var(--spacing-lg));
+  padding: var(--spacing-xl);
+  background: var(--color-surface-1);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-md);
   text-align: center;
 }
-
-/* Avatar — circular with warm shadow */
-.user-profile-page__avatar {
-  width: 6rem;
-  height: 6rem;
-  border-radius: 50%;
-  object-fit: cover;
-  border: 4px solid var(--color-surface);
-  box-shadow: var(--shadow-md);
-  flex-shrink: 0;
+@media (max-width: 1023px) {
+  .user-profile__identity-card { position: static; }
 }
 
-/* Avatar placeholder — initial on sage bg */
-.user-profile-page__avatar-placeholder {
-  width: 6rem;
-  height: 6rem;
-  border-radius: 50%;
-  background-color: var(--color-primary-light);
-  border: 4px solid var(--color-surface);
+.user-profile__avatar {
+  width: 96px;
+  height: 96px;
+  border-radius: var(--radius-full);
+  object-fit: cover;
+  border: 3px solid var(--color-surface);
   box-shadow: var(--shadow-md);
-  font-family: var(--font-display);
-  font-size: var(--font-size-3xl);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-primary-dark);
+}
+@media (max-width: 640px) {
+  .user-profile__avatar { width: 72px; height: 72px; }
+}
+.user-profile__avatar-fallback {
+  width: 96px;
+  height: 96px;
+  border-radius: var(--radius-full);
+  background: var(--color-primary-light);
   display: flex;
   align-items: center;
   justify-content: center;
-  user-select: none;
-  flex-shrink: 0;
-}
-
-/* Display name — Fraunces, large */
-.user-profile-page__name {
   font-family: var(--font-display);
   font-size: var(--font-size-3xl);
-  font-weight: var(--font-weight-bold);
-  letter-spacing: var(--letter-spacing-tight);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-primary-dark);
+}
+.user-profile__display-name {
+  font-family: var(--font-display);
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-semibold);
   color: var(--color-text);
   margin: 0;
-  line-height: var(--line-height-snug);
 }
-
-/* Bio — muted, readable, centered */
-.user-profile-page__bio {
+.user-profile__bio {
+  font-size: var(--font-size-md);
   color: var(--color-text-muted);
-  font-size: var(--font-size-lg);
+  max-width: 480px;
   line-height: var(--line-height-relaxed);
-  max-width: 40rem;
   margin: 0;
-  text-align: center;
 }
-
-/* "Member since" small muted line */
-.user-profile-page__joined {
+.user-profile__joined {
   font-size: var(--font-size-sm);
   color: var(--color-text-subtle);
 }
-
-/* Follow button + stats row */
-.user-profile-page__follow-row {
+.user-profile__follow {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: var(--spacing-sm);
+  width: 100%;
 }
 
-/* Posts section */
-.user-profile-page__posts {
-  margin-top: var(--spacing-2xl);
-  padding-top: var(--spacing-xl);
-  border-top: 1px solid var(--color-border-light);
+/* Content area (right column) */
+.user-profile__content { min-width: 0; }
+.user-profile__panel {
+  margin-block-start: var(--spacing-xl);
 }
 
-.user-profile-page__posts-heading {
-  font-family: var(--font-display);
-  font-size: var(--font-size-xl);
-  font-weight: var(--font-weight-semibold);
-  letter-spacing: var(--letter-spacing-tight);
-  color: var(--color-text);
-  margin: 0 0 var(--spacing-lg);
-  text-align: center;
-}
-
-.user-profile-page__posts-status,
-.user-profile-page__posts-empty {
-  text-align: center;
-  color: var(--color-text-muted);
-  font-size: var(--font-size-md);
-  padding: var(--spacing-lg) 0;
-  margin: 0;
-}
-
-.user-profile-page__posts-grid {
+/* Posts grid */
+.user-profile__posts-grid {
   list-style: none;
   padding: 0;
   margin: 0;
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: repeat(3, 1fr);
   gap: var(--spacing-lg);
 }
-
-@media (min-width: 40rem) {
-  .user-profile-page__posts-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (min-width: 48rem) {
-  .user-profile-page {
-    padding: var(--spacing-2xl) var(--spacing-lg);
-  }
-
-  .user-profile-page__follow-row {
-    flex-direction: row;
-    gap: var(--spacing-md);
-  }
-}
-
+@media (max-width: 1200px) { .user-profile__posts-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 640px)  { .user-profile__posts-grid { grid-template-columns: 1fr; } }

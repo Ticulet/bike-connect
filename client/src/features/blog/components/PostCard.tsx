@@ -5,6 +5,16 @@ import './post-card.css';
 
 interface PostCardProps {
   post: PostSummary;
+  /**
+   * Visual size variant.
+   * - "featured": full-width, large title (display-sm), drop-cap option, cover image left on desktop
+   * - "medium": image top, title + excerpt. Title at 3xl.
+   * - "compact": image strip or none, title + meta only (no excerpt). Title at xl.
+   * Defaults to "medium" to match prior default behaviour.
+   */
+  variant?: 'featured' | 'medium' | 'compact';
+  /** Enable drop cap on the excerpt (featured variant only). */
+  dropCap?: boolean;
 }
 
 function formatDate(dateString: string): string {
@@ -19,12 +29,14 @@ function formatCategoryLabel(category: string): string {
   return category.replace(/_/g, ' ');
 }
 
-export function PostCard({ post }: PostCardProps): React.JSX.Element {
+export function PostCard({ post, variant = 'medium', dropCap = false }: PostCardProps): React.JSX.Element {
   const displayDate = post.published_at ?? post.created_at;
   const authorInitial = post.author_display_name.charAt(0).toUpperCase();
+  const showExcerpt = variant !== 'compact';
+  const showCategory = variant !== 'compact';
 
   return (
-    <article className="post-card">
+    <article className={`post-card post-card--${variant}`}>
       {isSafeImageUrl(post.cover_image_url) && (
         <img
           src={post.cover_image_url}
@@ -35,9 +47,11 @@ export function PostCard({ post }: PostCardProps): React.JSX.Element {
       )}
       <div className="post-card__body">
         <div className="post-card__meta">
-          <span className="post-card__category" aria-label={`Category: ${formatCategoryLabel(post.category)}`}>
-            {formatCategoryLabel(post.category)}
-          </span>
+          {showCategory && (
+            <span className="post-card__category" aria-label={`Category: ${formatCategoryLabel(post.category)}`}>
+              {formatCategoryLabel(post.category)}
+            </span>
+          )}
           <time className="post-card__date" dateTime={displayDate}>
             {formatDate(displayDate)}
           </time>
@@ -49,8 +63,10 @@ export function PostCard({ post }: PostCardProps): React.JSX.Element {
           </Link>
         </h2>
 
-        {post.excerpt && (
-          <p className="post-card__excerpt">{post.excerpt}</p>
+        {showExcerpt && post.excerpt && (
+          <p className={`post-card__excerpt${dropCap ? ' post-card__excerpt--drop-cap' : ''}`}>
+            {post.excerpt}
+          </p>
         )}
 
         <Link
