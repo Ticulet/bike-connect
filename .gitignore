@@ -29,3 +29,12 @@ npm-debug.log*
 coverage/
 test-results/
 backups/
+
+# TypeScript incremental build cache
+*.tsbuildinfo
+
+# Secrets (Google OAuth client JSON downloads)
+client_secret_*.json
+
+# Toolkit working dir
+.session/
