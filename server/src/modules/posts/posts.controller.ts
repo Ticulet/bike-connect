@@ -10,6 +10,7 @@ export async function list(req: Request, res: Response, next: NextFunction): Pro
       limit: query.limit,
       category: query.category,
       tagSlug: query.tag,
+      authorId: query.author,
     });
     res.json(posts);
   } catch (err) {

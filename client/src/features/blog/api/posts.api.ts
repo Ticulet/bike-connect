@@ -41,12 +41,14 @@ export function fetchPosts(params: {
   limit?: number;
   category?: string;
   tag?: string;
+  author?: string;
 }): Promise<PaginatedPostsResponse> {
   const query = new URLSearchParams();
   if (params.cursor) query.set('cursor', params.cursor);
   if (params.limit !== undefined) query.set('limit', String(params.limit));
   if (params.category) query.set('category', params.category);
   if (params.tag) query.set('tag', params.tag);
+  if (params.author) query.set('author', params.author);
   const qs = query.toString();
   return apiClient<PaginatedPostsResponse>(`/posts${qs ? `?${qs}` : ''}`);
 }

@@ -17,6 +17,7 @@ export interface FindPublishedParams {
   limit: number;
   category?: Post['category'];
   tagSlug?: string;
+  authorId?: string;
 }
 
 export const postsRepository = {
@@ -55,6 +56,10 @@ export const postsRepository = {
           .where('tags.slug', '=', params.tagSlug)
           .select('post_tags.post_id'),
       );
+    }
+
+    if (params.authorId) {
+      query = query.where('posts.author_id', '=', params.authorId);
     }
 
     return query

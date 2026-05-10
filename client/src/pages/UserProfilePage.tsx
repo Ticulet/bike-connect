@@ -8,6 +8,8 @@ import {
 } from '../features/follows/api/follows.api.js';
 import { FollowButton } from '../features/follows/components/FollowButton.js';
 import { FollowStats } from '../features/follows/components/FollowStats.js';
+import { fetchPosts, type PostSummary } from '../features/blog/api/posts.api.js';
+import { PostCard } from '../features/blog/components/PostCard.js';
 import './user-profile.css';
 
 interface UserProfile {
@@ -36,14 +38,45 @@ export function UserProfilePage(): React.JSX.Element {
 
   const [followStats, setFollowStats] = useState<FollowStatsData | null>(null);
 
-  const loadFollowStats = useCallback(async (userId: string): Promise<void> => {
-    try {
-      const stats = await fetchFollowStats(userId);
-      setFollowStats(stats);
-    } catch {
-      // Non-critical: follow stats failure should not block the profile page
-    }
-  }, []);
+  const [authorPosts, setAuthorPosts] = useState<PostSummary[]>([]);
+  const [postsLoading, setPostsLoading] = useState(false);
+
+  const loadFollowStats = useCallback(
+    async (userId: string, signal: AbortSignal): Promise<void> => {
+      if (signal.aborted) return;
+      try {
+        const stats = await fetchFollowStats(userId);
+        if (!signal.aborted) {
+          setFollowStats(stats);
+        }
+      } catch {
+        // Non-critical: follow stats failure should not block the profile page
+      }
+    },
+    [],
+  );
+
+  const loadAuthorPosts = useCallback(
+    async (userId: string, signal: AbortSignal): Promise<void> => {
+      if (signal.aborted) return;
+      setPostsLoading(true);
+      try {
+        const result = await fetchPosts({ author: userId, limit: 12 });
+        if (!signal.aborted) {
+          setAuthorPosts(result.data);
+        }
+      } catch {
+        if (!signal.aborted) {
+          setAuthorPosts([]);
+        }
+      } finally {
+        if (!signal.aborted) {
+          setPostsLoading(false);
+        }
+      }
+    },
+    [],
+  );
 
   useEffect(() => {
     if (!id) return;
@@ -53,12 +86,14 @@ export function UserProfilePage(): React.JSX.Element {
     setNotFound(false);
     setError(null);
     setFollowStats(null);
+    setAuthorPosts([]);
 
     apiClient<UserProfile>(`/users/${id}`, { signal: controller.signal })
       .then((result) => {
         if (!controller.signal.aborted) {
           setProfile(result);
-          void loadFollowStats(id);
+          void loadFollowStats(id, controller.signal);
+          void loadAuthorPosts(id, controller.signal);
         }
       })
       .catch((err: unknown) => {
@@ -78,7 +113,7 @@ export function UserProfilePage(): React.JSX.Element {
     return () => {
       controller.abort();
     };
-  }, [id, loadFollowStats]);
+  }, [id, loadFollowStats, loadAuthorPosts]);
 
   function handleFollowStatsChange(update: Partial<FollowStatsData>): void {
     setFollowStats((prev) => {
@@ -177,6 +212,32 @@ export function UserProfilePage(): React.JSX.Element {
           Member since {formatMemberSince(profile.created_at)}
         </p>
       </article>
+
+      <section className="user-profile-page__posts" aria-labelledby="author-posts-heading">
+        <h2 id="author-posts-heading" className="user-profile-page__posts-heading">
+          {isOwnProfile ? 'Your posts' : `Posts by ${profile.display_name}`}
+        </h2>
+
+        {postsLoading ? (
+          <p className="user-profile-page__posts-status" role="status" aria-live="polite">
+            Loading posts...
+          </p>
+        ) : authorPosts.length === 0 ? (
+          <p className="user-profile-page__posts-empty" role="status" aria-live="polite">
+            {isOwnProfile
+              ? "You haven't published any posts yet."
+              : `${profile.display_name} hasn't published any posts yet.`}
+          </p>
+        ) : (
+          <ul role="list" className="user-profile-page__posts-grid">
+            {authorPosts.map((post) => (
+              <li key={post.id}>
+                <PostCard post={post} />
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
     </main>
   );
 }

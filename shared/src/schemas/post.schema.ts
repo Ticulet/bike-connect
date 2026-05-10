@@ -26,4 +26,5 @@ export const postQuerySchema = z.object({
     .default(PAGINATION.DEFAULT_LIMIT),
   category: z.enum(POST_CATEGORIES).optional(),
   tag: z.string().optional(),
+  author: z.string().uuid().optional(),
 });
