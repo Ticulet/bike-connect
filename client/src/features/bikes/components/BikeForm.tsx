@@ -288,14 +288,14 @@ export function BikeForm({
         </div>
       </div>
 
-      <div className="bike-form__actions">
+      <div className="bike-form__save-bar">
         <button
           type="submit"
-          className="bike-form__submit"
+          className="btn btn-primary"
           disabled={isSubmitting}
           aria-disabled={isSubmitting}
         >
-          {isSubmitting ? 'Saving...' : submitLabel}
+          {isSubmitting ? 'Saving…' : submitLabel}
         </button>
       </div>
     </form>

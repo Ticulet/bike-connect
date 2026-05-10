@@ -113,6 +113,168 @@
 }
 
 /* ===========================
+   Bike Card — Workshop Variant
+   =========================== */
+
+.bike-card--workshop {
+  display: block;
+  background-color: var(--color-surface-1, var(--color-surface));
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card, var(--radius-lg));
+  overflow: hidden;
+  transition: box-shadow var(--transition-normal), transform var(--transition-normal);
+  box-shadow: none;
+}
+
+.bike-card--workshop:hover {
+  box-shadow: var(--shadow-sm);
+  transform: translateY(-1px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .bike-card--workshop {
+    transition: none;
+  }
+  .bike-card--workshop:hover {
+    transform: none;
+  }
+}
+
+.bike-card__link--workshop {
+  display: flex;
+  flex-direction: row;
+  gap: var(--spacing-lg);
+  align-items: flex-start;
+  text-decoration: none;
+  color: inherit;
+  padding: var(--spacing-md);
+}
+
+.bike-card__link--workshop:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+.bike-card__image-wrap {
+  width: 15rem;
+  min-width: 10rem;
+  flex-shrink: 0;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  aspect-ratio: 16 / 10;
+  background-color: var(--color-bg-subtle);
+}
+
+.bike-card__image-wrap .bike-card__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: 0;
+}
+
+.bike-card__image-wrap .bike-card__image-placeholder {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: unset;
+  border-radius: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-subtle);
+}
+
+.bike-card--workshop .bike-card__body {
+  flex: 1;
+  min-width: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.bike-card__eyebrow {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-eyebrow);
+  color: var(--color-accent);
+  margin: 0;
+  line-height: 1;
+}
+
+.bike-card__title {
+  font-family: var(--font-display);
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--letter-spacing-tight);
+  line-height: var(--line-height-snug);
+  color: var(--color-text);
+  margin: 0;
+}
+
+.bike-card__meta {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.bike-card__specs {
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  gap: var(--spacing-xs) var(--spacing-xl);
+  margin: var(--spacing-sm) 0 0;
+}
+
+.bike-card__spec {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.bike-card__spec dt {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-eyebrow);
+  color: var(--color-text-muted);
+  line-height: 1;
+}
+
+.bike-card__spec dd {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text);
+  margin: 0;
+}
+
+.bike-card__reminders {
+  list-style: none;
+  margin: var(--spacing-sm) 0 0;
+  padding: 0;
+  display: flex;
+  gap: var(--spacing-xs);
+  flex-wrap: wrap;
+}
+
+/* Mobile: stack image above body */
+@media (max-width: 40rem) {
+  .bike-card__link--workshop {
+    flex-direction: column;
+  }
+
+  .bike-card__image-wrap {
+    width: 100%;
+    min-width: unset;
+  }
+
+  .bike-card__specs {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ===========================
    Bike Form
    =========================== */
 
@@ -203,6 +365,27 @@
 @media (max-width: 36rem) {
   .bike-form__field-row {
     grid-template-columns: 1fr;
+  }
+}
+
+/* Sticky save bar */
+.bike-form__save-bar {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md) var(--spacing-lg);
+  background-color: var(--color-surface-1, var(--color-surface));
+  border-top: 1px solid var(--color-border);
+  box-shadow: 0 -2px 8px rgb(42 38 32 / 0.04);
+  margin-top: var(--spacing-lg);
+}
+
+/* On mobile, avoid overlapping MobileTabBar (64px) */
+@media (max-width: 40rem) {
+  .bike-form__save-bar {
+    bottom: calc(4rem + env(safe-area-inset-bottom, 0px));
   }
 }
 
@@ -377,6 +560,116 @@
   .component-list__col-installed,
   .component-list__col-mileage {
     display: none;
+  }
+}
+
+/* ===========================
+   Component List — Numbered (Workshop Catalog)
+   =========================== */
+
+.component-list--numbered {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.component-list__row {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md) var(--spacing-sm);
+  border-bottom: 1px solid var(--color-border-light);
+  transition: background-color var(--transition-fast);
+}
+
+.component-list__row:last-child {
+  border-bottom: none;
+}
+
+.component-list__row:hover {
+  background-color: var(--color-surface-2, var(--color-bg-subtle));
+}
+
+.component-list__number {
+  font-family: var(--font-display);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-muted);
+  font-variant-numeric: tabular-nums;
+  width: 3rem;
+  flex-shrink: 0;
+  line-height: 1;
+  padding-top: 0.1em;
+}
+
+.component-list__name {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.component-list__type {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-eyebrow);
+  color: var(--color-accent);
+  margin: 0;
+  line-height: 1;
+}
+
+.component-list__model {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text);
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.component-list__specs-dl {
+  display: flex;
+  gap: var(--spacing-lg);
+  margin: 0;
+  flex-shrink: 0;
+}
+
+.component-list__spec-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0;
+}
+
+.component-list__spec-item dt {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-eyebrow);
+  color: var(--color-text-muted);
+  line-height: 1;
+}
+
+.component-list__spec-item dd {
+  font-size: var(--font-size-sm);
+  font-variant-numeric: tabular-nums;
+  color: var(--color-text);
+  margin: 0;
+}
+
+@media (max-width: 40rem) {
+  .component-list__specs-dl {
+    display: none;
+  }
+
+  .component-list__number {
+    width: 2rem;
+    font-size: var(--font-size-base);
   }
 }
 

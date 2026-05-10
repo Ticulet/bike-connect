@@ -5,65 +5,83 @@
 .reminder-badge {
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
+  gap: var(--spacing-xs);
   font-size: var(--font-size-xs);
   font-weight: var(--font-weight-semibold);
-  padding: 0.25rem 0.65rem;
-  border-radius: var(--radius-full);
+  padding: var(--spacing-2xs) var(--spacing-sm);
+  border-radius: var(--radius-pill, var(--radius-full));
   white-space: nowrap;
-  text-transform: capitalize;
   letter-spacing: var(--letter-spacing-wide);
   cursor: default;
   line-height: 1;
+  border-width: 1px;
+  border-style: solid;
+  transition: opacity var(--transition-fast);
 }
 
-.reminder-badge--ok {
-  background-color: var(--color-success-bg);
-  color: var(--color-success);
+/* Compact: icon only, still has aria-label + title */
+.reminder-badge--compact {
+  padding: var(--spacing-2xs);
 }
 
-.reminder-badge--due_soon {
-  background-color: var(--color-warning-bg);
-  color: var(--color-warning);
-}
+/* ---------- Status backgrounds ----------
+   Fallback (Safari ≤ 15.3, Chromium < 111): use existing tinted background tokens.
+   Modern browsers (color-mix supported): refined tint via @supports below. */
 
 .reminder-badge--overdue {
   background-color: var(--color-error-bg);
+  border-color: var(--color-error);
   color: var(--color-error);
+}
+
+.reminder-badge--due-soon,
+.reminder-badge--due_soon {
+  background-color: var(--color-warning-bg, var(--color-bg-subtle));
+  border-color: var(--color-warning);
+  color: var(--color-warning);
+}
+
+.reminder-badge--scheduled {
+  background-color: var(--color-info-bg, var(--color-bg-subtle));
+  border-color: var(--color-info);
+  color: var(--color-info);
+}
+
+.reminder-badge--ok {
+  background-color: var(--color-success-bg, var(--color-bg-subtle));
+  border-color: var(--color-success);
+  color: var(--color-success);
+}
+
+@supports (background-color: color-mix(in srgb, red 10%, white)) {
+  .reminder-badge--overdue {
+    background-color: color-mix(in srgb, var(--color-error) 12%, var(--color-bg));
+    border-color: color-mix(in srgb, var(--color-error) 30%, transparent);
+  }
+  .reminder-badge--due-soon,
+  .reminder-badge--due_soon {
+    background-color: color-mix(in srgb, var(--color-warning) 12%, var(--color-bg));
+    border-color: color-mix(in srgb, var(--color-warning) 30%, transparent);
+  }
+  .reminder-badge--scheduled {
+    background-color: color-mix(in srgb, var(--color-info) 12%, var(--color-bg));
+    border-color: color-mix(in srgb, var(--color-info) 30%, transparent);
+  }
+  .reminder-badge--ok {
+    background-color: color-mix(in srgb, var(--color-success) 12%, var(--color-bg));
+    border-color: color-mix(in srgb, var(--color-success) 30%, transparent);
+  }
 }
 
 .reminder-badge--no_threshold,
 .reminder-badge--no_service_yet {
   background-color: var(--color-bg-subtle);
-  color: var(--color-text-subtle);
-}
-
-.reminder-badge--no_service_yet {
+  border-color: var(--color-border-light);
   color: var(--color-text-muted);
 }
 
-.reminder-badge__dot {
-  width: 0.4375rem;
-  height: 0.4375rem;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-
-.reminder-badge--ok .reminder-badge__dot {
-  background-color: var(--color-success);
-}
-
-.reminder-badge--due_soon .reminder-badge__dot {
-  background-color: var(--color-warning);
-}
-
-.reminder-badge--overdue .reminder-badge__dot {
-  background-color: var(--color-error);
-}
-
-.reminder-badge--no_threshold .reminder-badge__dot,
-.reminder-badge--no_service_yet .reminder-badge__dot {
-  background-color: var(--color-text-subtle);
+.reminder-badge__label {
+  /* Pill text, inline */
 }
 
 /* ===========================
@@ -80,6 +98,75 @@
   border: 1px solid var(--color-border-light);
 }
 
+.reminder-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.reminder-list__row {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-md);
+  padding: var(--spacing-sm) 0;
+  border-bottom: 1px solid var(--color-border-light);
+  list-style: none;
+}
+
+.reminder-list__row:last-child {
+  border-bottom: none;
+}
+
+.reminder-list__detail {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.reminder-list__title {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text);
+  margin: 0;
+  line-height: var(--line-height-snug);
+}
+
+.reminder-list__meta {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  margin: 0;
+}
+
+.reminder-list__dismiss {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  padding: var(--spacing-xs);
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  color: var(--color-text-muted);
+  flex-shrink: 0;
+  transition: background-color var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast);
+}
+
+.reminder-list__dismiss:hover {
+  background-color: var(--color-bg-subtle);
+  border-color: var(--color-border);
+  color: var(--color-text);
+}
+
+.reminder-list__dismiss:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+/* Legacy items support */
 .reminder-list__items {
   display: flex;
   flex-direction: column;
@@ -93,7 +180,6 @@
   gap: var(--spacing-md);
   padding: var(--spacing-sm) 0;
   border-bottom: 1px solid var(--color-border-light);
-  transition: background-color var(--transition-fast);
 }
 
 .reminder-item:last-child {

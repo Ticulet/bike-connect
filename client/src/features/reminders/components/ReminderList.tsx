@@ -1,12 +1,28 @@
 import type { ComponentReminder } from '../api/reminders.api.js';
 import { ReminderBadge } from './ReminderBadge.js';
+import { useToast } from '../../../components/ui/useToast.js';
 import '../reminders.css';
 
 interface ReminderListProps {
   reminders: ComponentReminder[];
+  /** Compact sidebar display — omits dismiss button. */
+  compact?: boolean;
+  /** Called when a reminder is dismissed. Parent should remove from state. */
+  onDismiss?: (componentId: string) => void;
 }
 
-export function ReminderList({ reminders }: ReminderListProps): React.JSX.Element {
+// X icon — hand-rolled inline SVG
+function XIcon(): React.JSX.Element {
+  return (
+    <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true">
+      <path d="M3.5 3.5l7 7M10.5 3.5l-7 7" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+export function ReminderList({ reminders, compact = false, onDismiss }: ReminderListProps): React.JSX.Element {
+  const toast = useToast();
+
   if (reminders.length === 0) {
     return (
       <p className="reminder-list__empty">
@@ -15,30 +31,35 @@ export function ReminderList({ reminders }: ReminderListProps): React.JSX.Elemen
     );
   }
 
+  function handleDismiss(reminder: ComponentReminder): void {
+    toast.success('Reminder dismissed');
+    onDismiss?.(reminder.component_id);
+  }
+
   return (
-    <div className="reminder-list" role="list" aria-label="Component maintenance reminders">
-      <div className="reminder-list__items">
-        {reminders.map((reminder) => (
-          <div
-            key={reminder.component_id}
-            className="reminder-item"
-            role="listitem"
-          >
-            <div className="reminder-item__info">
-              <span className="reminder-item__name">{reminder.component_name}</span>
-              <span className="reminder-item__category">{reminder.component_category}</span>
-              {reminder.km_since_last_service !== null && (
-                <span className="reminder-item__detail">
-                  {reminder.km_since_last_service} km since last service
-                </span>
-              )}
-            </div>
-            <div className="reminder-item__badge-col">
-              <ReminderBadge reminder={reminder} />
-            </div>
+    <ul className="reminder-list" aria-label="Component maintenance reminders">
+      {reminders.map((reminder) => (
+        <li key={reminder.component_id} className="reminder-list__row">
+          <ReminderBadge reminder={reminder} compact={compact} />
+          <div className="reminder-list__detail">
+            <p className="reminder-list__title">{reminder.component_name}</p>
+            <p className="reminder-list__meta">
+              {reminder.component_category}
+              {reminder.km_since_last_service !== null && ` · ${reminder.km_since_last_service} km since last service`}
+            </p>
           </div>
-        ))}
-      </div>
-    </div>
+          {!compact && onDismiss !== undefined && (
+            <button
+              type="button"
+              className="reminder-list__dismiss"
+              onClick={() => handleDismiss(reminder)}
+              aria-label={`Dismiss reminder: ${reminder.component_name}`}
+            >
+              <XIcon />
+            </button>
+          )}
+        </li>
+      ))}
+    </ul>
   );
 }

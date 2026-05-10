@@ -6,6 +6,8 @@ interface ComponentListProps {
   onEdit: (component: ComponentItem) => void;
   onDelete: (componentId: string) => void;
   isOwner: boolean;
+  /** When true, renders as a numbered workshop spec list instead of a table. */
+  numbered?: boolean;
 }
 
 function formatDate(dateStr: string | null): string {
@@ -21,17 +23,102 @@ function formatCategory(category: string): string {
   return category.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
+// ── Numbered spec list (Workshop Catalog) ─────────────────────────────────
+
+function NumberedComponentList({
+  components,
+  isOwner,
+  onEdit,
+  onDelete,
+}: {
+  components: ComponentItem[];
+  isOwner: boolean;
+  onEdit: (c: ComponentItem) => void;
+  onDelete: (id: string) => void;
+}): React.JSX.Element {
+  return (
+    <ol className="component-list component-list--numbered">
+      {components.map((component, index) => (
+        <li key={component.id} className="component-list__row">
+          <span className="component-list__number" aria-hidden="true">
+            {String(index + 1).padStart(2, '0')}
+          </span>
+
+          <div className="component-list__name">
+            <p className="component-list__type">{formatCategory(component.category)}</p>
+            <p className="component-list__model">
+              {[component.brand, component.name, component.model]
+                .filter(Boolean)
+                .join(' ')}
+            </p>
+          </div>
+
+          <dl className="component-list__specs-dl">
+            {component.installed_at !== null && component.installed_at !== '' && (
+              <div className="component-list__spec-item">
+                <dt>Installed</dt>
+                <dd>{formatDate(component.installed_at)}</dd>
+              </div>
+            )}
+            {component.mileage_at_install !== null && (
+              <div className="component-list__spec-item">
+                <dt>Distance</dt>
+                <dd>{component.mileage_at_install.toLocaleString()} km</dd>
+              </div>
+            )}
+          </dl>
+
+          {isOwner && (
+            <div className="component-list__actions">
+              <button
+                type="button"
+                className="component-list__btn"
+                onClick={() => onEdit(component)}
+                aria-label={`Edit ${component.name}`}
+              >
+                Edit
+              </button>
+              <button
+                type="button"
+                className="component-list__btn component-list__btn--danger"
+                onClick={() => onDelete(component.id)}
+                aria-label={`Delete ${component.name}`}
+              >
+                Delete
+              </button>
+            </div>
+          )}
+        </li>
+      ))}
+    </ol>
+  );
+}
+
+// ── Main component ─────────────────────────────────────────────────────────
+
 export function ComponentList({
   components,
   onEdit,
   onDelete,
   isOwner,
+  numbered = false,
 }: ComponentListProps): React.JSX.Element {
   if (components.length === 0) {
     return (
       <p className="component-list__empty">
         No components added yet.
       </p>
+    );
+  }
+
+  if (numbered) {
+    return (
+      <NumberedComponentList
+        components={components}
+        isOwner={isOwner}
+        onEdit={onEdit}
+        onDelete={onDelete}
+      />
     );
   }
 
@@ -62,12 +149,12 @@ export function ComponentList({
               </td>
               <td>{component.name}</td>
               <td>
-                {component.brand || component.model
+                {component.brand !== null || component.model !== null
                   ? [component.brand, component.model].filter(Boolean).join(' / ')
                   : '—'}
               </td>
               <td className="component-list__col-installed">
-                {formatDate(component.installed_at)}
+                {formatDate(component.installed_at ?? null)}
               </td>
               <td className="component-list__col-mileage">
                 {component.mileage_at_install !== null

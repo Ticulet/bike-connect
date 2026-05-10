@@ -3,7 +3,53 @@ import { Link } from 'react-router';
 import { fetchMyBikes, deleteBike, type BikeItem } from '../api/bikes.api.js';
 import { BikeCard } from '../components/BikeCard.js';
 import { ConfirmDialog } from '../../../components/ui/ConfirmDialog.js';
+import { PageHeader } from '../../../components/ui/PageHeader.js';
+import { EmptyState } from '../../../components/ui/EmptyState.js';
+import { Skeleton } from '../../../components/ui/Skeleton.js';
 import './bikes-pages.css';
+
+// ── Icons ──────────────────────────────────────────────────────────────────
+
+function PlusIcon(): React.JSX.Element {
+  return (
+    <svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true">
+      <path d="M8 3v10M3 8h10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function BikeEmptyIcon(): React.JSX.Element {
+  return (
+    <svg width="48" height="48" viewBox="0 0 48 48" aria-hidden="true" fill="none">
+      <circle cx="14" cy="32" r="8" stroke="currentColor" strokeWidth="1.5" />
+      <circle cx="34" cy="32" r="8" stroke="currentColor" strokeWidth="1.5" />
+      <path d="M14 32L20 16h8l6 16" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M20 16h8" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+// ── Skeleton rows ──────────────────────────────────────────────────────────
+
+function BikesSkeleton(): React.JSX.Element {
+  return (
+    <ul className="my-bikes__list" aria-busy="true" aria-label="Loading bikes">
+      {[1, 2, 3].map((n) => (
+        <li key={n} className="my-bikes__skeleton-row">
+          <Skeleton width="15rem" height="9.375rem" />
+          <div className="my-bikes__skeleton-body">
+            <Skeleton width="6rem" height="0.75rem" />
+            <Skeleton width="14rem" height="1.5rem" />
+            <Skeleton width="10rem" height="0.875rem" />
+            <Skeleton width="100%" height="2.5rem" />
+          </div>
+        </li>
+      ))}
+    </ul>
+  );
+}
+
+// ── Page ───────────────────────────────────────────────────────────────────
 
 export function MyBikesPage(): React.JSX.Element {
   const [bikes, setBikes] = useState<BikeItem[]>([]);
@@ -61,48 +107,40 @@ export function MyBikesPage(): React.JSX.Element {
   const deleteTarget = bikes.find((b) => b.id === deleteTargetId);
 
   return (
-    <main id="main" className="bikes-page">
-      <div className="my-bikes-page__toolbar">
-        <h1 className="bikes-page__heading">My Bikes</h1>
-        <Link to="/my-bikes/new" className="my-bikes-page__new-link">
-          + Add Bike
-        </Link>
-      </div>
+    <main id="main" className="my-bikes">
+      <PageHeader
+        eyebrow="Your garage"
+        title="Bikes"
+        subtitle={isLoading ? undefined : `${bikes.length} registered`}
+        variant="workshop"
+        actions={
+          <Link to="/me/bikes/new" className="btn btn-primary my-bikes__add-btn">
+            <PlusIcon /> Add bike
+          </Link>
+        }
+      />
 
       {error && (
-        <p className="bikes-page__error" role="alert">
-          {error}
-        </p>
+        <p className="bikes-page__error" role="alert">{error}</p>
       )}
 
-      {isLoading && (
-        <p className="bikes-page__loading" aria-live="polite">
-          Loading your bikes...
-        </p>
-      )}
-
-      {!isLoading && bikes.length === 0 && !error && (
-        <div className="bikes-page__empty">
-          <p>You have no bikes yet.</p>
-          <Link to="/my-bikes/new">Add your first bike</Link>
-        </div>
-      )}
-
-      {!isLoading && (
-        <p className="sr-only" aria-live="polite">
-          {bikes.length === 0 ? 'No bikes found.' : `${bikes.length} bike${bikes.length === 1 ? '' : 's'} loaded.`}
-        </p>
-      )}
-
-      {!isLoading && bikes.length > 0 && (
-        <div className="my-bikes-page__grid">
+      {isLoading ? (
+        <BikesSkeleton />
+      ) : bikes.length === 0 && !error ? (
+        <EmptyState
+          icon={<BikeEmptyIcon />}
+          title="No bikes yet"
+          description="Register your first ride to start tracking miles and maintenance."
+          action={
+            <Link to="/me/bikes/new" className="btn btn-primary">Add your first bike</Link>
+          }
+        />
+      ) : (
+        <ul className="my-bikes__list">
           {bikes.map((bike) => (
-            <div key={bike.id} className="my-bikes-page__card-wrapper">
-              <BikeCard bike={bike} />
-              <div className="my-bikes-page__card-actions">
-                <Link to={`/my-bikes/${bike.id}/edit`} className="my-bikes-page__edit-link" aria-label={`Edit ${bike.name}`}>
-                  Edit
-                </Link>
+            <li key={bike.id} className="my-bikes__item">
+              <BikeCard bike={bike} variant="workshop" />
+              <div className="my-bikes__card-actions">
                 <button
                   type="button"
                   className="my-bikes-page__delete-btn"
@@ -112,9 +150,9 @@ export function MyBikesPage(): React.JSX.Element {
                   Delete
                 </button>
               </div>
-            </div>
+            </li>
           ))}
-        </div>
+        </ul>
       )}
 
       <ConfirmDialog

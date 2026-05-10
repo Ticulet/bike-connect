@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { Link } from 'react-router';
 import { MaintenanceEntry } from './MaintenanceEntry.js';
 import { ConfirmDialog } from '../../../components/ui/ConfirmDialog.js';
 import type { MaintenanceLogItem } from '../api/maintenance.api.js';
@@ -9,13 +8,16 @@ interface MaintenanceTimelineProps {
   bikeId: string;
   isOwner: boolean;
   onDelete: (logId: string) => void;
+  /** When provided, called with the log entry to edit (for drawer invocation). */
+  onEditRequest?: (log: MaintenanceLogItem) => void;
 }
 
 export function MaintenanceTimeline({
   logs,
-  bikeId,
+  bikeId: _bikeId,
   isOwner,
   onDelete,
+  onEditRequest,
 }: MaintenanceTimelineProps): React.JSX.Element {
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
 
@@ -47,19 +49,10 @@ export function MaintenanceTimeline({
               key={log.id}
               log={log}
               isOwner={isOwner}
+              onEdit={onEditRequest !== undefined ? () => onEditRequest(log) : undefined}
               onDelete={() => handleDeleteRequest(log.id)}
             />
           ))
-        )}
-
-        {isOwner && (
-          <Link
-            to={`/my-bikes/${bikeId}/maintenance/new`}
-            className="maintenance-timeline__add-link"
-            aria-label="Add maintenance entry"
-          >
-            Add Maintenance Entry
-          </Link>
         )}
       </div>
 

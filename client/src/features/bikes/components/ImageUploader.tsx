@@ -1,4 +1,5 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, useCallback } from 'react';
+import { useToast } from '../../../components/ui/useToast.js';
 import './photo-gallery.css';
 
 export interface ImageUploaderProps {
@@ -6,9 +7,10 @@ export interface ImageUploaderProps {
   label?: string;
 }
 
-type UploadStatus = 'idle' | 'uploading' | 'error';
+type UploadStatus = 'idle' | 'uploading' | 'error' | 'dragover';
 
 const MAX_FILE_SIZE_BYTES = 5 * 1024 * 1024; // 5 MB
+const ALLOWED_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp']);
 
 export function ImageUploader({
   onUpload,
@@ -17,73 +19,112 @@ export function ImageUploader({
   const inputRef = useRef<HTMLInputElement>(null);
   const [status, setStatus] = useState<UploadStatus>('idle');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const toast = useToast();
 
   function handleButtonClick(): void {
     inputRef.current?.click();
   }
 
-  async function handleFileChange(
-    event: React.ChangeEvent<HTMLInputElement>,
-  ): Promise<void> {
-    const file = event.target.files?.[0];
-    if (!file) return;
-
-    // Reset input value so same file can be re-selected after an error
-    event.target.value = '';
-
-    const allowedTypes = new Set(['image/jpeg', 'image/png', 'image/webp']);
-    if (!allowedTypes.has(file.type)) {
-      setErrorMessage('Only JPEG, PNG, and WebP images are allowed.');
-      setStatus('error');
-      return;
-    }
-
-    if (file.size > MAX_FILE_SIZE_BYTES) {
-      setErrorMessage('File exceeds 5 MB limit. Please choose a smaller image.');
-      setStatus('error');
-      return;
-    }
-
-    setStatus('uploading');
-    setErrorMessage(null);
-
-    const formData = new FormData();
-    formData.append('image', file);
-
-    try {
-      const response = await fetch('/api/images/upload', {
-        method: 'POST',
-        credentials: 'include',
-        body: formData,
-      });
-
-      if (!response.ok) {
-        const body: unknown = await response.json().catch(() => null);
-        const message =
-          typeof body === 'object' &&
-          body !== null &&
-          'message' in body &&
-          typeof (body as Record<string, unknown>).message === 'string'
-            ? (body as Record<string, string>).message
-            : 'Upload failed. Please try again.';
-        throw new Error(message);
+  const uploadFile = useCallback(
+    async (file: File): Promise<void> => {
+      if (!ALLOWED_TYPES.has(file.type)) {
+        const msg = 'Only JPEG, PNG, and WebP images are allowed.';
+        setErrorMessage(msg);
+        setStatus('error');
+        toast.error(msg);
+        return;
       }
 
-      const data = (await response.json()) as { url: string };
+      if (file.size > MAX_FILE_SIZE_BYTES) {
+        const msg = 'Image too large (max 5 MB)';
+        setErrorMessage(msg);
+        setStatus('error');
+        toast.error(msg);
+        return;
+      }
+
+      setStatus('uploading');
+      setErrorMessage(null);
+
+      const formData = new FormData();
+      formData.append('image', file);
+
+      try {
+        const response = await fetch('/api/images/upload', {
+          method: 'POST',
+          credentials: 'include',
+          body: formData,
+        });
+
+        if (!response.ok) {
+          const body: unknown = await response.json().catch(() => null);
+          const message =
+            typeof body === 'object' &&
+            body !== null &&
+            'message' in body &&
+            typeof (body as Record<string, unknown>).message === 'string'
+              ? (body as Record<string, string>).message
+              : 'Upload failed. Please try again.';
+          throw new Error(message);
+        }
+
+        const data = (await response.json()) as { url: string };
+        setStatus('idle');
+        onUpload(data.url);
+        toast.success('Photo added');
+      } catch (err: unknown) {
+        const message = err instanceof Error ? err.message : 'Upload failed. Please try again.';
+        setErrorMessage(message);
+        setStatus('error');
+        toast.error(message);
+      }
+    },
+    [onUpload, toast],
+  );
+
+  const handleFileChange = useCallback(
+    async (event: React.ChangeEvent<HTMLInputElement>): Promise<void> => {
+      const file = event.target.files?.[0];
+      if (!file) return;
+      event.target.value = '';
+      await uploadFile(file);
+    },
+    [uploadFile],
+  );
+
+  const handleDragOver = useCallback((e: React.DragEvent<HTMLDivElement>): void => {
+    e.preventDefault();
+    setStatus('dragover');
+  }, []);
+
+  const handleDragLeave = useCallback((): void => {
+    setStatus((prev) => prev === 'dragover' ? 'idle' : prev);
+  }, []);
+
+  const handleDrop = useCallback(
+    async (e: React.DragEvent<HTMLDivElement>): Promise<void> => {
+      e.preventDefault();
       setStatus('idle');
-      onUpload(data.url);
-    } catch (err: unknown) {
-      const message =
-        err instanceof Error ? err.message : 'Upload failed. Please try again.';
-      setErrorMessage(message);
-      setStatus('error');
-    }
-  }
+      const file = e.dataTransfer.files[0];
+      if (file) {
+        await uploadFile(file);
+      }
+    },
+    [uploadFile],
+  );
 
   const isUploading = status === 'uploading';
+  const isDragOver = status === 'dragover';
 
   return (
-    <div className="image-uploader" aria-busy={isUploading}>
+    <div
+      className={`image-uploader${isDragOver ? ' image-uploader--dragover' : ''}`}
+      aria-busy={isUploading}
+      onDragOver={handleDragOver}
+      onDragEnter={handleDragOver}
+      onDragLeave={handleDragLeave}
+      onDrop={(e) => void handleDrop(e)}
+    >
       <input
         ref={inputRef}
         type="file"
@@ -98,20 +139,19 @@ export function ImageUploader({
         className="image-uploader__btn"
         onClick={handleButtonClick}
         disabled={isUploading}
-        aria-label={label}
       >
-        {isUploading ? 'Uploading...' : label}
+        {isUploading ? 'Uploading...' : isDragOver ? 'Drop to upload' : label}
       </button>
+      <p className="image-uploader__hint">
+        Drop photos here, or click to browse
+      </p>
       {isUploading && (
         <span className="image-uploader__status" aria-live="polite">
           Uploading image, please wait...
         </span>
       )}
-      {status === 'error' && errorMessage && (
-        <span
-          className="image-uploader__error"
-          role="alert"
-        >
+      {status === 'error' && errorMessage !== null && (
+        <span className="image-uploader__error" role="alert">
           {errorMessage}
         </span>
       )}

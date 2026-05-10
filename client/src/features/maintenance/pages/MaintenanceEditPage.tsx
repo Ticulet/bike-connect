@@ -3,26 +3,25 @@ import { useParams, useNavigate, Link } from 'react-router';
 import { fetchComponents, type ComponentItem } from '../../bikes/api/components.api.js';
 import {
   fetchMaintenanceLogs,
-  updateMaintenanceLog,
   type MaintenanceLogItem,
-  type CreateMaintenancePayload,
 } from '../api/maintenance.api.js';
 import { MaintenanceForm } from '../components/MaintenanceForm.js';
+import { PageHeader } from '../../../components/ui/PageHeader.js';
+import { Skeleton } from '../../../components/ui/Skeleton.js';
 import { ApiClientError } from '../../../lib/api-client.js';
+import { useToast } from '../../../components/ui/useToast.js';
 import '../../bikes/pages/bikes-pages.css';
 
 export function MaintenanceEditPage(): React.JSX.Element {
   const { bikeId, logId } = useParams<{ bikeId: string; logId: string }>();
   const navigate = useNavigate();
+  const toast = useToast();
 
   const [log, setLog] = useState<MaintenanceLogItem | null>(null);
   const [components, setComponents] = useState<ComponentItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [isNotFound, setIsNotFound] = useState(false);
-
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const abortRef = useRef<AbortController | null>(null);
 
@@ -71,34 +70,20 @@ export function MaintenanceEditPage(): React.JSX.Element {
     };
   }, [bikeId, logId]);
 
-  async function handleSubmit(data: CreateMaintenancePayload): Promise<void> {
-    if (!bikeId || !logId) return;
+  function handleSuccess(_entry: MaintenanceLogItem): void {
+    toast.success('Maintenance entry updated.');
+    void navigate(`/me/bikes/${bikeId ?? ''}`);
+  }
 
-    setIsSubmitting(true);
-    setSubmitError(null);
-
-    try {
-      await updateMaintenanceLog(bikeId, logId, data);
-      void navigate(`/my-bikes/${bikeId}`);
-    } catch (err: unknown) {
-      if (err instanceof ApiClientError) {
-        setSubmitError(`Failed to update maintenance record (${err.code}).`);
-      } else if (err instanceof Error) {
-        setSubmitError(err.message);
-      } else {
-        setSubmitError('An unexpected error occurred.');
-      }
-    } finally {
-      setIsSubmitting(false);
-    }
+  function handleCancel(): void {
+    void navigate(`/me/bikes/${bikeId ?? ''}`);
   }
 
   if (isLoading) {
     return (
-      <main id="main" className="bikes-page bikes-page--narrow">
-        <p className="bikes-page__loading" aria-live="polite">
-          Loading...
-        </p>
+      <main id="main" className="bike-form-page bikes-page bikes-page--narrow">
+        <Skeleton width="100%" height="2rem" />
+        <Skeleton width="100%" height="24rem" />
       </main>
     );
   }
@@ -108,43 +93,40 @@ export function MaintenanceEditPage(): React.JSX.Element {
       <main id="main" className="bikes-page bikes-page--narrow">
         <h1 className="bikes-page__heading">Record Not Found</h1>
         <p>The maintenance record you are looking for does not exist.</p>
-        <Link to={`/my-bikes/${bikeId ?? ''}`}>Back to Bike</Link>
+        <Link to={`/me/bikes/${bikeId ?? ''}`}>Back to Bike</Link>
       </main>
     );
   }
 
-  if (loadError) {
+  if (loadError !== null) {
     return (
       <main id="main" className="bikes-page bikes-page--narrow">
-        <p className="bikes-page__error" role="alert">
-          {loadError}
-        </p>
-        <Link to={`/my-bikes/${bikeId ?? ''}`}>Back to Bike</Link>
+        <p className="bikes-page__error" role="alert">{loadError}</p>
+        <Link to={`/me/bikes/${bikeId ?? ''}`}>Back to Bike</Link>
       </main>
     );
   }
 
   return (
-    <main id="main" className="bikes-page bikes-page--narrow">
-      <Link to={`/my-bikes/${bikeId ?? ''}`} className="bike-form-page__back">
+    <main id="main" className="bike-form-page bikes-page bikes-page--narrow">
+      <Link to={`/me/bikes/${bikeId ?? ''}`} className="bike-form-page__back">
         ← Back to Bike
       </Link>
 
-      <h1 className="bikes-page__heading">Edit Maintenance Record</h1>
-
-      {submitError && (
-        <p className="bikes-page__error" role="alert">
-          {submitError}
-        </p>
-      )}
+      <PageHeader
+        eyebrow="Maintenance"
+        title="Edit entry"
+        variant="workshop"
+      />
 
       {log !== null && (
         <MaintenanceForm
+          bikeId={bikeId ?? ''}
+          logId={logId}
           components={components}
           initialData={log}
-          onSubmit={handleSubmit}
-          isSubmitting={isSubmitting}
-          submitLabel="Save Changes"
+          onSuccess={handleSuccess}
+          onCancel={handleCancel}
         />
       )}
     </main>

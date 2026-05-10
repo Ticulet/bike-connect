@@ -68,7 +68,66 @@
 }
 
 /* ===========================
-   My Bikes Page
+   My Bikes Page — Workshop
+   =========================== */
+
+.my-bikes {
+  max-width: 60rem;
+  margin: 0 auto;
+  padding: var(--spacing-xl) var(--spacing-md);
+}
+
+@media (min-width: 48rem) {
+  .my-bikes {
+    padding: var(--spacing-2xl) var(--spacing-lg);
+  }
+}
+
+.my-bikes__add-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.my-bikes__list {
+  list-style: none;
+  padding: 0;
+  margin: var(--spacing-lg) 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.my-bikes__item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+.my-bikes__card-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+/* Skeleton rows */
+.my-bikes__skeleton-row {
+  display: flex;
+  gap: var(--spacing-lg);
+  align-items: flex-start;
+  padding: var(--spacing-md);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-card, var(--radius-lg));
+}
+
+.my-bikes__skeleton-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+/* ===========================
+   My Bikes Page (legacy grid — keep for back-compat)
    =========================== */
 
 .my-bikes-page__toolbar {
@@ -125,12 +184,14 @@
 .my-bikes-page__card-wrapper {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-xs);
+  gap: var(--spacing-md);
 }
 
 .my-bikes-page__card-actions {
   display: flex;
   justify-content: flex-end;
+  align-items: center;
+  gap: var(--spacing-md);
 }
 
 .my-bikes-page__delete-btn {
@@ -180,7 +241,73 @@
 }
 
 /* ===========================
-   Bike Detail Page
+   Bike Detail Page — Workshop
+   =========================== */
+
+.bike-detail__skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+.bike-detail__layout {
+  display: grid;
+  grid-template-columns: 1fr 20rem;
+  gap: var(--spacing-2xl);
+  align-items: start;
+  margin-top: var(--spacing-xl);
+}
+
+.bike-detail__main {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2xl);
+  min-width: 0;
+}
+
+.bike-detail__section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
+}
+
+.bike-detail__section-actions {
+  margin-bottom: var(--spacing-md);
+}
+
+.bike-detail__sidebar {
+  position: sticky;
+  top: 6rem;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+  padding: var(--spacing-lg);
+  background-color: var(--color-surface-1, var(--color-surface));
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-card, var(--radius-lg));
+}
+
+@media (max-width: 60rem) {
+  .bike-detail__layout {
+    grid-template-columns: 1fr;
+  }
+
+  .bike-detail__sidebar {
+    position: static;
+    order: -1;
+  }
+
+  .bike-detail__sidebar .stat-strip--vertical {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: var(--spacing-xl);
+  }
+}
+
+/* ===========================
+   Bike Detail Page (legacy)
    =========================== */
 
 .bike-detail__hero {
@@ -397,90 +524,231 @@
 }
 
 /* ===========================
-   Explore Bikes Page
+   Public Bike Page
    =========================== */
 
-.explore-bikes-page__header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: var(--spacing-md);
-  margin-bottom: var(--spacing-lg);
+.public-bike__hero {
+  margin-top: var(--spacing-lg);
 }
 
-.explore-bikes-page__filters {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-sm);
-}
-
-.explore-bikes-page__filter-label {
+.public-bike__owner {
   font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-semibold);
-  color: var(--color-text-muted);
-  white-space: nowrap;
-}
-
-.explore-bikes-page__filter-select {
-  padding: 0.4rem 0.75rem;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  font-family: var(--font-body);
-  font-size: var(--font-size-sm);
-  color: var(--color-text);
-  background-color: var(--color-surface);
-  cursor: pointer;
-  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
-}
-
-.explore-bikes-page__filter-select:hover {
-  border-color: var(--color-border-strong);
-}
-
-.explore-bikes-page__filter-select:focus {
-  outline: none;
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px var(--color-primary-light);
-}
-
-.explore-bikes-page__load-more {
-  display: flex;
-  justify-content: center;
-  margin-top: var(--spacing-xl);
-}
-
-.explore-bikes-page__load-more-btn {
+  font-weight: var(--font-weight-medium);
+  color: var(--color-primary);
+  text-decoration: none;
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  padding: 0.625rem var(--spacing-xl);
-  background-color: var(--color-surface);
-  border: 1px solid var(--color-border);
+  gap: var(--spacing-xs);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border: 1px solid var(--color-border-light);
   border-radius: var(--radius-md);
-  font-family: var(--font-body);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-semibold);
-  color: var(--color-text);
-  cursor: pointer;
-  transition: background-color var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast);
+  transition: background-color var(--transition-fast), border-color var(--transition-fast);
 }
 
-.explore-bikes-page__load-more-btn:hover {
+.public-bike__owner:hover {
   background-color: var(--color-bg-subtle);
-  border-color: var(--color-border-strong);
-  box-shadow: var(--shadow-sm);
+  border-color: var(--color-border);
+  text-decoration: none;
 }
 
-.explore-bikes-page__load-more-btn:focus-visible {
+.public-bike__owner:focus-visible {
   outline: 2px solid var(--color-focus);
   outline-offset: 2px;
 }
 
-.explore-bikes-page__load-more-btn:disabled {
-  opacity: 0.55;
-  cursor: not-allowed;
+/* ===========================
+   Explore Bikes Page (Phase C TASK-019 — editorial redesign)
+   Tokens only. Legacy explore-bikes-page__* rules replaced below.
+   =========================== */
+
+.explore-bikes {
+  max-width: var(--max-width-content);
+  margin-inline: auto;
+  padding-block-end: var(--spacing-4xl);
 }
+
+/* Two-column layout: filter rail + main content */
+.explore-bikes__layout {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: var(--spacing-3xl);
+  align-items: start;
+  padding-inline: var(--spacing-md);
+}
+
+@media (max-width: 1023px) {
+  .explore-bikes__layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ---- Filter rail ---- */
+.explore-bikes__filters {
+  position: sticky;
+  top: calc(var(--header-height) + var(--spacing-lg));
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xl);
+}
+
+@media (max-width: 1023px) {
+  .explore-bikes__filters {
+    position: static;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: var(--spacing-lg);
+    overflow-x: auto;
+    padding-block-end: var(--spacing-sm);
+    scrollbar-width: thin;
+  }
+}
+
+@media (max-width: 767px) {
+  .explore-bikes__filters {
+    flex-direction: column;
+    overflow-x: visible;
+  }
+}
+
+/* FilterGroup */
+.filter-group {
+  border: none;
+  padding: 0;
+  margin: 0;
+  min-inline-size: 0;
+}
+
+.filter-group__legend {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: var(--letter-spacing-wide);
+  text-transform: uppercase;
+  color: var(--color-text-muted);
+  margin-block-end: var(--spacing-sm);
+  display: block;
+}
+
+.filter-group__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-xs);
+}
+
+@media (max-width: 1023px) and (min-width: 768px) {
+  .filter-group__chips {
+    flex-wrap: nowrap;
+  }
+}
+
+.filter-group__reset {
+  align-self: flex-start;
+  font-size: var(--font-size-xs);
+  padding: 0.25rem 0.625rem;
+}
+
+/* ---- Toolbar ---- */
+.explore-bikes__toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-block-end: var(--spacing-lg);
+}
+
+.explore-bikes__count {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  margin: 0;
+  min-inline-size: 4rem;
+}
+
+/* ViewSwitcher */
+.view-switcher {
+  display: flex;
+  gap: var(--spacing-xs);
+}
+
+.view-switcher__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  cursor: pointer;
+  transition: background-color var(--motion-duration-fast) var(--motion-easing-standard),
+              color var(--motion-duration-fast) var(--motion-easing-standard),
+              border-color var(--motion-duration-fast) var(--motion-easing-standard);
+}
+
+.view-switcher__btn[aria-pressed="true"] {
+  background: var(--color-primary-light);
+  border-color: var(--color-primary);
+  color: var(--color-primary-dark);
+}
+
+.view-switcher__btn:hover:not([aria-pressed="true"]) {
+  background: var(--color-surface-2);
+  border-color: var(--color-border-strong);
+  color: var(--color-text);
+}
+
+.view-switcher__btn:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
+/* ---- Bike list views ---- */
+.explore-bikes__list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.explore-bikes__list--grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--spacing-lg);
+}
+
+.explore-bikes__list--masonry {
+  column-count: 3;
+  column-gap: var(--spacing-lg);
+}
+
+.explore-bikes__list--masonry > li {
+  break-inside: avoid;
+  margin-block-end: var(--spacing-lg);
+}
+
+@media (max-width: 1100px) {
+  .explore-bikes__list--masonry { column-count: 2; }
+}
+
+@media (max-width: 640px) {
+  .explore-bikes__list--masonry { column-count: 1; }
+  .explore-bikes__list--grid { grid-template-columns: 1fr; }
+}
+
+/* ---- Loading skeleton ---- */
+.explore-bikes__skeletons {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: var(--spacing-lg);
+}
+
+/* ---- Load more ---- */
+.explore-bikes__load-more {
+  display: flex;
+  justify-content: center;
+  margin-block-start: var(--spacing-2xl);
+}
+
+/* ---- Main area ---- */
+.explore-bikes__main { min-width: 0; }
 
 /* ===========================
    Explore Bike Card (owner info)

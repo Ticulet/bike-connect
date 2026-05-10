@@ -7,7 +7,27 @@ interface RideListProps {
   bikeId: string;
   isOwner: boolean;
   onDeleteRequest: (rideId: string) => void;
+  /** Optional: called when edit is triggered (for drawer invocation). If absent, falls back to Link. */
+  onEditRequest?: (ride: RideItem) => void;
 }
+
+// ── Pencil icon ────────────────────────────────────────────────────────────
+
+function PencilIcon(): React.JSX.Element {
+  return (
+    <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true">
+      <path
+        d="M9.5 2.5l2 2-7 7H2.5v-2l7-7Z"
+        stroke="currentColor"
+        strokeWidth="1.2"
+        strokeLinejoin="round"
+        fill="none"
+      />
+    </svg>
+  );
+}
+
+// ── Format helpers ─────────────────────────────────────────────────────────
 
 function formatDate(dateString: string): string {
   return new Date(dateString).toLocaleDateString('en-US', {
@@ -24,11 +44,19 @@ function formatDuration(minutes: number): string {
   return m > 0 ? `${h}h ${m}m` : `${h}h`;
 }
 
+function formatKm(value: string | number): string {
+  const n = typeof value === 'string' ? parseFloat(value) : value;
+  return `${n.toFixed(1)} km`;
+}
+
+// ── Component ──────────────────────────────────────────────────────────────
+
 export function RideList({
   rides,
   bikeId,
   isOwner,
-  onDeleteRequest,
+  onDeleteRequest: _onDeleteRequest,
+  onEditRequest,
 }: RideListProps): React.JSX.Element {
   if (rides.length === 0) {
     return (
@@ -39,61 +67,53 @@ export function RideList({
   }
 
   return (
-    <div className="ride-list" role="region" aria-label="Logged rides">
-      <table className="ride-list__table">
-        <thead>
-          <tr>
-            <th scope="col">Date</th>
-            <th scope="col">Distance</th>
-            <th scope="col" className="ride-list__col-duration">Duration</th>
-            <th scope="col" className="ride-list__col-notes">Notes</th>
-            {isOwner && <th scope="col"><span className="sr-only">Actions</span></th>}
-          </tr>
-        </thead>
-        <tbody>
-          {rides.map((ride) => (
-            <tr key={ride.id}>
-              <td>
-                <time dateTime={ride.date}>{formatDate(ride.date)}</time>
-              </td>
-              <td>{parseFloat(ride.distance_km).toFixed(1)} km</td>
-              <td className="ride-list__col-duration">
-                {ride.duration_min !== null ? formatDuration(ride.duration_min) : '—'}
-              </td>
-              <td className="ride-list__col-notes">
-                {ride.notes ? (
-                  <span className="ride-list__notes" title={ride.notes}>
-                    {ride.notes}
-                  </span>
-                ) : (
-                  '—'
-                )}
-              </td>
-              {isOwner && (
-                <td>
-                  <div className="ride-list__actions">
-                    <Link
-                      to={`/my-bikes/${bikeId}/rides/${ride.id}/edit`}
-                      className="ride-list__btn"
-                      aria-label={`Edit ride on ${formatDate(ride.date)}`}
-                    >
-                      Edit
-                    </Link>
-                    <button
-                      type="button"
-                      className="ride-list__btn ride-list__btn--danger"
-                      onClick={() => onDeleteRequest(ride.id)}
-                      aria-label={`Delete ride on ${formatDate(ride.date)}`}
-                    >
-                      Delete
-                    </button>
-                  </div>
-                </td>
-              )}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+    <ol className="ride-list" aria-label="Logged rides">
+      {rides.map((ride, index) => (
+        <li key={ride.id} className="ride-list__row">
+          <span className="ride-list__number" aria-hidden="true">
+            {String(rides.length - index).padStart(3, '0')}
+          </span>
+
+          <div className="ride-list__main">
+            <p className="ride-list__title">{ride.notes?.slice(0, 60) ?? 'Untitled ride'}</p>
+            <p className="ride-list__meta">
+              <time dateTime={ride.date}>{formatDate(ride.date)}</time>
+            </p>
+          </div>
+
+          <dl className="ride-list__specs">
+            <div className="ride-list__spec">
+              <dt>Distance</dt>
+              <dd>{formatKm(ride.distance_km)}</dd>
+            </div>
+            <div className="ride-list__spec">
+              <dt>Duration</dt>
+              <dd>{ride.duration_min !== null ? formatDuration(ride.duration_min) : '—'}</dd>
+            </div>
+          </dl>
+
+          {isOwner && (
+            onEditRequest !== undefined ? (
+              <button
+                type="button"
+                className="ride-list__edit-btn"
+                onClick={() => onEditRequest(ride)}
+                aria-label={`Edit ride on ${formatDate(ride.date)}`}
+              >
+                <PencilIcon />
+              </button>
+            ) : (
+              <Link
+                to={`/me/bikes/${bikeId}/rides/${ride.id}/edit`}
+                className="ride-list__edit-btn"
+                aria-label={`Edit ride on ${formatDate(ride.date)}`}
+              >
+                <PencilIcon />
+              </Link>
+            )
+          )}
+        </li>
+      ))}
+    </ol>
   );
 }

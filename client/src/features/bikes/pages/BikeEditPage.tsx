@@ -3,6 +3,8 @@ import { useNavigate, useParams, Link } from 'react-router';
 import type { CreateBike } from '@bike-connect/shared';
 import { fetchBike, updateBike, type BikeItem } from '../api/bikes.api.js';
 import { BikeForm } from '../components/BikeForm.js';
+import { PageHeader } from '../../../components/ui/PageHeader.js';
+import { Skeleton } from '../../../components/ui/Skeleton.js';
 import { ApiClientError } from '../../../lib/api-client.js';
 import './bikes-pages.css';
 
@@ -63,7 +65,7 @@ export function BikeEditPage(): React.JSX.Element {
 
     try {
       await updateBike(id, data);
-      void navigate(`/my-bikes/${id}`);
+      void navigate(`/me/bikes/${id}`);
     } catch (err: unknown) {
       if (err instanceof ApiClientError) {
         setSubmitError(`Failed to update bike (${err.code}).`);
@@ -79,10 +81,9 @@ export function BikeEditPage(): React.JSX.Element {
 
   if (isLoadingBike) {
     return (
-      <main id="main" className="bikes-page bikes-page--narrow">
-        <p className="bikes-page__loading" aria-live="polite">
-          Loading bike...
-        </p>
+      <main id="main" className="bike-form-page bikes-page bikes-page--narrow">
+        <Skeleton width="100%" height="2rem" />
+        <Skeleton width="100%" height="24rem" />
       </main>
     );
   }
@@ -92,37 +93,39 @@ export function BikeEditPage(): React.JSX.Element {
       <main id="main" className="bikes-page bikes-page--narrow">
         <h1 className="bikes-page__heading">Bike Not Found</h1>
         <p>The bike you are trying to edit does not exist.</p>
-        <Link to="/my-bikes">Back to My Bikes</Link>
+        <Link to="/me/bikes">Back to My Bikes</Link>
       </main>
     );
   }
 
-  if (loadError) {
+  if (loadError !== null) {
     return (
       <main id="main" className="bikes-page bikes-page--narrow">
-        <p className="bikes-page__error" role="alert">
-          {loadError}
-        </p>
-        <Link to="/my-bikes">Back to My Bikes</Link>
+        <p className="bikes-page__error" role="alert">{loadError}</p>
+        <Link to="/me/bikes">Back to My Bikes</Link>
       </main>
     );
   }
 
   return (
-    <main id="main" className="bikes-page bikes-page--narrow">
-      <Link to={`/my-bikes/${id ?? ''}`} className="bike-form-page__back">
+    <main id="main" className="bike-form-page bikes-page bikes-page--narrow">
+      <Link to={`/me/bikes/${id ?? ''}`} className="bike-form-page__back">
         ← Back to Bike
       </Link>
 
-      <h1 className="bikes-page__heading">Edit Bike</h1>
+      <PageHeader
+        eyebrow="Edit"
+        title={bike?.name ?? 'Edit bike'}
+        variant="workshop"
+      />
 
-      {submitError && (
+      {submitError !== null && (
         <p className="bikes-page__error" role="alert">
           {submitError}
         </p>
       )}
 
-      {bike && (
+      {bike !== null && (
         <BikeForm
           initialValues={{
             name: bike.name,
@@ -135,7 +138,7 @@ export function BikeEditPage(): React.JSX.Element {
           }}
           onSubmit={(data) => void handleSubmit(data)}
           isSubmitting={isSubmitting}
-          submitLabel="Save Changes"
+          submitLabel="Save changes"
         />
       )}
     </main>

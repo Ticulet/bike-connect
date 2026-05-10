@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { VALIDATION_LIMITS } from '@bike-connect/shared';
 import type { RideItem, CreateRidePayload } from '../api/rides.api.js';
+import { createRide, updateRide } from '../api/rides.api.js';
 import '../rides.css';
 
 interface RideFormValues {
@@ -11,11 +12,14 @@ interface RideFormValues {
 }
 
 interface RideFormProps {
+  bikeId: string;
+  /** When provided, renders in edit mode. */
+  rideId?: string;
   initialData?: RideItem;
-  onSubmit: (data: CreateRidePayload) => Promise<void>;
-  onCancel?: () => void;
-  isSubmitting: boolean;
-  submitLabel: string;
+  /** Called on successful submit with the resulting ride entry. */
+  onSuccess: (entry: RideItem) => void;
+  /** Called when the user cancels. */
+  onCancel: () => void;
 }
 
 function buildDefaults(initialData?: RideItem): RideFormValues {
@@ -72,15 +76,19 @@ function validate(values: RideFormValues): Partial<Record<keyof RideFormValues, 
 }
 
 export function RideForm({
+  bikeId,
+  rideId,
   initialData,
-  onSubmit,
+  onSuccess,
   onCancel,
-  isSubmitting,
-  submitLabel,
 }: RideFormProps): React.JSX.Element {
   const [values, setValues] = useState<RideFormValues>(() => buildDefaults(initialData));
   const [errors, setErrors] = useState<Partial<Record<keyof RideFormValues, string>>>({});
   const [touched, setTouched] = useState<Partial<Record<keyof RideFormValues, boolean>>>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+
+  const isEditMode = rideId !== undefined;
 
   function handleChange(
     event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
@@ -128,19 +136,34 @@ export function RideForm({
       payload.notes = values.notes.trim();
     }
 
-    await onSubmit(payload);
-  }
+    setIsSubmitting(true);
+    setSubmitError(null);
 
-  const isEdit = initialData !== undefined;
+    try {
+      let result: RideItem;
+      if (isEditMode && rideId !== undefined) {
+        result = await updateRide(bikeId, rideId, payload);
+      } else {
+        result = await createRide(bikeId, payload);
+      }
+      onSuccess(result);
+    } catch (err: unknown) {
+      setSubmitError(err instanceof Error ? err.message : 'An unexpected error occurred.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
 
   return (
     <form
       className="ride-form"
       onSubmit={(e) => void handleSubmit(e)}
       noValidate
-      aria-label={isEdit ? 'Edit ride' : 'Log ride'}
+      aria-label={isEditMode ? 'Edit ride' : 'Log ride'}
     >
-      <h3 className="ride-form__title">{isEdit ? 'Edit Ride' : 'Log a Ride'}</h3>
+      {submitError !== null && (
+        <p className="ride-form__submit-error" role="alert">{submitError}</p>
+      )}
 
       <div className="ride-form__field-row">
         <div className="ride-form__field">
@@ -247,22 +270,20 @@ export function RideForm({
       <div className="ride-form__actions">
         <button
           type="submit"
-          className="ride-form__submit"
+          className="btn btn-primary"
           disabled={isSubmitting}
           aria-disabled={isSubmitting}
         >
-          {isSubmitting ? 'Saving...' : submitLabel}
+          {isSubmitting ? 'Saving…' : isEditMode ? 'Save changes' : 'Log ride'}
         </button>
-        {onCancel !== undefined && (
-          <button
-            type="button"
-            className="ride-form__cancel-btn"
-            onClick={onCancel}
-            disabled={isSubmitting}
-          >
-            Cancel
-          </button>
-        )}
+        <button
+          type="button"
+          className="btn btn-ghost"
+          onClick={onCancel}
+          disabled={isSubmitting}
+        >
+          Cancel
+        </button>
       </div>
     </form>
   );

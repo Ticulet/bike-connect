@@ -6,6 +6,8 @@ interface MaintenanceEntryProps {
   log: MaintenanceLogItem;
   onDelete: () => void;
   isOwner: boolean;
+  /** When provided, called on edit click (for drawer invocation). Falls back to Link. */
+  onEdit?: () => void;
 }
 
 function formatCost(cost: string): string {
@@ -29,6 +31,7 @@ export function MaintenanceEntry({
   log,
   onDelete,
   isOwner,
+  onEdit,
 }: MaintenanceEntryProps): React.JSX.Element {
   const [descriptionExpanded, setDescriptionExpanded] = useState(false);
 
@@ -87,13 +90,24 @@ export function MaintenanceEntry({
 
       {isOwner && (
         <div className="maintenance-entry__actions">
-          <Link
-            to={`/my-bikes/${log.bike_id}/maintenance/${log.id}/edit`}
-            className="maintenance-entry__edit-btn"
-            aria-label={`Edit ${log.title}`}
-          >
-            Edit
-          </Link>
+          {onEdit !== undefined ? (
+            <button
+              type="button"
+              className="maintenance-entry__edit-btn"
+              onClick={onEdit}
+              aria-label={`Edit ${log.title}`}
+            >
+              Edit
+            </button>
+          ) : (
+            <Link
+              to={`/me/bikes/${log.bike_id}/maintenance/${log.id}/edit`}
+              className="maintenance-entry__edit-btn"
+              aria-label={`Edit ${log.title}`}
+            >
+              Edit
+            </Link>
+          )}
           <button
             type="button"
             className="maintenance-entry__delete-btn"

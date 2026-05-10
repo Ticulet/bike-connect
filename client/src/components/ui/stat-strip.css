@@ -1,0 +1,95 @@
+/* ===========================
+   StatStrip
+   Horizontal: row of stats with dividers.
+   Vertical: column of stats.
+   =========================== */
+
+.stat-strip {
+  display: flex;
+  gap: 0;
+  margin: 0;
+  padding: 0;
+}
+
+/* Horizontal layout */
+.stat-strip--horizontal {
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 0;
+}
+
+.stat-strip--horizontal .stat-strip__item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  padding: var(--spacing-md) var(--spacing-xl);
+}
+
+.stat-strip--horizontal .stat-strip__item + .stat-strip__item {
+  border-left: 1px solid var(--color-border);
+}
+
+.stat-strip--horizontal .stat-strip__item:first-child {
+  padding-left: 0;
+}
+
+/* Vertical layout */
+.stat-strip--vertical {
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+.stat-strip--vertical .stat-strip__item {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+/* Label — small caps eyebrow */
+.stat-strip__label {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  text-transform: uppercase;
+  letter-spacing: var(--letter-spacing-eyebrow);
+  color: var(--color-text-muted);
+  line-height: 1;
+}
+
+/* Value — Fraunces display */
+.stat-strip__value {
+  font-family: var(--font-display);
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text);
+  font-variant-numeric: tabular-nums;
+  line-height: var(--line-height-tight);
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+}
+
+/* Delta chip */
+.stat-strip__delta {
+  font-family: var(--font-body);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-success);
+}
+
+@media (max-width: 40rem) {
+  .stat-strip--horizontal {
+    flex-direction: column;
+    gap: var(--spacing-md);
+  }
+
+  .stat-strip--horizontal .stat-strip__item {
+    padding: 0;
+    border-left: none;
+    border-bottom: 1px solid var(--color-border-light);
+    padding-bottom: var(--spacing-md);
+  }
+
+  .stat-strip--horizontal .stat-strip__item:last-child {
+    border-bottom: none;
+  }
+}

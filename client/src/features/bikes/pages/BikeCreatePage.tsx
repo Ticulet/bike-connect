@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router';
 import type { CreateBike } from '@bike-connect/shared';
 import { createBike } from '../api/bikes.api.js';
 import { BikeForm } from '../components/BikeForm.js';
+import { PageHeader } from '../../../components/ui/PageHeader.js';
 import { ApiClientError } from '../../../lib/api-client.js';
 import './bikes-pages.css';
 
@@ -17,7 +18,7 @@ export function BikeCreatePage(): React.JSX.Element {
 
     try {
       const created = await createBike(data);
-      void navigate(`/my-bikes/${created.id}`);
+      void navigate(`/me/bikes/${created.id}`);
     } catch (err: unknown) {
       if (err instanceof ApiClientError) {
         setSubmitError(`Failed to create bike (${err.code}).`);
@@ -32,14 +33,18 @@ export function BikeCreatePage(): React.JSX.Element {
   }
 
   return (
-    <main id="main" className="bikes-page bikes-page--narrow">
-      <Link to="/my-bikes" className="bike-form-page__back">
+    <main id="main" className="bike-form-page bikes-page bikes-page--narrow">
+      <Link to="/me/bikes" className="bike-form-page__back">
         ← My Bikes
       </Link>
 
-      <h1 className="bikes-page__heading">Add New Bike</h1>
+      <PageHeader
+        eyebrow="Add to garage"
+        title="New bike"
+        variant="workshop"
+      />
 
-      {submitError && (
+      {submitError !== null && (
         <p className="bikes-page__error" role="alert">
           {submitError}
         </p>
@@ -48,7 +53,7 @@ export function BikeCreatePage(): React.JSX.Element {
       <BikeForm
         onSubmit={(data) => void handleSubmit(data)}
         isSubmitting={isSubmitting}
-        submitLabel="Add Bike"
+        submitLabel="Create bike"
       />
     </main>
   );

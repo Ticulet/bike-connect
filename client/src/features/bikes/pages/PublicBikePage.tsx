@@ -4,6 +4,9 @@ import { fetchBike, type BikeItem } from '../api/bikes.api.js';
 import { fetchComponents, type ComponentItem } from '../api/components.api.js';
 import { PhotoGallery } from '../components/PhotoGallery.js';
 import { ComponentList } from '../components/ComponentList.js';
+import { PageHeader } from '../../../components/ui/PageHeader.js';
+import { StatStrip } from '../../../components/ui/StatStrip.js';
+import { Skeleton } from '../../../components/ui/Skeleton.js';
 import { ApiClientError } from '../../../lib/api-client.js';
 import './bikes-pages.css';
 
@@ -45,9 +48,7 @@ export function PublicBikePage(): React.JSX.Element {
         if (err instanceof ApiClientError && err.status === 404) {
           setIsNotFound(true);
         } else {
-          setLoadError(
-            err instanceof Error ? err.message : 'Failed to load bike.',
-          );
+          setLoadError(err instanceof Error ? err.message : 'Failed to load bike.');
         }
       } finally {
         if (!controller.signal.aborted) {
@@ -65,10 +66,12 @@ export function PublicBikePage(): React.JSX.Element {
 
   if (isLoading) {
     return (
-      <main id="main" className="bikes-page">
-        <p className="bikes-page__loading" aria-live="polite">
-          Loading bike...
-        </p>
+      <main id="main" className="public-bike bikes-page">
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--spacing-lg)' }}>
+          <Skeleton width="100%" height="2rem" />
+          <Skeleton width="100%" height="18rem" />
+          <Skeleton width="100%" height="12rem" />
+        </div>
       </main>
     );
   }
@@ -83,12 +86,10 @@ export function PublicBikePage(): React.JSX.Element {
     );
   }
 
-  if (loadError) {
+  if (loadError !== null) {
     return (
       <main id="main" className="bikes-page">
-        <p className="bikes-page__error" role="alert">
-          {loadError}
-        </p>
+        <p className="bikes-page__error" role="alert">{loadError}</p>
         <Link to="/">Back to Home</Link>
       </main>
     );
@@ -96,48 +97,61 @@ export function PublicBikePage(): React.JSX.Element {
 
   if (!bike) return <></>;
 
+  const publicStats = [
+    { label: 'Frame', value: bike.type },
+    { label: 'Year', value: String(bike.year) },
+    { label: 'Brand', value: bike.brand },
+    { label: 'Components', value: components.length },
+  ];
+
   return (
-    <main id="main" className="bikes-page">
-      <PhotoGallery
-        heroImageUrl={bike.hero_image_url}
-        isOwner={false}
-        bikeName={bike.name}
+    <main id="main" className="public-bike bikes-page">
+      <PageHeader
+        eyebrow={bike.type}
+        title={bike.name}
+        subtitle={`${bike.brand} · ${bike.year}`}
+        variant="workshop"
+        actions={
+          <Link
+            to={`/users/${bike.user_id}`}
+            className="public-bike__owner"
+            aria-label={`View owner's profile`}
+          >
+            View owner's profile
+          </Link>
+        }
       />
 
-      <div className="bike-detail__meta">
-        <span className="bike-detail__badge bike-detail__badge--type">
-          {bike.type}
-        </span>
+      <div className="public-bike__hero">
+        <PhotoGallery
+          heroImageUrl={bike.hero_image_url}
+          isOwner={false}
+          bikeName={bike.name}
+        />
       </div>
 
-      <h1 className="bikes-page__heading">{bike.name}</h1>
-
-      <p className="bike-detail__subtitle">
-        {bike.brand} {bike.model} &mdash; {bike.year}
-      </p>
-
-      {bike.description && (
+      {bike.description !== null && bike.description !== '' && (
         <p className="bike-detail__description">{bike.description}</p>
       )}
 
-      <p className="bike-detail__owner-link">
-        <Link to={`/users/${bike.user_id}`}>View owner&rsquo;s profile</Link>
-      </p>
+      <div className="bike-detail__layout">
+        <div className="bike-detail__main">
+          <section aria-labelledby="public-specs">
+            <h2 id="public-specs" className="section-heading">Specifications</h2>
+            <ComponentList
+              components={components}
+              isOwner={false}
+              numbered
+              onEdit={() => undefined}
+              onDelete={() => undefined}
+            />
+          </section>
+        </div>
 
-      <section
-        className="bike-detail__section"
-        aria-labelledby="components-heading"
-      >
-        <h2 id="components-heading" className="bikes-page__subheading">
-          Components
-        </h2>
-        <ComponentList
-          components={components}
-          isOwner={false}
-          onEdit={() => undefined}
-          onDelete={() => undefined}
-        />
-      </section>
+        <aside className="bike-detail__sidebar" aria-label="At a glance">
+          <StatStrip stats={publicStats} orientation="vertical" />
+        </aside>
+      </div>
     </main>
   );
 }

@@ -53,10 +53,25 @@
 
 .image-uploader {
   display: flex;
-  flex-direction: row;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-start;
   gap: var(--spacing-sm);
-  flex-wrap: wrap;
+  padding: var(--spacing-lg);
+  border: 2px dashed var(--color-border);
+  border-radius: var(--radius-md);
+  background-color: var(--color-bg-subtle);
+  transition: border-color var(--transition-fast), background-color var(--transition-fast);
+}
+
+.image-uploader--dragover {
+  border-color: var(--color-accent);
+  background-color: color-mix(in srgb, var(--color-accent) 8%, var(--color-bg));
+}
+
+.image-uploader__hint {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-muted);
+  margin: 0;
 }
 
 .image-uploader__input {

@@ -2,6 +2,10 @@ import { useState } from 'react';
 import { MAINTENANCE_TYPES, VALIDATION_LIMITS } from '@bike-connect/shared';
 import type { ComponentItem } from '../../bikes/api/components.api.js';
 import type { MaintenanceLogItem, CreateMaintenancePayload } from '../api/maintenance.api.js';
+import {
+  createMaintenanceLog,
+  updateMaintenanceLog,
+} from '../api/maintenance.api.js';
 import '../maintenance.css';
 
 interface MaintenanceFormValues {
@@ -15,11 +19,15 @@ interface MaintenanceFormValues {
 }
 
 interface MaintenanceFormProps {
-  components: ComponentItem[];
+  bikeId: string;
+  /** When provided, renders in edit mode. */
+  logId?: string;
+  components?: ComponentItem[];
   initialData?: MaintenanceLogItem;
-  onSubmit: (data: CreateMaintenancePayload) => Promise<void>;
-  isSubmitting: boolean;
-  submitLabel: string;
+  /** Called on successful submit with the resulting log entry. */
+  onSuccess: (entry: MaintenanceLogItem) => void;
+  /** Called when the user cancels. */
+  onCancel: () => void;
 }
 
 function buildDefaults(initialData?: MaintenanceLogItem): MaintenanceFormValues {
@@ -31,13 +39,10 @@ function buildDefaults(initialData?: MaintenanceLogItem): MaintenanceFormValues 
       component_id: initialData.component_id ?? '',
       cost: initialData.cost !== null ? parseFloat(initialData.cost).toFixed(2) : '',
       mileage_at_service:
-        initialData.mileage_at_service !== null
-          ? String(initialData.mileage_at_service)
-          : '',
+        initialData.mileage_at_service !== null ? String(initialData.mileage_at_service) : '',
       performed_at: initialData.performed_at,
     };
   }
-
   const today = new Date().toISOString().split('T')[0] ?? '';
   return {
     type: MAINTENANCE_TYPES[0],
@@ -91,35 +96,30 @@ function validate(
 }
 
 export function MaintenanceForm({
-  components,
+  bikeId,
+  logId,
+  components = [],
   initialData,
-  onSubmit,
-  isSubmitting,
-  submitLabel,
+  onSuccess,
+  onCancel,
 }: MaintenanceFormProps): React.JSX.Element {
-  const [values, setValues] = useState<MaintenanceFormValues>(() =>
-    buildDefaults(initialData),
-  );
-  const [errors, setErrors] = useState<Partial<Record<keyof MaintenanceFormValues, string>>>(
-    {},
-  );
-  const [touched, setTouched] = useState<
-    Partial<Record<keyof MaintenanceFormValues, boolean>>
-  >({});
+  const [values, setValues] = useState<MaintenanceFormValues>(() => buildDefaults(initialData));
+  const [errors, setErrors] = useState<Partial<Record<keyof MaintenanceFormValues, string>>>({});
+  const [touched, setTouched] = useState<Partial<Record<keyof MaintenanceFormValues, boolean>>>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
+
+  const isEditMode = logId !== undefined;
 
   function handleChange(
-    event: React.ChangeEvent<
-      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-    >,
+    event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>,
   ): void {
     const { name, value } = event.target;
     setValues((prev) => ({ ...prev, [name]: value }));
   }
 
   function handleBlur(
-    event: React.FocusEvent<
-      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
-    >,
+    event: React.FocusEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>,
   ): void {
     const { name } = event.target;
     setTouched((prev) => ({ ...prev, [name]: true }));
@@ -150,25 +150,29 @@ export function MaintenanceForm({
       performed_at: values.performed_at,
     };
 
-    if (values.description.trim()) {
-      payload.description = values.description.trim();
-    }
-
-    if (values.component_id !== '') {
-      payload.component_id = values.component_id;
-    } else {
-      payload.component_id = null;
-    }
-
-    if (values.cost !== '') {
-      payload.cost = parseFloat(values.cost);
-    }
-
+    if (values.description.trim()) payload.description = values.description.trim();
+    payload.component_id = values.component_id !== '' ? values.component_id : null;
+    if (values.cost !== '') payload.cost = parseFloat(values.cost);
     if (values.mileage_at_service !== '') {
       payload.mileage_at_service = parseInt(values.mileage_at_service, 10);
     }
 
-    await onSubmit(payload);
+    setIsSubmitting(true);
+    setSubmitError(null);
+
+    try {
+      let result: MaintenanceLogItem;
+      if (isEditMode && logId !== undefined) {
+        result = await updateMaintenanceLog(bikeId, logId, payload);
+      } else {
+        result = await createMaintenanceLog(bikeId, payload);
+      }
+      onSuccess(result);
+    } catch (err: unknown) {
+      setSubmitError(err instanceof Error ? err.message : 'An unexpected error occurred.');
+    } finally {
+      setIsSubmitting(false);
+    }
   }
 
   return (
@@ -176,14 +180,15 @@ export function MaintenanceForm({
       className="maintenance-form"
       onSubmit={(e) => void handleSubmit(e)}
       noValidate
-      aria-label={initialData !== undefined ? 'Edit maintenance record' : 'Add maintenance record'}
+      aria-label={isEditMode ? 'Edit maintenance record' : 'Add maintenance record'}
     >
+      {submitError !== null && (
+        <p className="maintenance-form__submit-error" role="alert">{submitError}</p>
+      )}
+
       <div className="maintenance-form__field-row">
         <div className="maintenance-form__field">
-          <label
-            className="maintenance-form__label maintenance-form__label--required"
-            htmlFor="mf-type"
-          >
+          <label className="maintenance-form__label maintenance-form__label--required" htmlFor="mf-type">
             Type
           </label>
           <select
@@ -211,10 +216,7 @@ export function MaintenanceForm({
         </div>
 
         <div className="maintenance-form__field">
-          <label
-            className="maintenance-form__label maintenance-form__label--required"
-            htmlFor="mf-title"
-          >
+          <label className="maintenance-form__label maintenance-form__label--required" htmlFor="mf-title">
             Title
           </label>
           <input
@@ -252,9 +254,7 @@ export function MaintenanceForm({
         >
           <option value="">None (bike-wide)</option>
           {components.map((c) => (
-            <option key={c.id} value={c.id}>
-              {c.name}
-            </option>
+            <option key={c.id} value={c.id}>{c.name}</option>
           ))}
         </select>
       </div>
@@ -272,9 +272,7 @@ export function MaintenanceForm({
           onBlur={handleBlur}
           rows={4}
           maxLength={VALIDATION_LIMITS.MAINTENANCE_DESCRIPTION_MAX}
-          aria-describedby={
-            fieldError('description') !== undefined ? 'mf-description-error' : undefined
-          }
+          aria-describedby={fieldError('description') !== undefined ? 'mf-description-error' : undefined}
         />
         {fieldError('description') !== undefined && (
           <span id="mf-description-error" className="maintenance-form__error" role="alert">
@@ -285,9 +283,7 @@ export function MaintenanceForm({
 
       <div className="maintenance-form__field-row">
         <div className="maintenance-form__field">
-          <label className="maintenance-form__label" htmlFor="mf-cost">
-            Cost ($)
-          </label>
+          <label className="maintenance-form__label" htmlFor="mf-cost">Cost ($)</label>
           <input
             id="mf-cost"
             name="cost"
@@ -308,9 +304,7 @@ export function MaintenanceForm({
         </div>
 
         <div className="maintenance-form__field">
-          <label className="maintenance-form__label" htmlFor="mf-mileage">
-            Mileage at service (km)
-          </label>
+          <label className="maintenance-form__label" htmlFor="mf-mileage">Mileage at service (km)</label>
           <input
             id="mf-mileage"
             name="mileage_at_service"
@@ -321,11 +315,7 @@ export function MaintenanceForm({
             onBlur={handleBlur}
             min={0}
             step="1"
-            aria-describedby={
-              fieldError('mileage_at_service') !== undefined
-                ? 'mf-mileage-error'
-                : undefined
-            }
+            aria-describedby={fieldError('mileage_at_service') !== undefined ? 'mf-mileage-error' : undefined}
           />
           {fieldError('mileage_at_service') !== undefined && (
             <span id="mf-mileage-error" className="maintenance-form__error" role="alert">
@@ -336,10 +326,7 @@ export function MaintenanceForm({
       </div>
 
       <div className="maintenance-form__field">
-        <label
-          className="maintenance-form__label maintenance-form__label--required"
-          htmlFor="mf-performed-at"
-        >
+        <label className="maintenance-form__label maintenance-form__label--required" htmlFor="mf-performed-at">
           Date performed
         </label>
         <input
@@ -352,9 +339,7 @@ export function MaintenanceForm({
           onBlur={handleBlur}
           required
           aria-required="true"
-          aria-describedby={
-            fieldError('performed_at') !== undefined ? 'mf-performed-at-error' : undefined
-          }
+          aria-describedby={fieldError('performed_at') !== undefined ? 'mf-performed-at-error' : undefined}
         />
         {fieldError('performed_at') !== undefined && (
           <span id="mf-performed-at-error" className="maintenance-form__error" role="alert">
@@ -366,11 +351,19 @@ export function MaintenanceForm({
       <div className="maintenance-form__actions">
         <button
           type="submit"
-          className="maintenance-form__submit"
+          className="btn btn-primary"
           disabled={isSubmitting}
           aria-disabled={isSubmitting}
         >
-          {isSubmitting ? 'Saving...' : submitLabel}
+          {isSubmitting ? 'Saving…' : isEditMode ? 'Save changes' : 'Log entry'}
+        </button>
+        <button
+          type="button"
+          className="btn btn-ghost"
+          onClick={onCancel}
+          disabled={isSubmitting}
+        >
+          Cancel
         </button>
       </div>
     </form>
