@@ -51,7 +51,7 @@
   }
 
   .mobile-tab-bar__item.active {
-    color: var(--color-accent);
+    color: var(--color-accent-deep);
   }
 
   /* Sign in CTA variant */

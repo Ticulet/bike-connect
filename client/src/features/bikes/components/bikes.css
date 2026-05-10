@@ -201,7 +201,7 @@
   font-weight: var(--font-weight-semibold);
   text-transform: uppercase;
   letter-spacing: var(--letter-spacing-eyebrow);
-  color: var(--color-accent);
+  color: var(--color-accent-deep);
   margin: 0;
   line-height: 1;
 }
@@ -620,7 +620,7 @@
   font-weight: var(--font-weight-semibold);
   text-transform: uppercase;
   letter-spacing: var(--letter-spacing-eyebrow);
-  color: var(--color-accent);
+  color: var(--color-accent-deep);
   margin: 0;
   line-height: 1;
 }

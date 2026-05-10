@@ -367,11 +367,11 @@
   box-shadow: var(--shadow-sm);
 }
 
-/* Filled/liked state — heart in clay orange */
+/* Filled/liked state — heart in clay orange (deep variant for AA contrast) */
 .like-btn--liked {
   background: var(--color-accent-light);
-  color: var(--color-accent);
-  border-color: var(--color-accent);
+  color: var(--color-accent-deep);
+  border-color: var(--color-accent-deep);
   box-shadow: var(--shadow-sm);
 }
 

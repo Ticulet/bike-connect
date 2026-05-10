@@ -180,7 +180,7 @@
   outline-offset: 2px;
 }
 
-.btn-toggle[aria-pressed="true"] { color: var(--color-accent); }
+.btn-toggle[aria-pressed="true"] { color: var(--color-accent-deep); }
 
 .btn-toggle__icon {
   transition: transform var(--motion-duration-fast) var(--motion-easing-spring);
