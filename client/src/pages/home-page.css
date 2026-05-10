@@ -30,7 +30,7 @@
 }
 .home-hero__title em {
   font-style: italic;
-  color: var(--color-primary-light);
+  color: var(--color-accent-dark);
 }
 .home-hero__lead {
   font-size: var(--font-size-xl);
@@ -121,7 +121,7 @@
   font-size: var(--font-size-display-sm);
   line-height: var(--line-height-heading);
 }
-.home-problem__title em { font-style: italic; color: var(--color-primary-light); }
+.home-problem__title em { font-style: italic; color: var(--color-accent-dark); }
 .home-problem__grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
