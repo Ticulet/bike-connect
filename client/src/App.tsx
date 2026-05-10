@@ -26,11 +26,7 @@ import { ExploreBikesPage } from './features/bikes/pages/ExploreBikesPage.js';
 import { FeedPage } from './features/feed/pages/FeedPage.js';
 import { RideCreatePage } from './features/rides/pages/RideCreatePage.js';
 import { RideEditPage } from './features/rides/pages/RideEditPage.js';
-
-// TODO: replace with real MeHubPage once the personal hub index is built.
-const MeHubPage = (): React.JSX.Element => (
-  <div>Hub — coming soon.</div>
-);
+import { MeHubPage } from './pages/MeHubPage.js';
 
 export default function App(): React.JSX.Element {
   return (

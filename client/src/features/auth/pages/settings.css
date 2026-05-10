@@ -1,36 +1,147 @@
 /* ===========================
-   Settings Page
+   Settings Page — workshop
    =========================== */
 
-.settings-page {
-  max-width: 36rem;
+.settings {
+  max-width: var(--max-width-content);
   margin: 0 auto;
   padding: var(--spacing-xl) var(--spacing-md);
 }
 
-.settings-page__title {
-  font-family: var(--font-display);
-  font-size: var(--font-size-3xl);
-  font-weight: var(--font-weight-bold);
-  letter-spacing: var(--letter-spacing-tight);
-  color: var(--color-text);
-  margin-bottom: var(--spacing-xl);
-  line-height: var(--line-height-snug);
+.settings__loading {
+  padding: var(--spacing-xl);
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
 }
 
-.settings-page__form {
+/* ── Two-column layout ────────────────── */
+
+.settings__layout {
+  display: flex;
+  gap: var(--spacing-2xl);
+  align-items: flex-start;
+  margin-top: var(--spacing-2xl);
+}
+
+/* ── Left rail ────────────────── */
+
+.settings__rail {
+  flex-shrink: 0;
+  width: 13.75rem; /* 220px */
+  position: sticky;
+  top: 6rem; /* below header (~96 px) */
+}
+
+.settings__rail-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2xs);
+}
+
+/* Rail link — shared base */
+.settings__rail-link {
+  display: block;
+  width: 100%;
+  padding: var(--spacing-sm) var(--spacing-md);
+  font-family: var(--font-body);
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-muted);
+  border-radius: var(--radius-sm);
+  border: none;
+  background: transparent;
+  text-align: left;
+  text-decoration: none;
+  cursor: pointer;
+  border-left: 4px solid transparent;
+  transition: color var(--transition-fast), background-color var(--transition-fast), border-color var(--transition-fast);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .settings__rail-link {
+    transition: none;
+  }
+}
+
+.settings__rail-link:hover {
+  background-color: var(--color-surface-2);
+  color: var(--color-text);
+}
+
+.settings__rail-link:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.settings__rail-link.is-active {
+  border-left-color: var(--color-accent);
+  color: var(--color-text);
+  font-weight: var(--font-weight-semibold);
+  background-color: var(--color-surface-2);
+}
+
+/* Danger variant — Sign out */
+.settings__rail-link--danger {
+  color: var(--color-error);
+  margin-top: var(--spacing-md);
+}
+
+.settings__rail-link--danger:hover {
+  background-color: color-mix(in srgb, var(--color-error) 8%, var(--color-bg));
+  color: var(--color-error);
+}
+
+/* ── Main content area ────────────────── */
+
+.settings__main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xl);
+}
+
+/* ── Settings card ────────────────── */
+
+.settings-card {
+  padding: var(--spacing-2xl);
+  background: var(--color-surface-1);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  scroll-margin-top: 7rem;
+}
+
+.settings-card__title {
+  font-family: var(--font-display);
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text);
+  letter-spacing: var(--letter-spacing-tight);
+  margin-bottom: var(--spacing-lg);
+}
+
+.settings-card__body {
+  /* content */
+}
+
+/* ── Settings form (inside profile card) ────────────────── */
+
+.settings-form {
   display: flex;
   flex-direction: column;
   gap: var(--spacing-lg);
 }
 
-.settings-page__field {
+.settings-form__field {
   display: flex;
   flex-direction: column;
   gap: 0;
 }
 
-.settings-page__label {
+.settings-form__label {
   display: block;
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-semibold);
@@ -38,9 +149,8 @@
   margin-bottom: 0.4rem;
 }
 
-/* Input and textarea — mirrors .input / .textarea global style */
-.settings-page__input,
-.settings-page__textarea {
+.settings-form__input,
+.settings-form__textarea {
   display: block;
   width: 100%;
   font-family: var(--font-body);
@@ -54,108 +164,209 @@
   box-sizing: border-box;
   transition:
     border-color var(--transition-fast),
-    box-shadow var(--transition-fast),
-    background-color var(--transition-fast);
+    box-shadow var(--transition-fast);
 }
 
-.settings-page__input:hover,
-.settings-page__textarea:hover {
+@media (prefers-reduced-motion: reduce) {
+  .settings-form__input,
+  .settings-form__textarea {
+    transition: none;
+  }
+}
+
+.settings-form__input:hover,
+.settings-form__textarea:hover {
   border-color: var(--color-border-strong);
 }
 
-.settings-page__input:focus,
-.settings-page__textarea:focus {
+.settings-form__input:focus,
+.settings-form__textarea:focus {
   outline: none;
   border-color: var(--color-primary);
   box-shadow: 0 0 0 3px var(--color-primary-light);
 }
 
-.settings-page__input[aria-invalid='true'],
-.settings-page__textarea[aria-invalid='true'] {
+.settings-form__input[aria-invalid='true'],
+.settings-form__textarea[aria-invalid='true'] {
   border-color: var(--color-error);
 }
 
-.settings-page__textarea {
+.settings-form__textarea {
   resize: vertical;
   min-height: 6.25rem;
 }
 
-.settings-page__hint {
+.settings-form__hint {
   font-size: var(--font-size-xs);
   color: var(--color-text-subtle);
   margin-top: 0.25rem;
 }
 
-.settings-page__error {
+.settings-form__error {
   font-size: var(--font-size-xs);
   color: var(--color-error);
   margin-top: 0.25rem;
 }
 
-.settings-page__actions {
-  display: flex;
-  align-items: center;
-  gap: var(--spacing-md);
+.settings-form__actions {
   margin-top: var(--spacing-sm);
 }
 
-/* Submit button — primary green style */
-.settings-page__submit {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.625rem 1.25rem;
-  font-family: var(--font-body);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-semibold);
-  line-height: 1.2;
-  background-color: var(--color-primary);
-  color: var(--color-text-inverse);
-  border: 1px solid transparent;
-  border-radius: var(--radius-md);
-  cursor: pointer;
-  box-shadow: var(--shadow-sm);
-  transition:
-    background-color var(--transition-fast),
-    box-shadow var(--transition-fast),
-    transform 80ms ease;
+/* ── Account info (key/value pairs) ────────────────── */
+
+.settings-info {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  margin: 0;
 }
 
-.settings-page__submit:hover:not(:disabled) {
-  background-color: var(--color-primary-dark);
-  box-shadow: var(--shadow-md);
+.settings-info__row {
+  display: flex;
+  gap: var(--spacing-md);
+  align-items: baseline;
 }
 
-.settings-page__submit:active:not(:disabled) {
-  transform: translateY(1px);
-}
-
-.settings-page__submit:disabled {
-  opacity: 0.55;
-  cursor: not-allowed;
-}
-
-/* Success message — green-tinted callout */
-.settings-page__success {
+.settings-info__label {
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
-  color: var(--color-success);
-  background-color: var(--color-success-bg);
-  border-radius: var(--radius-md);
-  padding: 0.75rem 1rem;
+  color: var(--color-text-subtle);
+  min-width: 8rem;
+  flex-shrink: 0;
 }
 
-/* Server-level error message */
-.settings-page__server-error {
+.settings-info__value {
   font-size: var(--font-size-sm);
-  color: var(--color-error);
-  background-color: var(--color-error-bg);
-  border-radius: var(--radius-md);
-  padding: 0.75rem 1rem;
+  color: var(--color-text);
+}
+
+/* ── Toggles (privacy / notifications) ────────────────── */
+
+.settings-toggles {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.settings-toggle {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  cursor: pointer;
+}
+
+.settings-toggle__label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text);
+}
+
+.settings-toggle__input {
+  /* Visually hidden but still functional */
+  position: absolute;
+  opacity: 0;
+  width: 1px;
+  height: 1px;
+}
+
+.settings-toggle__track {
+  display: block;
+  width: 2.5rem;
+  height: 1.375rem;
+  background-color: var(--color-border-strong);
+  border-radius: var(--radius-full);
+  position: relative;
+  flex-shrink: 0;
+  transition: background-color var(--transition-fast);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .settings-toggle__track {
+    transition: none;
+  }
+}
+
+.settings-toggle__track::after {
+  content: '';
+  position: absolute;
+  top: 0.1875rem;
+  left: 0.1875rem;
+  width: 1rem;
+  height: 1rem;
+  background: var(--color-surface);
+  border-radius: var(--radius-full);
+  transition: transform var(--transition-fast);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .settings-toggle__track::after {
+    transition: none;
+  }
+}
+
+.settings-toggle__input:checked + .settings-toggle__track {
+  background-color: var(--color-primary);
+}
+
+.settings-toggle__input:checked + .settings-toggle__track::after {
+  transform: translateX(1.125rem);
+}
+
+.settings-toggle__input:focus-visible + .settings-toggle__track {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.settings-toggle__hint {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-subtle);
+  margin: 0;
+}
+
+/* ── Responsive: collapse rail to top strip ────────────────── */
+
+@media (max-width: 60rem) {
+  .settings__layout {
+    flex-direction: column;
+    gap: var(--spacing-lg);
+  }
+
+  .settings__rail {
+    width: 100%;
+    position: static;
+  }
+
+  .settings__rail-list {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: var(--spacing-xs);
+  }
+
+  .settings__rail-link {
+    border-left: none;
+    border-bottom: 2px solid transparent;
+    border-radius: var(--radius-sm);
+  }
+
+  .settings__rail-link.is-active {
+    border-left-color: transparent;
+    border-bottom-color: var(--color-accent);
+  }
+
+  .settings__rail-link--danger {
+    margin-top: 0;
+    margin-left: auto;
+  }
 }
 
 @media (min-width: 48rem) {
-  .settings-page {
+  .settings {
     padding: var(--spacing-2xl) var(--spacing-lg);
+  }
+}
+
+@media (min-width: 64rem) {
+  .settings {
+    padding: var(--spacing-2xl) var(--spacing-xl);
   }
 }

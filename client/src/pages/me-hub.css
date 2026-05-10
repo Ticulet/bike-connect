@@ -1,0 +1,198 @@
+/* ===========================
+   /me Hub Index Page
+   =========================== */
+
+.me-hub {
+  max-width: var(--max-width-content);
+  margin: 0 auto;
+  padding: var(--spacing-xl) var(--spacing-md);
+}
+
+/* ── Summary stat strip ────────────────── */
+
+.me-hub__summary {
+  margin-top: var(--spacing-xl);
+}
+
+/* ── Quick links section ────────────────── */
+
+.me-hub__quick-links {
+  margin-top: var(--spacing-2xl);
+}
+
+.section-heading {
+  font-family: var(--font-display);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text);
+  letter-spacing: var(--letter-spacing-tight);
+  margin-bottom: var(--spacing-md);
+}
+
+.me-hub__links {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: var(--spacing-md);
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* ── Quick link card ────────────────── */
+
+.me-hub__link {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-lg);
+  background-color: var(--color-surface-1);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-card);
+  color: var(--color-text);
+  text-decoration: none;
+  transition: background-color var(--transition-fast), border-color var(--transition-fast);
+  position: relative;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .me-hub__link {
+    transition: none;
+  }
+}
+
+.me-hub__link:hover {
+  background-color: var(--color-surface-2);
+  border-color: var(--color-border-strong);
+}
+
+.me-hub__link:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.me-hub__link-icon {
+  color: var(--color-primary);
+  display: flex;
+  align-items: center;
+}
+
+.me-hub__link-label {
+  font-family: var(--font-body);
+  font-size: var(--font-size-md);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text);
+}
+
+.me-hub__link-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: var(--chip-padding-y) var(--chip-padding-x);
+  background-color: var(--color-stone-200);
+  color: var(--color-text-muted);
+  border-radius: var(--radius-pill);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  line-height: 1;
+}
+
+/* ── Reminders section ────────────────── */
+
+.me-hub__reminders {
+  margin-top: var(--spacing-2xl);
+}
+
+/* ── Activity section ────────────────── */
+
+.me-hub__activity {
+  margin-top: var(--spacing-2xl);
+}
+
+.me-hub__activity-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.me-hub__activity-item {
+  border-bottom: 1px solid var(--color-border-light);
+}
+
+.me-hub__activity-item:first-child {
+  border-top: 1px solid var(--color-border-light);
+}
+
+.me-hub__activity-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-md);
+  padding: var(--spacing-sm) 0;
+  color: var(--color-text);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .me-hub__activity-link {
+    transition: none;
+  }
+}
+
+.me-hub__activity-link:hover {
+  color: var(--color-primary);
+}
+
+.me-hub__activity-link:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+  border-radius: var(--radius-xs);
+}
+
+.me-hub__activity-label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.me-hub__activity-time {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-subtle);
+  flex-shrink: 0;
+}
+
+/* ── Skeleton loading state ────────────────── */
+
+.me-hub__skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+  padding: var(--spacing-xl) var(--spacing-md);
+  max-width: var(--max-width-content);
+  margin: 0 auto;
+}
+
+.me-hub__skeleton-links {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: var(--spacing-md);
+}
+
+/* ── Responsive ────────────────── */
+
+@media (min-width: 48rem) {
+  .me-hub {
+    padding: var(--spacing-2xl) var(--spacing-lg);
+  }
+}
+
+@media (min-width: 64rem) {
+  .me-hub {
+    padding: var(--spacing-2xl) var(--spacing-xl);
+  }
+}

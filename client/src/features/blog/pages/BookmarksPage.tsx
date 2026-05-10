@@ -1,8 +1,12 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router';
 import { fetchMyBookmarks, type BookmarkedPost } from '../api/bookmarks.api.js';
 import { PostCard } from '../components/PostCard.js';
+import { PageHeader } from '../../../components/ui/PageHeader.js';
+import { EmptyState } from '../../../components/ui/EmptyState.js';
+import { Skeleton } from '../../../components/ui/Skeleton.js';
 import type { PostSummary } from '../api/posts.api.js';
-import '../components/blog-social.css';
+import './bookmarks.css';
 
 function bookmarkedPostToSummary(bp: BookmarkedPost): PostSummary {
   return {
@@ -21,6 +25,43 @@ function bookmarkedPostToSummary(bp: BookmarkedPost): PostSummary {
     author_avatar_url: bp.author_avatar_url,
   };
 }
+
+// ───────────────────────── Icons ─────────────────────────
+
+function BookmarkIcon(): React.JSX.Element {
+  return (
+    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M5 3h14a1 1 0 011 1v17l-7-4-7 4V4a1 1 0 011-1z"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+// ───────────────────────── BookmarksSkeleton ─────────────────────────
+
+function BookmarksSkeleton(): React.JSX.Element {
+  return (
+    <div className="bookmarks__skeleton" aria-label="Loading bookmarks…">
+      {Array.from({ length: 3 }, (_, i) => (
+        <div key={i} className="bookmarks__skeleton-card">
+          <Skeleton variant="rect" height="12rem" />
+          <div className="bookmarks__skeleton-body">
+            <Skeleton variant="text" width="60%" height="1.25rem" />
+            <Skeleton variant="text" width="90%" height="1rem" />
+            <Skeleton variant="text" width="80%" height="1rem" />
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// ───────────────────────── BookmarksPage ─────────────────────────
 
 export function BookmarksPage(): React.JSX.Element {
   const [bookmarks, setBookmarks] = useState<BookmarkedPost[]>([]);
@@ -53,45 +94,45 @@ export function BookmarksPage(): React.JSX.Element {
     };
   }, []);
 
-  if (isLoading) {
-    return (
-      <main id="main" className="bookmarks-page">
-        <h1 className="bookmarks-page__heading">My Bookmarks</h1>
-        <p className="bookmarks-page__loading" aria-live="polite">
-          Loading bookmarks…
-        </p>
-      </main>
-    );
-  }
-
-  if (error) {
-    return (
-      <main id="main" className="bookmarks-page">
-        <h1 className="bookmarks-page__heading">My Bookmarks</h1>
-        <p className="bookmarks-page__error" role="alert">
-          {error}
-        </p>
-      </main>
-    );
-  }
-
   return (
-    <main id="main" className="bookmarks-page">
-      <h1 className="bookmarks-page__heading">My Bookmarks</h1>
+    <div className="bookmarks">
+      <PageHeader
+        eyebrow="Personal"
+        title="Bookmarks"
+        subtitle={
+          !isLoading && bookmarks.length > 0
+            ? `${bookmarks.length} saved`
+            : undefined
+        }
+        variant="editorial"
+      />
 
-      {bookmarks.length === 0 ? (
-        <p className="bookmarks-page__empty">
-          You have no bookmarks yet. Bookmark posts to find them here.
-        </p>
+      {error && (
+        <p className="bookmarks__error" role="alert">{error}</p>
+      )}
+
+      {isLoading ? (
+        <BookmarksSkeleton />
+      ) : bookmarks.length === 0 ? (
+        <EmptyState
+          icon={<BookmarkIcon />}
+          title="No bookmarks yet"
+          description="Tap the bookmark icon on any post to save it here for later."
+          action={
+            <Link to="/posts" className="btn btn-primary">
+              Browse posts
+            </Link>
+          }
+        />
       ) : (
-        <ul role="list" className="bookmarks-page__grid" aria-label="Bookmarked posts">
+        <ul className="bookmarks__grid" role="list" aria-label="Bookmarked posts">
           {bookmarks.map((bookmark) => (
             <li key={bookmark.id}>
-              <PostCard post={bookmarkedPostToSummary(bookmark)} />
+              <PostCard post={bookmarkedPostToSummary(bookmark)} variant="medium" />
             </li>
           ))}
         </ul>
       )}
-    </main>
+    </div>
   );
 }

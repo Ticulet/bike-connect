@@ -2,6 +2,67 @@
    Feed Page
    =========================== */
 
+/* New BEM root — used by the refreshed FeedPage */
+.feed {
+  max-width: var(--max-width-narrow);  /* 48rem — editorial reading width */
+  margin: 0 auto;
+  padding: var(--spacing-xl) var(--spacing-md);
+}
+
+.feed__error {
+  font-size: var(--font-size-sm);
+  color: var(--color-error);
+  background-color: var(--color-error-bg);
+  border-radius: var(--radius-md);
+  padding: 0.75rem 1rem;
+  margin-top: var(--spacing-md);
+}
+
+/* Single-column list with generous gaps */
+.feed__list {
+  list-style: none;
+  padding: 0;
+  margin: var(--spacing-2xl) 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2xl);
+}
+
+/* Pagination row */
+.feed__pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: var(--spacing-xl);
+  padding-top: var(--spacing-xl);
+  border-top: 1px solid var(--color-border-light);
+}
+
+/* Skeleton container */
+.feed__skeleton {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-2xl);
+  margin-top: var(--spacing-2xl);
+}
+
+.feed__skeleton-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  background: var(--color-surface-1);
+}
+
+.feed__skeleton-body {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md);
+}
+
+/* Legacy .feed-page root (keep for any remaining references) */
 .feed-page {
   max-width: 48rem;
   margin: 0 auto;
@@ -210,6 +271,7 @@
 }
 
 @media (min-width: 48rem) {
+  .feed,
   .feed-page {
     padding: var(--spacing-2xl) var(--spacing-lg);
   }
@@ -220,7 +282,24 @@
 }
 
 @media (min-width: 64rem) {
+  .feed,
   .feed-page {
     padding: var(--spacing-2xl) var(--spacing-xl);
+  }
+}
+
+/* Gate hover/active transforms behind reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .feed-page__suggested-item {
+    transition: border-color var(--transition-fast);
+    transform: none;
+  }
+
+  .feed-page__suggested-item:hover {
+    transform: none;
+  }
+
+  .feed-page__load-more-btn:active:not(:disabled) {
+    transform: none;
   }
 }
