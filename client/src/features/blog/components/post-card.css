@@ -11,14 +11,26 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  transition: box-shadow var(--transition-normal), transform var(--transition-normal),
-              border-color var(--transition-normal);
+  transition: box-shadow var(--motion-duration-normal) var(--motion-easing-standard),
+              transform var(--motion-duration-normal) var(--motion-easing-standard),
+              border-color var(--motion-duration-normal) var(--motion-easing-standard);
 }
 
 .post-card:hover {
   box-shadow: var(--shadow-md);
   border-color: var(--color-border);
   transform: translateY(-2px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .post-card {
+    transition: box-shadow var(--motion-duration-normal) var(--motion-easing-standard),
+                border-color var(--motion-duration-normal) var(--motion-easing-standard);
+  }
+
+  .post-card:hover {
+    transform: none;
+  }
 }
 
 .post-card__cover {
@@ -40,8 +52,13 @@
 .post-card__meta {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: var(--spacing-sm);
   flex-wrap: wrap;
+}
+
+.post-card__meta-sep {
+  color: var(--color-text-subtle);
+  user-select: none;
 }
 
 .post-card__category {
@@ -75,7 +92,7 @@
 .post-card__title-link {
   color: var(--color-text);
   text-decoration: none;
-  transition: color var(--transition-fast);
+  transition: color var(--motion-duration-fast) var(--motion-easing-standard);
 }
 
 /* Expand the title link's hit area over the entire card.
@@ -128,7 +145,7 @@
   padding: 0.15rem 0.35rem;
   margin-left: -0.35rem;
   border-radius: var(--radius-md);
-  transition: background-color var(--transition-fast);
+  transition: background-color var(--motion-duration-fast) var(--motion-easing-standard);
 }
 
 .post-card__author:hover {
@@ -201,12 +218,12 @@
   aspect-ratio: 21 / 9;
 }
 
-/* Drop cap on excerpt */
-.post-card__excerpt--drop-cap::first-letter {
-  float: left;
+/* Drop cap on excerpt — featured variant only; applied via has-drop-cap on article */
+.post-card--featured.has-drop-cap .post-card__excerpt::first-letter {
   font-family: var(--font-display);
   font-size: 3.5em;
   line-height: 0.85;
+  float: left;
   margin: 0.05em 0.1em 0 0;
   color: var(--color-primary);
 }

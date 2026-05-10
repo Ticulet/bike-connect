@@ -8,7 +8,22 @@ import {
 import { ApiClientError } from '../../../lib/api-client.js';
 import { CommentForm } from './CommentForm.js';
 import { CommentItem } from './CommentItem.js';
+import { Skeleton } from '../../../components/ui/Skeleton.js';
+import { EmptyState } from '../../../components/ui/EmptyState.js';
 import './blog-social.css';
+
+function CommentIcon(): React.JSX.Element {
+  return (
+    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
 
 interface CommentListProps {
   postId: string;
@@ -136,11 +151,17 @@ export function CommentList({
       )}
 
       {isLoading ? (
-        <p aria-live="polite" style={{ color: 'var(--color-text-muted)' }}>
-          Loading comments…
-        </p>
+        <div className="comment-section__skeleton" role="status" aria-live="polite" aria-label="Loading comments…">
+          <Skeleton variant="text" width="60%" height="1rem" />
+          <Skeleton variant="text" width="85%" height="0.875rem" />
+          <Skeleton variant="text" width="40%" height="0.875rem" />
+        </div>
       ) : commentCount === 0 ? (
-        <p className="comment-section__empty">No comments yet.</p>
+        <EmptyState
+          icon={<CommentIcon />}
+          title="No comments yet"
+          description="Be the first to share your thoughts."
+        />
       ) : (
         <ul className="comment-section__list" aria-label="Comments list">
           {threads.map(({ comment, replies }) => (

@@ -12,7 +12,9 @@
   flex-direction: column;
   text-decoration: none;
   color: inherit;
-  transition: box-shadow var(--transition-normal), transform var(--transition-normal), border-color var(--transition-normal);
+  transition: box-shadow var(--motion-duration-normal) var(--motion-easing-standard),
+              transform var(--motion-duration-normal) var(--motion-easing-standard),
+              border-color var(--motion-duration-normal) var(--motion-easing-standard);
 }
 
 .bike-card:hover {
@@ -122,7 +124,8 @@
   border: 1px solid var(--color-border);
   border-radius: var(--radius-card, var(--radius-lg));
   overflow: hidden;
-  transition: box-shadow var(--transition-normal), transform var(--transition-normal);
+  transition: box-shadow var(--motion-duration-normal) var(--motion-easing-standard),
+              transform var(--motion-duration-normal) var(--motion-easing-standard);
   box-shadow: none;
 }
 
@@ -133,7 +136,7 @@
 
 @media (prefers-reduced-motion: reduce) {
   .bike-card--workshop {
-    transition: none;
+    transition: box-shadow var(--motion-duration-normal) var(--motion-easing-standard);
   }
   .bike-card--workshop:hover {
     transform: none;
@@ -419,7 +422,7 @@
   font-weight: var(--font-weight-semibold);
   cursor: pointer;
   box-shadow: var(--shadow-sm);
-  transition: background-color var(--transition-fast), box-shadow var(--transition-fast), transform 80ms ease;
+  transition: background-color var(--transition-fast), box-shadow var(--transition-fast), transform var(--motion-duration-instant) var(--motion-easing-standard);
 }
 
 .bike-form__submit:hover:not(:disabled) {
@@ -790,7 +793,7 @@
   font-weight: var(--font-weight-semibold);
   cursor: pointer;
   box-shadow: var(--shadow-sm);
-  transition: background-color var(--transition-fast), box-shadow var(--transition-fast), transform 80ms ease;
+  transition: background-color var(--transition-fast), box-shadow var(--transition-fast), transform var(--motion-duration-instant) var(--motion-easing-standard);
 }
 
 .component-form__submit:hover:not(:disabled) {
@@ -831,4 +834,24 @@
 .component-form__cancel-btn:focus-visible {
   outline: 2px solid var(--color-focus);
   outline-offset: 2px;
+}
+
+/* Reduced-motion guards */
+@media (prefers-reduced-motion: reduce) {
+  .bike-card {
+    transition: box-shadow var(--motion-duration-normal) var(--motion-easing-standard),
+                border-color var(--motion-duration-normal) var(--motion-easing-standard);
+  }
+
+  .bike-card:hover {
+    transform: none;
+  }
+
+  .bike-form__submit:active:not(:disabled) {
+    transform: none;
+  }
+
+  .component-form__submit:active:not(:disabled) {
+    transform: none;
+  }
 }

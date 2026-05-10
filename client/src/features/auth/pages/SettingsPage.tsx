@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router';
 import { useAuth } from '../hooks/useAuth.js';
 import { apiClient, ApiClientError } from '../../../lib/api-client.js';
 import { PageHeader } from '../../../components/ui/PageHeader.js';
+import { Skeleton } from '../../../components/ui/Skeleton.js';
 import { useToast } from '../../../components/ui/useToast.js';
 import type { AuthUser } from '../api/auth.api.js';
 import './settings.css';
@@ -293,7 +294,11 @@ export function SettingsPage(): React.JSX.Element {
   if (isLoading) {
     return (
       <div className="settings">
-        <p role="status" aria-live="polite" className="settings__loading">Loading…</p>
+        <div className="settings__loading" role="status" aria-live="polite" aria-label="Loading settings…">
+          <Skeleton variant="text" width="40%" height="2rem" />
+          <Skeleton variant="text" width="65%" height="1rem" />
+          <Skeleton variant="rect" height="12rem" />
+        </div>
       </div>
     );
   }

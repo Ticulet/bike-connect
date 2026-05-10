@@ -2,6 +2,22 @@ import { useState } from 'react';
 import { toggleBookmark } from '../api/bookmarks.api.js';
 import './blog-social.css';
 
+function BookmarkFilledIcon(): React.JSX.Element {
+  return (
+    <svg width="14" height="16" viewBox="0 0 14 16" aria-hidden="true" fill="currentColor">
+      <path d="M2 2a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v13l-5-3-5 3V2z" />
+    </svg>
+  );
+}
+
+function BookmarkOutlineIcon(): React.JSX.Element {
+  return (
+    <svg width="14" height="16" viewBox="0 0 14 16" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.4">
+      <path d="M2 2a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v13l-5-3-5 3V2z" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
 interface BookmarkButtonProps {
   postId: string;
   isAuthenticated: boolean;
@@ -44,15 +60,15 @@ export function BookmarkButton({
   return (
     <button
       type="button"
-      className={`bookmark-btn${isBookmarked ? ' bookmark-btn--bookmarked' : ''}`}
+      className={`btn-toggle bookmark-btn${isBookmarked ? ' bookmark-btn--bookmarked' : ''}`}
       onClick={() => void handleToggle()}
       disabled={!isAuthenticated || isToggling}
       aria-label={label}
       aria-pressed={isAuthenticated ? isBookmarked : undefined}
       title={!isAuthenticated ? 'Log in to bookmark' : undefined}
     >
-      <span className="bookmark-btn__icon" aria-hidden="true">
-        {isBookmarked ? '🔖' : '🏷'}
+      <span className="btn-toggle__icon bookmark-btn__icon" aria-hidden="true">
+        {isBookmarked ? <BookmarkFilledIcon /> : <BookmarkOutlineIcon />}
       </span>
       <span>{isBookmarked ? 'Bookmarked' : 'Bookmark'}</span>
     </button>

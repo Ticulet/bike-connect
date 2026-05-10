@@ -1,7 +1,22 @@
 import type { ComponentReminder } from '../api/reminders.api.js';
 import { ReminderBadge } from './ReminderBadge.js';
 import { useToast } from '../../../components/ui/useToast.js';
+import { EmptyState } from '../../../components/ui/EmptyState.js';
 import '../reminders.css';
+
+function BellIcon(): React.JSX.Element {
+  return (
+    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.73 21a2 2 0 0 1-3.46 0"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
 
 interface ReminderListProps {
   reminders: ComponentReminder[];
@@ -25,9 +40,11 @@ export function ReminderList({ reminders, compact = false, onDismiss }: Reminder
 
   if (reminders.length === 0) {
     return (
-      <p className="reminder-list__empty">
-        No components with maintenance thresholds set.
-      </p>
+      <EmptyState
+        icon={<BellIcon />}
+        title="No reminders"
+        description="No components with maintenance thresholds set."
+      />
     );
   }
 

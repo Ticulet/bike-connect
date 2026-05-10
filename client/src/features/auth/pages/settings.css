@@ -29,7 +29,7 @@
   flex-shrink: 0;
   width: 13.75rem; /* 220px */
   position: sticky;
-  top: 6rem; /* below header (~96 px) */
+  top: 6rem; /* sync with --header-height (4.5rem) + 1.5rem breathing room */
 }
 
 .settings__rail-list {
@@ -111,7 +111,7 @@
   background: var(--color-surface-1);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-card);
-  scroll-margin-top: 7rem;
+  scroll-margin-top: 7rem; /* sync with --header-height (4.5rem) + spacing-xl (2rem) + buffer */
 }
 
 .settings-card__title {

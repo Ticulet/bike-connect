@@ -1,6 +1,20 @@
 import { Link } from 'react-router';
 import type { RideItem } from '../api/rides.api.js';
+import { EmptyState } from '../../../components/ui/EmptyState.js';
 import '../rides.css';
+
+function RouteIcon(): React.JSX.Element {
+  return (
+    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M3 17c0-1.1.9-2 2-2h14a2 2 0 0 1 0 4H5a2 2 0 0 1-2-2zM3 7c0-1.1.9-2 2-2h8a2 2 0 0 1 0 4H5a2 2 0 0 1-2-2z"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
 
 interface RideListProps {
   rides: RideItem[];
@@ -60,9 +74,11 @@ export function RideList({
 }: RideListProps): React.JSX.Element {
   if (rides.length === 0) {
     return (
-      <p className="ride-list__empty">
-        No rides logged yet.{isOwner && ' Log your first ride above.'}
-      </p>
+      <EmptyState
+        icon={<RouteIcon />}
+        title="No rides logged yet"
+        description={isOwner ? 'Log your first ride above.' : 'No rides have been recorded for this bike.'}
+      />
     );
   }
 

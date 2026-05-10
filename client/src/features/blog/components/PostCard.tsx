@@ -34,9 +34,14 @@ export function PostCard({ post, variant = 'medium', dropCap = false }: PostCard
   const authorInitial = post.author_display_name.charAt(0).toUpperCase();
   const showExcerpt = variant !== 'compact';
   const showCategory = variant !== 'compact';
+  const articleClass = [
+    'post-card',
+    `post-card--${variant}`,
+    dropCap && variant === 'featured' ? 'has-drop-cap' : '',
+  ].filter(Boolean).join(' ');
 
   return (
-    <article className={`post-card post-card--${variant}`}>
+    <article className={articleClass}>
       {isSafeImageUrl(post.cover_image_url) && (
         <img
           src={post.cover_image_url}
@@ -52,6 +57,9 @@ export function PostCard({ post, variant = 'medium', dropCap = false }: PostCard
               {formatCategoryLabel(post.category)}
             </span>
           )}
+          {showCategory && (
+            <span className="post-card__meta-sep" aria-hidden="true">·</span>
+          )}
           <time className="post-card__date" dateTime={displayDate}>
             {formatDate(displayDate)}
           </time>
@@ -64,7 +72,7 @@ export function PostCard({ post, variant = 'medium', dropCap = false }: PostCard
         </h2>
 
         {showExcerpt && post.excerpt && (
-          <p className={`post-card__excerpt${dropCap ? ' post-card__excerpt--drop-cap' : ''}`}>
+          <p className="post-card__excerpt">
             {post.excerpt}
           </p>
         )}

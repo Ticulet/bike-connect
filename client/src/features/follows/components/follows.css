@@ -9,39 +9,11 @@
   gap: 0.375rem;
 }
 
+/* .follow-btn extends .btn-toggle (from utilities/buttons.css) */
 .follow-btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.5rem 1.125rem;
   font-family: var(--font-body);
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-semibold);
-  line-height: 1.2;
-  border-radius: var(--radius-md);
-  border: 1.5px solid var(--color-primary);
-  background-color: var(--color-primary);
-  color: var(--color-text-inverse);
-  cursor: pointer;
-  white-space: nowrap;
-  transition:
-    background-color var(--transition-fast),
-    color var(--transition-fast),
-    border-color var(--transition-fast),
-    box-shadow var(--transition-fast),
-    transform 80ms ease;
-  box-shadow: var(--shadow-sm);
-}
-
-.follow-btn:hover:not(:disabled) {
-  background-color: var(--color-primary-dark);
-  border-color: var(--color-primary-dark);
-  color: var(--color-text-inverse);
-  box-shadow: var(--shadow-md);
-}
-
-.follow-btn:active:not(:disabled) {
-  transform: translateY(1px);
 }
 
 .follow-btn:disabled {
@@ -49,20 +21,14 @@
   cursor: not-allowed;
 }
 
-/* Following state — outline style */
-.follow-btn--following {
-  background-color: transparent;
+/* Following state — green accent tint */
+.follow-btn.is-following {
   color: var(--color-primary);
-  border-color: var(--color-primary);
-  box-shadow: none;
 }
 
-/* Hover on following state — red-tinted unfollow signal */
-.follow-btn--following:hover:not(:disabled) {
-  background-color: var(--color-error-bg);
-  border-color: var(--color-error);
+.follow-btn.is-following:hover:not(:disabled) {
+  background: var(--color-error-bg);
   color: var(--color-error);
-  box-shadow: none;
 }
 
 .follow-btn__error {
@@ -78,7 +44,7 @@
 .follow-stats {
   display: inline-flex;
   align-items: center;
-  gap: 0.375rem;
+  gap: var(--spacing-xs);
   font-size: var(--font-size-sm);
   color: var(--color-text-muted);
 }
@@ -101,4 +67,10 @@
 .follow-stats__separator {
   color: var(--color-text-subtle);
   user-select: none;
+}
+
+/* compact variant — smaller text, tighter gap */
+.follow-stats--compact {
+  font-size: var(--font-size-xs);
+  gap: var(--spacing-2xs);
 }

@@ -17,7 +17,27 @@
   border-radius: var(--radius-xl);
   background: var(--color-surface);
   color: var(--color-text);
-  box-shadow: var(--shadow-xl);
+  box-shadow: var(--shadow-2xl);
+
+  /* Entry motion: slide up + fade in */
+  opacity: 0;
+  transform: translateY(var(--motion-offset-enter));
+  animation: confirm-dialog-enter var(--motion-duration-normal) var(--motion-easing-emphasized) forwards;
+}
+
+@keyframes confirm-dialog-enter {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .confirm-dialog {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
 }
 
 .confirm-dialog::backdrop {
@@ -50,31 +70,10 @@
   gap: var(--spacing-sm);
 }
 
+/* Confirm dialog uses .btn .btn-ghost (cancel) and .btn .btn-danger (confirm)
+   from utilities/buttons.css — only minor adjustments needed here */
 .confirm-dialog__btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--font-body);
-  font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
-  padding: 0.5rem var(--spacing-md);
-  border-radius: var(--radius-md);
-  border: 1px solid var(--color-border);
-  background: var(--color-surface);
-  color: var(--color-text);
-  cursor: pointer;
-  transition: background-color var(--transition-fast), border-color var(--transition-fast),
-              color var(--transition-fast);
-}
-
-.confirm-dialog__btn:focus-visible {
-  outline: 2px solid var(--color-primary);
-  outline-offset: 2px;
-}
-
-.confirm-dialog__btn--cancel:hover {
-  background: var(--color-bg-subtle);
-  border-color: var(--color-border-strong);
 }
 
 .confirm-dialog__btn--confirm {

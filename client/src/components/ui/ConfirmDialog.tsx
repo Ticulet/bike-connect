@@ -19,15 +19,24 @@ export function ConfirmDialog({
   onCancel,
 }: ConfirmDialogProps): React.JSX.Element {
   const dialogRef = useRef<HTMLDialogElement>(null);
+  // Track the element that triggered the dialog so focus restores on close
+  const triggerRef = useRef<Element | null>(null);
 
   useEffect(() => {
     const dialog = dialogRef.current;
     if (!dialog) return;
 
     if (isOpen && !dialog.open) {
+      // Capture the currently focused element to restore focus on close
+      triggerRef.current = document.activeElement;
       dialog.showModal();
     } else if (!isOpen && dialog.open) {
       dialog.close();
+      // Restore focus to the trigger element
+      if (triggerRef.current instanceof HTMLElement) {
+        triggerRef.current.focus();
+      }
+      triggerRef.current = null;
     }
   }, [isOpen]);
 
@@ -48,14 +57,14 @@ export function ConfirmDialog({
       <div className="confirm-dialog__actions">
         <button
           type="button"
-          className="confirm-dialog__btn confirm-dialog__btn--cancel"
+          className="btn btn-ghost confirm-dialog__btn confirm-dialog__btn--cancel"
           onClick={onCancel}
         >
           Cancel
         </button>
         <button
           type="button"
-          className="confirm-dialog__btn confirm-dialog__btn--confirm"
+          className="btn confirm-dialog__btn confirm-dialog__btn--confirm"
           onClick={onConfirm}
           autoFocus
         >

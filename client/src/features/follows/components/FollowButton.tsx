@@ -3,6 +3,22 @@ import { toggleFollow, type FollowStats } from '../api/follows.api.js';
 import { ApiClientError } from '../../../lib/api-client.js';
 import './follows.css';
 
+function PlusIcon(): React.JSX.Element {
+  return (
+    <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true" fill="none">
+      <path d="M7 2v10M2 7h10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function CheckIcon(): React.JSX.Element {
+  return (
+    <svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true" fill="none">
+      <path d="M2.5 7l3 3 6-6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
 interface FollowButtonProps {
   userId: string;
   isFollowing: boolean;
@@ -69,14 +85,17 @@ export function FollowButton({
     <div className="follow-button-wrapper">
       <button
         type="button"
-        className={`follow-btn${localIsFollowing ? ' follow-btn--following' : ''}`}
+        className={`btn-toggle follow-btn${localIsFollowing ? ' is-following' : ''}`}
         onClick={() => void handleToggle()}
         disabled={isLoading}
         aria-busy={isLoading}
         aria-pressed={localIsFollowing}
         aria-label={localIsFollowing ? 'Unfollow this user' : 'Follow this user'}
       >
-        {isLoading ? '...' : localIsFollowing ? 'Following' : 'Follow'}
+        <span className="btn-toggle__icon" aria-hidden="true">
+          {isLoading ? '…' : localIsFollowing ? <CheckIcon /> : <PlusIcon />}
+        </span>
+        <span>{localIsFollowing ? 'Following' : 'Follow'}</span>
       </button>
       {error !== null && (
         <p className="follow-btn__error" role="alert">

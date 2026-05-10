@@ -5,7 +5,9 @@
   border: 1px solid var(--color-border-light);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-sm);
-  transition: box-shadow var(--transition-normal), transform var(--transition-normal), border-color var(--transition-normal);
+  transition: box-shadow var(--motion-duration-normal) var(--motion-easing-standard),
+              transform var(--motion-duration-normal) var(--motion-easing-standard),
+              border-color var(--motion-duration-normal) var(--motion-easing-standard);
 }
 
 .card-hover:hover {
@@ -16,10 +18,30 @@
 
 /* elevation-hover — utility for interactive cards that need a lift effect */
 .elevation-hover {
-  transition: box-shadow var(--transition-normal), transform var(--transition-normal);
+  transition: box-shadow var(--motion-duration-normal) var(--motion-easing-standard),
+              transform var(--motion-duration-normal) var(--motion-easing-standard);
 }
 
 .elevation-hover:hover {
   box-shadow: var(--shadow-md);
   transform: translateY(-2px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card {
+    transition: box-shadow var(--motion-duration-normal) var(--motion-easing-standard),
+                border-color var(--motion-duration-normal) var(--motion-easing-standard);
+  }
+
+  .card-hover:hover {
+    transform: none;
+  }
+
+  .elevation-hover {
+    transition: box-shadow var(--motion-duration-normal) var(--motion-easing-standard);
+  }
+
+  .elevation-hover:hover {
+    transform: none;
+  }
 }

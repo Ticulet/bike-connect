@@ -380,7 +380,7 @@
   font-weight: var(--font-weight-semibold);
   cursor: pointer;
   box-shadow: var(--shadow-sm);
-  transition: background-color var(--transition-fast), box-shadow var(--transition-fast), transform 80ms ease;
+  transition: background-color var(--transition-fast), box-shadow var(--transition-fast), transform var(--motion-duration-instant) var(--motion-easing-standard);
 }
 
 .maintenance-form__submit:hover:not(:disabled) {
@@ -426,4 +426,10 @@
 .maintenance-form__cancel-btn:focus-visible {
   outline: 2px solid var(--color-focus);
   outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .maintenance-form__submit:active:not(:disabled) {
+    transform: none;
+  }
 }

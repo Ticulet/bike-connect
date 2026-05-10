@@ -127,7 +127,28 @@ export function Tabs({
   );
 }
 
-/** Returns the panel element props for a given tab id (consumed by the parent). */
+/**
+ * Returns the props object to spread onto a tab panel element.
+ *
+ * The `Tabs` component uses **automatic activation on focus**: selecting a tab
+ * (via click or arrow key) immediately activates that tab's panel. Consumers
+ * must pair each `<Tabs>` with matching panels by spreading these props:
+ *
+ * ```tsx
+ * const TABS_ID = 'profile';
+ * <Tabs baseId={TABS_ID} ... />
+ * <div {...getTabPanelProps(TABS_ID, 'posts')} hidden={activeTab !== 'posts'}>
+ *   {/* posts panel content *\/}
+ * </div>
+ * ```
+ *
+ * This links `aria-controls` (on the tab button) to the panel's `id` and
+ * `aria-labelledby` (on the panel) back to the tab button, satisfying the
+ * ARIA tabs pattern.
+ *
+ * @param tabsBaseId - The `baseId` prop passed to the `<Tabs>` component.
+ * @param tabId - The `id` of the tab item (matches `TabItem.id`).
+ */
 export function getTabPanelProps(
   tabsBaseId: string,
   tabId: string,

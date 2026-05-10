@@ -37,11 +37,6 @@
 
   --color-focus: #2f5233;
 
-  /* Legacy aliases (keep existing component CSS working) */
-  --color-background: var(--color-bg);
-  --color-secondary: var(--color-accent);
-  --color-secondary-dark: var(--color-accent-dark);
-
   /* Spacing (4/8/16 rhythm) */
   --spacing-2xs: 0.125rem;  /* 2 px — hairline gaps */
   --spacing-xs: 0.25rem;
@@ -143,6 +138,9 @@
   --transition-fast: var(--motion-duration-fast) var(--motion-easing-standard);
   --transition-normal: var(--motion-duration-normal) var(--motion-easing-standard);
   --transition-slow: var(--motion-duration-slow) var(--motion-easing-standard);
+
+  /* Motion — translation offsets for entry animations (drawer, dialog, toast) */
+  --motion-offset-enter: 8px;
 
   /* Shadow — extra-large elevation (modals, drawers) */
   --shadow-2xl:
