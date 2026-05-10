@@ -11,6 +11,8 @@ export default defineConfig({
     environment: 'jsdom',
     globals: false,
     setupFiles: ['./test/setup.ts'],
+    // Exclude Playwright e2e tests — they are run separately via `npx playwright test`
+    exclude: ['**/node_modules/**', '**/dist/**', 'e2e/**'],
     reporters: isCI ? ['default', ['junit', { outputFile: './test-results/junit.xml' }]] : ['default'],
     coverage: {
       provider: 'v8',

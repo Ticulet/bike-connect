@@ -174,7 +174,7 @@
   font-family: var(--font-family-mono);
   font-size: var(--font-size-sm);
   letter-spacing: var(--letter-spacing-mono);
-  color: var(--color-accent);
+  color: var(--color-accent-deep);
   margin-block-end: var(--spacing-sm);
 }
 .home-how__step-icon { color: var(--color-primary); margin-block-end: var(--spacing-md); }

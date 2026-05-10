@@ -8,6 +8,7 @@
   --color-primary-soft: #d4dfd1;        /* mid-sage */
   --color-accent: #e07a3c;              /* clay orange */
   --color-accent-dark: #b35a20;
+  --color-accent-deep: #8a4016;         /* darker accent for small text on --color-bg-subtle (6.5:1, WCAG AA) */
   --color-accent-light: #f9ede3;
   --color-olive: #7a8b56;               /* muted olive secondary */
   --color-terracotta: #c55a32;          /* deeper accent */
@@ -19,7 +20,7 @@
   --color-surface-alt: #fdfbf7;         /* off-white alt */
   --color-text: #2a2620;                /* warm near-black */
   --color-text-muted: #6b6459;          /* warm gray */
-  --color-text-subtle: #8a8379;         /* lighter gray */
+  --color-text-subtle: #737069;         /* lighter gray — darkened from #8a8379 to meet WCAG AA 4.5:1 on #ffffff (4.94:1) and #faf7f2 (4.62:1) */
   --color-text-inverse: #ffffff;
   --color-border: #d7cfc2;              /* warm beige */
   --color-border-light: #ebe3d4;        /* subtle beige */
