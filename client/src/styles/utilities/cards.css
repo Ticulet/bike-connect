@@ -1,0 +1,25 @@
+/* utilities/cards.css — .card, .card-hover, .elevation-hover — see docs/implementations/design-modernization/concept.md §5 */
+
+.card {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  transition: box-shadow var(--transition-normal), transform var(--transition-normal), border-color var(--transition-normal);
+}
+
+.card-hover:hover {
+  box-shadow: var(--shadow-md);
+  border-color: var(--color-border);
+  transform: translateY(-2px);
+}
+
+/* elevation-hover — utility for interactive cards that need a lift effect */
+.elevation-hover {
+  transition: box-shadow var(--transition-normal), transform var(--transition-normal);
+}
+
+.elevation-hover:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
