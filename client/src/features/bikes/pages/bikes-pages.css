@@ -256,6 +256,7 @@
   gap: var(--spacing-2xl);
   align-items: start;
   margin-top: var(--spacing-xl);
+  margin-top: 10rem;
 }
 
 .bike-detail__main {
@@ -309,33 +310,6 @@
 /* ===========================
    Bike Detail Page (legacy)
    =========================== */
-
-.bike-detail__hero {
-  width: 100%;
-  aspect-ratio: 2 / 1;
-  max-height: 28rem;
-  object-fit: cover;
-  border-radius: var(--radius-xl);
-  margin-bottom: var(--spacing-lg);
-  box-shadow: var(--shadow-md);
-  display: block;
-}
-
-.bike-detail__hero-placeholder {
-  width: 100%;
-  aspect-ratio: 2 / 1;
-  max-height: 28rem;
-  min-height: 10rem;
-  background-color: var(--color-bg-subtle);
-  border: 2px dashed var(--color-border);
-  border-radius: var(--radius-xl);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--color-text-subtle);
-  font-size: 3rem;
-  margin-bottom: var(--spacing-lg);
-}
 
 .bike-detail__meta {
   display: flex;

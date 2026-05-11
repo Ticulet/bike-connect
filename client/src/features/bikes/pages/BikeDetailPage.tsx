@@ -383,14 +383,12 @@ export function BikeDetailPage(): React.JSX.Element {
         }
       />
 
-      <div className="bike-detail__hero">
-        <PhotoGallery
-          heroImageUrl={bike.hero_image_url}
-          isOwner={isOwner}
-          bikeName={bike.name}
-          onHeroChange={(url) => void handleHeroChange(url)}
-        />
-      </div>
+      <PhotoGallery
+        heroImageUrl={bike.hero_image_url}
+        isOwner={isOwner}
+        bikeName={bike.name}
+        onHeroChange={(url) => void handleHeroChange(url)}
+      />
 
       <div className="bike-detail__layout">
         <div className="bike-detail__main">
