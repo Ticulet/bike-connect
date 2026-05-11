@@ -360,6 +360,17 @@
   color: var(--color-error);
 }
 
+/* Top-level submit error — banner above the action row */
+.maintenance-form__submit-error {
+  font-size: var(--font-size-sm);
+  color: var(--color-error);
+  background-color: var(--color-error-bg);
+  border: 1px solid color-mix(in srgb, var(--color-error) 30%, transparent);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-sm) var(--spacing-md);
+  margin: 0 0 var(--spacing-sm);
+}
+
 .maintenance-form__actions {
   display: flex;
   gap: var(--spacing-sm);

@@ -143,19 +143,40 @@
   }
 }
 
+/* Base link reset — applies to both the default grid card and the
+   workshop variant. Prevents the default <a> blue/underlined styling
+   from leaking onto card titles, meta, and specs. */
+.bike-card__link {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+
+.bike-card__link:focus-visible {
+  outline: 2px solid var(--color-focus);
+  outline-offset: 2px;
+}
+
 .bike-card__link--workshop {
   display: flex;
   flex-direction: row;
   gap: var(--spacing-lg);
   align-items: flex-start;
-  text-decoration: none;
-  color: inherit;
   padding: var(--spacing-md);
 }
 
-.bike-card__link--workshop:focus-visible {
-  outline: 2px solid var(--color-focus);
-  outline-offset: 2px;
+/* Title link inside a card — inherits colour, gains primary tint on hover. */
+.bike-card__name-link {
+  color: inherit;
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+.bike-card__name-link:hover {
+  color: var(--color-primary);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--color-primary) 40%, transparent);
+  text-underline-offset: 2px;
 }
 
 .bike-card__image-wrap {
