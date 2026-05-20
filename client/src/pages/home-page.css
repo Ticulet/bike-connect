@@ -169,14 +169,6 @@
 }
 @media (max-width: 1024px) { .home-how__steps { grid-template-columns: 1fr; } }
 .home-how__step { position: relative; padding-block-start: var(--spacing-lg); }
-.home-how__step-number {
-  display: block;
-  font-family: var(--font-family-mono);
-  font-size: var(--font-size-sm);
-  letter-spacing: var(--letter-spacing-mono);
-  color: var(--color-accent-deep);
-  margin-block-end: var(--spacing-sm);
-}
 .home-how__step-icon { color: var(--color-primary); margin-block-end: var(--spacing-md); }
 .home-how__step-title { font-family: var(--font-display); font-size: var(--font-size-2xl); }
 .home-how__step-copy { font-size: var(--font-size-md); color: var(--color-text-muted); }
@@ -380,8 +372,10 @@
 .home-principle {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
+  justify-content: center;
   gap: var(--spacing-sm);
+  text-align: justify;
 }
 .home-principle__icon { color: var(--color-primary); }
 .home-principle__copy { font-size: var(--font-size-md); color: var(--color-text); margin: 0; }

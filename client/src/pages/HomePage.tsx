@@ -164,7 +164,6 @@ export function HomePage(): React.JSX.Element {
         </header>
         <ol className="home-how__steps">
           <li className="home-how__step">
-            <span className="home-how__step-number">01</span>
             <PenIcon className="home-how__step-icon" />
             <h3 className="home-how__step-title">Write</h3>
             <p className="home-how__step-copy">
@@ -173,7 +172,6 @@ export function HomePage(): React.JSX.Element {
             </p>
           </li>
           <li className="home-how__step">
-            <span className="home-how__step-number">02</span>
             <BikeIcon className="home-how__step-icon" />
             <h3 className="home-how__step-title">Register</h3>
             <p className="home-how__step-copy">
@@ -182,7 +180,6 @@ export function HomePage(): React.JSX.Element {
             </p>
           </li>
           <li className="home-how__step">
-            <span className="home-how__step-number">03</span>
             <WrenchIcon className="home-how__step-icon" />
             <h3 className="home-how__step-title">Maintain</h3>
             <p className="home-how__step-copy">
