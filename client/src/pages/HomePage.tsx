@@ -87,8 +87,17 @@ export function HomePage(): React.JSX.Element {
         <p className="home-hero__trust" role="note">
           Free forever for personal use &middot; No credit card &middot; Built by riders
         </p>
-        <div className="home-hero__photo-slot" role="presentation" aria-hidden="true" />
       </section>
+
+      {/* Full-bleed hero banner — sibling of .home-hero so it escapes the 1100px max-width */}
+      <img
+        className="home-hero__photo-slot"
+        src="https://plus.unsplash.com/premium_photo-1678718713393-2b88cde9605b?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+        alt=""
+        loading="eager"
+        width={1920}
+        height={900}
+      />
 
       {/* SECTION 2: live stats strip */}
       {hasStats && (
@@ -333,7 +342,7 @@ export function HomePage(): React.JSX.Element {
         <header className="home-principles__header">
           <p className="home-principles__eyebrow">Principles</p>
           <h2 id="home-principles-title" className="home-principles__title">
-            A few promises we plan to keep.
+            A few promises I plan to keep.
           </h2>
         </header>
         <ul className="home-principles__row">
