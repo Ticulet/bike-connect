@@ -1,4 +1,5 @@
 import { useRef, useState, useCallback } from 'react';
+import { ALLOWED_IMAGE_TYPES, IMAGE_MAX_SIZE_BYTES } from '@bike-connect/shared';
 import { useToast } from '../../../components/ui/useToast.js';
 import './photo-gallery.css';
 
@@ -9,8 +10,8 @@ export interface ImageUploaderProps {
 
 type UploadStatus = 'idle' | 'uploading' | 'error' | 'dragover';
 
-const MAX_FILE_SIZE_BYTES = 5 * 1024 * 1024; // 5 MB
-const ALLOWED_TYPES = new Set(['image/jpeg', 'image/png', 'image/webp']);
+const MAX_FILE_SIZE_BYTES = IMAGE_MAX_SIZE_BYTES;
+const ALLOWED_TYPES = new Set<string>(ALLOWED_IMAGE_TYPES);
 
 export function ImageUploader({
   onUpload,
