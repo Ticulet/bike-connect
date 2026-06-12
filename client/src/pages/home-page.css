@@ -51,19 +51,16 @@
 }
 /* Full-bleed hero banner — escapes the hero's 1100px max-width by being a
    direct child of .home instead of nested inside .home-hero. Spans the
-   viewport edge-to-edge with a capped height so it doesn't dominate tall
-   displays. */
+   viewport edge-to-edge and shows the COMPLETE image: height follows the
+   photo's natural aspect ratio at every width, so nothing is ever cropped
+   on desktop or mobile. */
 .home-hero__photo-slot {
   display: block;
   width: 100%;
-  max-height: 32rem;
-  object-fit: cover;
+  height: auto;          /* whole image, true aspect ratio — never cropped */
+  margin-inline: auto;   /* centered */
   background: var(--color-surface-2);
   /* edge-to-edge: no border, no border-radius, no shadow */
-}
-
-@media (min-width: 80rem) {
-  .home-hero__photo-slot { max-height: 36rem; }
 }
 
 @media (max-width: 1024px) {

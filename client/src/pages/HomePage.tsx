@@ -70,7 +70,7 @@ export function HomePage(): React.JSX.Element {
       <section className="home-hero" aria-labelledby="home-hero-title">
         <p className="home-hero__eyebrow">A field guide for cyclists</p>
         <h1 id="home-hero-title" className="home-hero__title display-cover">
-          Ride, write, <em>and remember</em> every mile.
+          Ride, write, <em>and remember</em> every journey.
         </h1>
         <p className="home-hero__lead">
           Bike Connect is the warm, opinionated home for your ride stories,
