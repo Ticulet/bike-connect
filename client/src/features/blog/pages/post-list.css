@@ -41,6 +41,17 @@
   pointer-events: none;
 }
 
+/* Mobile: don't pin the filter bar. It stacks tall (search + category + tag
+   rows), so when sticky it covers a large part of the small viewport while
+   scrolling. `relative` (not `static`) keeps the ::after shadow anchored. */
+@media (max-width: 640px) {
+  .post-list__filters {
+    position: relative;
+    top: auto;
+    z-index: auto;
+  }
+}
+
 /* Featured post (full-width row) */
 .post-list__featured {
   margin-block-end: var(--spacing-xl);
