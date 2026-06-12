@@ -19,8 +19,9 @@ app.use(helmet());
 // CORS
 app.use(cors({ origin: env.CORS_ORIGIN, credentials: true }));
 
-// Global rate limiter
-app.use(globalLimiter);
+// Rate limiter — scoped to /api so static /uploads images (and other assets)
+// don't consume the request budget; only real API calls are counted.
+app.use('/api', globalLimiter);
 
 // Cookie parser
 app.use(cookieParser());

@@ -24,7 +24,7 @@ const envSchema = z.object({
   CLOUDINARY_URL: z.string().optional(),
   LOCAL_UPLOAD_DIR: z.string().default('./uploads'),
   RATE_LIMIT_WINDOW_MS: z.coerce.number().default(900000),
-  RATE_LIMIT_MAX: z.coerce.number().default(100),
+  RATE_LIMIT_MAX: z.coerce.number().default(1000),
 });
 
 export const env = envSchema.parse(process.env);
