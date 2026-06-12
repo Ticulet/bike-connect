@@ -118,29 +118,34 @@
   gap: var(--spacing-3xl);
   align-items: start;
 }
-@media (max-width: 960px) {
-  .post-detail__layout {
-    grid-template-columns: 1fr;
-  }
-  .post-detail__author-rail {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: var(--spacing-md);
-    border-block-end: 1px solid var(--color-border);
-    padding-block-end: var(--spacing-md);
-    margin-block-end: var(--spacing-xl);
-  }
-}
 
-/* Sticky author rail (desktop) */
+/* Author rail — sticky vertical column on desktop. Defined BEFORE the
+   mobile media query so the query (equal specificity) can override it. */
 .post-detail__author-rail {
   position: sticky;
   top: calc(var(--header-height) + var(--spacing-xl));
   display: flex;
   flex-direction: column;
   gap: var(--spacing-md);
+}
+
+@media (max-width: 960px) {
+  .post-detail__layout {
+    grid-template-columns: 1fr;
+  }
+  /* Mobile: rail is a static top strip, NOT sticky — previously it stayed
+     sticky and slid down over the article text while scrolling. */
+  .post-detail__author-rail {
+    position: static;
+    top: auto;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    border-block-end: 1px solid var(--color-border);
+    padding-block-end: var(--spacing-md);
+    margin-block-end: var(--spacing-xl);
+  }
 }
 .post-detail__author-link {
   display: flex;
