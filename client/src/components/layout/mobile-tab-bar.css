@@ -22,6 +22,8 @@
 
   .mobile-tab-bar__list {
     display: flex;
+    justify-content: space-around;
+    align-items: center;
     list-style: none;
     margin: 0;
     padding: 0;
