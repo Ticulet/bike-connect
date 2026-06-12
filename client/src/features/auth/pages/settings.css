@@ -238,6 +238,8 @@
 .settings-info__value {
   font-size: var(--font-size-sm);
   color: var(--color-text);
+  min-width: 0; /* allow this flex child to shrink below the email's width */
+  overflow-wrap: anywhere; /* break long emails/IDs instead of overflowing the page */
 }
 
 /* ── Toggles (privacy / notifications) ────────────────── */
@@ -356,6 +358,18 @@
   .settings__rail-link--danger {
     margin-top: 0;
     margin-left: auto;
+  }
+}
+
+/* Narrow phones: stack key/value so long emails get the full card width */
+@media (max-width: 30rem) {
+  .settings-info__row {
+    flex-direction: column;
+    gap: var(--spacing-2xs);
+  }
+
+  .settings-info__label {
+    min-width: 0;
   }
 }
 
