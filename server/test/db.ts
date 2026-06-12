@@ -58,7 +58,8 @@ async function runMigrations(target: Kysely<Database>): Promise<void> {
 export async function getTestDb(): Promise<Kysely<Database>> {
   if (db) return db;
 
-  container = await new PostgreSqlContainer('postgres:17-alpine')
+  // Same major version as docker-compose.yml so tests run against what prod runs.
+  container = await new PostgreSqlContainer('postgres:16-alpine')
     .withDatabase(TEST_DB_NAME)
     .withUsername('test')
     .withPassword('test')
