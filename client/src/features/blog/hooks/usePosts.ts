@@ -5,6 +5,9 @@ import { PAGINATION } from '@bike-connect/shared';
 interface UsePostsFilters {
   category?: string;
   tag?: string;
+  // Posts fetched per page. Defaults to the shared limit; the post list passes
+  // a multiple of its column count so the grid always fills complete rows.
+  limit?: number;
 }
 
 interface UsePostsResult {
@@ -39,7 +42,7 @@ export function usePosts(filters: UsePostsFilters): UsePostsResult {
       try {
         const result = await fetchPosts({
           cursor: pageCursor,
-          limit: PAGINATION.DEFAULT_LIMIT,
+          limit: filtersRef.current.limit ?? PAGINATION.DEFAULT_LIMIT,
           category: filtersRef.current.category,
           tag: filtersRef.current.tag,
         });

@@ -13,6 +13,12 @@ import type { PostSummary } from '../api/posts.api.js';
 import './post-list.css';
 import '../components/blog-social.css';
 
+// The list promotes the first three posts out of the grid (one featured card
+// plus two secondary cards), then renders the rest in a three-column grid.
+// Keeping the page size a multiple of three means the grid always fills
+// complete rows: 12 - 3 = 9 on the first page, then +12 on each "Load more".
+const POSTS_PER_PAGE = 12;
+
 function PenEmptyIcon(): React.JSX.Element {
   return (
     <svg width="40" height="40" viewBox="0 0 40 40" fill="none" aria-hidden="true">
@@ -54,6 +60,7 @@ export function PostListPage(): React.JSX.Element {
   const { posts, isLoading, hasMore, loadMore, error } = usePosts({
     category: category ?? undefined,
     tag: tag ?? undefined,
+    limit: POSTS_PER_PAGE,
   });
 
   const handleSearchResults = useCallback((results: PostSummary[]): void => {
