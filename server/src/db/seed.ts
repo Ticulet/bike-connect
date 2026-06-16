@@ -1,5 +1,10 @@
 import { sql } from 'kysely';
 import { db } from './index.js';
+import type {
+  BikeType,
+  ComponentCategory,
+  MaintenanceType,
+} from '@bike-connect/shared';
 
 /**
  * Idempotent seed script: inserts canonical demo data so the site has
@@ -51,6 +56,46 @@ const USERS = [
     avatar_url: 'https://ui-avatars.com/api/?name=Anna+Novak&background=C55A32&color=fff&size=256',
     bio: 'Mountain biker and trail builder from the Czech Republic. If it has knobby tires and a dropper, I will ride it.',
   },
+  {
+    id: '66666666-6666-6666-6666-666666666666',
+    google_id: 'seed-david-okafor',
+    email: 'david@seed.bikeconnect.local',
+    display_name: 'David Okafor',
+    avatar_url: 'https://ui-avatars.com/api/?name=David+Okafor&background=3A6B78&color=fff&size=256',
+    bio: 'London bike commuter logging every mile. Convinced a good set of fenders is the best upgrade nobody buys.',
+  },
+  {
+    id: '77777777-7777-7777-7777-777777777777',
+    google_id: 'seed-sofia-lindqvist',
+    email: 'sofia@seed.bikeconnect.local',
+    display_name: 'Sofia Lindqvist',
+    avatar_url: 'https://ui-avatars.com/api/?name=Sofia+Lindqvist&background=2F5233&color=fff&size=256',
+    bio: 'Randonneur from Gothenburg. 200s, 300s, and the occasional 600 when the weather cooperates, which it never does.',
+  },
+  {
+    id: '88888888-8888-8888-8888-888888888888',
+    google_id: 'seed-yuki-tanaka',
+    email: 'yuki@seed.bikeconnect.local',
+    display_name: 'Yuki Tanaka',
+    avatar_url: 'https://ui-avatars.com/api/?name=Yuki+Tanaka&background=C48318&color=fff&size=256',
+    bio: 'Track and fixed-gear rider in Osaka. Minimal bikes, maximal opinions about chainline.',
+  },
+  {
+    id: '99999999-9999-9999-9999-999999999999',
+    google_id: 'seed-liam-byrne',
+    email: 'liam@seed.bikeconnect.local',
+    display_name: 'Liam Byrne',
+    avatar_url: 'https://ui-avatars.com/api/?name=Liam+Byrne&background=1F3A22&color=fff&size=256',
+    bio: 'Enduro and trail rider from the Wicklow hills. Two full-suspension bikes and a hardtail for honesty.',
+  },
+  {
+    id: 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
+    google_id: 'seed-carla-mendes',
+    email: 'carla@seed.bikeconnect.local',
+    display_name: 'Carla Mendes',
+    avatar_url: 'https://ui-avatars.com/api/?name=Carla+Mendes&background=B35A20&color=fff&size=256',
+    bio: 'Bikepacking and long-distance touring out of Lisbon. The bike is the luggage rack now.',
+  },
 ] as const;
 
 const TAGS = [
@@ -64,6 +109,14 @@ const TAGS = [
   { name: 'tires', slug: 'tires' },
   { name: 'drivetrain', slug: 'drivetrain' },
   { name: 'long-distance', slug: 'long-distance' },
+  { name: 'commuting', slug: 'commuting' },
+  { name: 'touring', slug: 'touring' },
+  { name: 'bikepacking', slug: 'bikepacking' },
+  { name: 'training', slug: 'training' },
+  { name: 'gear', slug: 'gear' },
+  { name: 'wheels', slug: 'wheels' },
+  { name: 'racing', slug: 'racing' },
+  { name: 'winter', slug: 'winter' },
 ];
 
 type PostCategory = 'review' | 'maintenance_guide' | 'ride_report' | 'general';
@@ -488,6 +541,536 @@ const POSTS: SeedPost[] = [
       ],
     },
   },
+  {
+    slug: 'the-case-for-full-fenders',
+    author_id: USERS[5].id,
+    title: 'The case for full fenders (and why clip-ons are a trap)',
+    excerpt: 'Every winter the same argument resurfaces. After five years of year-round commuting in the rain, here is why I run full-coverage fenders and nothing less.',
+    cover_image_url: 'https://images.unsplash.com/photo-1507035895480-2b3156c31fc8?w=1600&q=80',
+    category: 'general',
+    published_days_ago: 6,
+    tag_slugs: ['commuting', 'gear', 'winter'],
+    content: {
+      type: 'doc',
+      content: [
+        p("There is a particular kind of wet that only a rear wheel can produce: a fine vertical stripe up your back, applied steadily for the length of your commute. Clip-on fenders do almost nothing about it."),
+        h(2, 'Coverage is the whole point'),
+        p("A full fender wraps most of the wheel, with a mudflap that reaches close to the road. That last 10 cm of flap is what keeps spray off your feet and off the rider behind you. Half-length clip-ons skip exactly the part that matters."),
+        ul(
+          'Mount points: get a bike with eyelets, or use proper p-clamps, not zip ties.',
+          'Mudflaps: longer is always better, both front and rear.',
+          'Clearance: leave room for the mud, or they pack and rub.',
+        ),
+        p("They are unfashionable and they add weight. They are also the single best quality-of-life upgrade for anyone who rides through a real winter."),
+      ],
+    },
+  },
+  {
+    slug: 'tubeless-setup-that-actually-works',
+    author_id: USERS[1].id,
+    title: 'A tubeless setup that actually seats on the first try',
+    excerpt: 'Tubeless is great when it works and miserable when it does not. Here is the repeatable process I use so the tire seats, holds air, and stops weeping sealant by morning.',
+    cover_image_url: 'https://images.unsplash.com/photo-1517263904808-5dc91e3e7044?w=1600&q=80',
+    category: 'maintenance_guide',
+    published_days_ago: 11,
+    tag_slugs: ['maintenance', 'tires', 'gear'],
+    content: {
+      type: 'doc',
+      content: [
+        p("Most tubeless horror stories come from skipping steps, not from the technology. Do these in order and the failure rate drops to near zero."),
+        h(2, 'The process'),
+        ol(
+          'Tape the rim with the correct width, one clean wrap, stretched tight, overlapping the valve hole.',
+          'Fit one bead, install the valve, then fit the second bead leaving a small section open.',
+          'Pour in the right volume of sealant, then finish seating the bead by hand.',
+          'Inflate fast with a compressor or a tubeless pump until both beads pop into place.',
+          'Drop to riding pressure, shake the wheel to spread sealant, and leave it overnight.',
+        ),
+        h(2, 'The part everyone skips'),
+        p("Clean the rim before taping. Any old residue and the tape will lift, the seal will fail, and you will blame the tire. It is never the tire."),
+      ],
+    },
+  },
+  {
+    slug: 'first-200k-brevet',
+    author_id: USERS[6].id,
+    title: 'My first 200 km brevet: slower is faster',
+    excerpt: 'A 200 km randonnee is not a race, but it punishes the same mistakes a race does. What I got wrong, and the two things that got me to the final control before the cutoff.',
+    cover_image_url: 'https://images.unsplash.com/photo-1541625602330-2277a4c46182?w=1600&q=80',
+    category: 'ride_report',
+    published_days_ago: 16,
+    tag_slugs: ['long-distance', 'ride-report', 'training'],
+    content: {
+      type: 'doc',
+      content: [
+        p("Two hundred kilometres sounds like a number until you are at kilometre 150 with a headwind and a control card that needs another stamp. Then it becomes a lesson in patience."),
+        h(2, 'What slowed me down'),
+        p("I started too fast. The first 60 km felt easy, so I rode them like they were free. They were not. By the halfway control I had spent matches I needed for the back half."),
+        h(2, 'What saved me'),
+        p("Eating on a timer, not on appetite, and refusing to stop for longer than five minutes at any control. Momentum is everything on a long day. The riders who finish are the ones who keep the stops short."),
+        quote("Ride the first half with your head and the second half with your legs. I had it backwards."),
+      ],
+    },
+  },
+  {
+    slug: 'fixed-gear-in-the-city',
+    author_id: USERS[7].id,
+    title: 'Why I still commute on a fixed gear',
+    excerpt: 'A fixed-gear bike in city traffic teaches you to read the road further ahead than any other bike. A defence of the simplest drivetrain there is.',
+    cover_image_url: 'https://images.unsplash.com/photo-1544191696-102dbdaeeaa0?w=1600&q=80',
+    category: 'general',
+    published_days_ago: 22,
+    tag_slugs: ['commuting', 'road'],
+    content: {
+      type: 'doc',
+      content: [
+        p("People assume fixed gear is about looking a certain way. For me it is about attention. When you cannot freewheel, you plan every gap and every light a hundred metres earlier."),
+        h(2, 'The maintenance argument'),
+        p("One cog, one chainring, one chain. No derailleurs to adjust, no cables to fray, nothing to clatter loose in the cold. In winter that simplicity is worth more than any gear range."),
+        p("It is not the right bike for hills or for everyone. But for a flat city commute it is honest, quiet, and almost impossible to break."),
+      ],
+    },
+  },
+  {
+    slug: 'choosing-an-enduro-bike',
+    author_id: USERS[8].id,
+    title: 'Choosing an enduro bike without overbuying',
+    excerpt: 'It is easy to spend a fortune on travel and electronics you will never use. Here is how I would pick an enduro bike today, working from the trail backwards.',
+    cover_image_url: 'https://images.unsplash.com/photo-1571068316344-75bc76f77890?w=1600&q=80',
+    category: 'review',
+    published_days_ago: 28,
+    tag_slugs: ['mtb', 'review', 'gear'],
+    content: {
+      type: 'doc',
+      content: [
+        p("The marketing wants you to buy travel and a motorised drivetrain. The trail wants you to buy geometry and brakes. Start with the trail."),
+        h(2, 'What actually matters'),
+        ul(
+          'Geometry that suits your local trails, not a bike-park lift line you ride twice a year.',
+          'Brakes with four pistons and big rotors. This is not where you save weight.',
+          'Suspension you will actually set up and service, not the most expensive option.',
+        ),
+        p("A well-set-up mid-tier bike beats a poorly-set-up flagship every single ride. Spend the saved money on a suspension service and a riding holiday."),
+      ],
+    },
+  },
+  {
+    slug: 'bikepacking-the-algarve',
+    author_id: USERS[9].id,
+    title: 'Bikepacking the Algarve in the off-season',
+    excerpt: 'Four days, one frame bag, and a coastline that empties out once the tourists leave. A loose route report from the south of Portugal in November.',
+    cover_image_url: 'https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=1600&q=80',
+    category: 'ride_report',
+    published_days_ago: 34,
+    tag_slugs: ['bikepacking', 'touring', 'ride-report'],
+    content: {
+      type: 'doc',
+      content: [
+        p("November in the Algarve is the secret. The light is low and golden, the cafes are still open, and the dirt roads above the coast belong entirely to you."),
+        h(2, 'The kit'),
+        p("Frame bag, small saddle pack, and a half-frame of tools. I carried too much water and not enough coffee money, which is the correct ratio to get wrong."),
+        h(2, 'The route'),
+        p("Inland on dirt, back to the coast each evening. The climbs are short but constant, and the surface ranges from smooth gravel to chunky limestone that rattled everything loose by day three."),
+        p("If you only have a long weekend and a gravel bike, this is the trip I would point you at first."),
+      ],
+    },
+  },
+  {
+    slug: 'how-to-bleed-disc-brakes',
+    author_id: USERS[1].id,
+    title: 'Bleeding disc brakes without making a mess',
+    excerpt: 'A clean brake bleed is mostly about preparation and patience. The full procedure, the mistakes that introduce air, and how to know when you are actually done.',
+    cover_image_url: 'https://images.unsplash.com/photo-1558981285-6f0c94958bb6?w=1600&q=80',
+    category: 'maintenance_guide',
+    published_days_ago: 41,
+    tag_slugs: ['maintenance', 'gear'],
+    content: {
+      type: 'doc',
+      content: [
+        p("A spongy lever almost always means air in the system. Bleeding sounds intimidating, but it is a slow, tidy job if you set up properly first."),
+        h(2, 'Before you start'),
+        ul(
+          'Use the correct fluid for your brand. Mineral oil and DOT are not interchangeable.',
+          'Level the bike so the lever is the highest point. Air rises to where you can push it out.',
+          'Protect the pads and rotor. Fluid contamination means new pads, every time.',
+        ),
+        h(2, 'Knowing you are done'),
+        p("Push fluid through until no bubbles appear at the lever, then close up and pump. The lever should come up firm and stay there. If it sinks, there is still air, and you start again."),
+      ],
+    },
+  },
+  {
+    slug: 'power-meter-first-season',
+    author_id: USERS[2].id,
+    title: 'A power meter changed how I train. Here is the honest review',
+    excerpt: 'After one season training with power instead of feel, the numbers confirmed some things and quietly demolished others. What it is worth, and what it is not.',
+    cover_image_url: 'https://images.unsplash.com/photo-1517263904808-5dc91e3e7044?w=1600&q=80',
+    category: 'review',
+    published_days_ago: 49,
+    tag_slugs: ['training', 'gear', 'review'],
+    content: {
+      type: 'doc',
+      content: [
+        p("I resisted a power meter for years. Feel had got me this far, I argued. Then I trained with one for a season and learned that my feel was confidently wrong about half the time."),
+        h(2, 'What it fixed'),
+        p("Pacing. On long climbs I used to start too hard and fade. Watching a number kept me honest in a way that perceived effort never managed."),
+        h(2, 'What it did not fix'),
+        p("Motivation, recovery, or the weather. A power meter measures output, not readiness. Some of my best days were low-number days, and the meter had nothing useful to say about why."),
+        quote("It is a brilliant pacing tool and a mediocre coach. Treat it as the former."),
+      ],
+    },
+  },
+  {
+    slug: 'wheel-truing-basics',
+    author_id: USERS[1].id,
+    title: 'Wheel truing for people who have never touched a spoke',
+    excerpt: 'A slightly buckled wheel is not a reason to buy a new one. The basics of truing, the one rule that keeps you out of trouble, and when to stop and visit a shop.',
+    cover_image_url: 'https://images.unsplash.com/photo-1571068316344-75bc76f77890?w=1600&q=80',
+    category: 'maintenance_guide',
+    published_days_ago: 57,
+    tag_slugs: ['maintenance', 'wheels'],
+    content: {
+      type: 'doc',
+      content: [
+        p("A wheel goes out of true gradually, then all at once after a pothole. The good news is that small corrections are well within reach of a patient beginner."),
+        h(2, 'The one rule'),
+        p("Small turns. A quarter turn of a spoke nipple is a lot. Work in eighths, check often, and approach the wobble from both sides rather than yanking one spoke tight."),
+        h(2, 'When to stop'),
+        p("If the rim has a flat spot, a crack, or spokes that ping at wildly different tensions, stop. That is a wheel for a shop with a tension meter, not a roadside fix."),
+      ],
+    },
+  },
+  {
+    slug: 'cassette-vs-climbing',
+    author_id: USERS[3].id,
+    title: 'I finally fitted an easier cassette and my ego survived',
+    excerpt: 'For years I rode gearing that was too hard for the hills near me, out of pride. Swapping to a wider-range cassette was the cheapest performance upgrade I have made.',
+    cover_image_url: 'https://images.unsplash.com/photo-1541625602330-2277a4c46182?w=1600&q=80',
+    category: 'general',
+    published_days_ago: 64,
+    tag_slugs: ['climbing', 'drivetrain', 'gear'],
+    content: {
+      type: 'doc',
+      content: [
+        p("There is a strange machismo about gearing. For a long time I refused an easier cassette because real cyclists grind, apparently. Real cyclists also walk up climbs they geared themselves out of."),
+        h(2, 'The change'),
+        p("I went to a wider-range cassette and a slightly smaller chainring. The bike got no slower on the flat and suddenly the local climbs were rideable seated, in a rhythm, instead of a survival effort."),
+        p("Cadence is free speed on a long climb. There is nothing virtuous about cracking at the bottom of a wall because the gear was too big."),
+      ],
+    },
+  },
+  {
+    slug: 'winter-base-training',
+    author_id: USERS[2].id,
+    title: 'What winter base training actually looks like',
+    excerpt: 'Base season is not glamorous and it is not all slow. A plain-language look at how I structure the dark months so spring fitness is not an accident.',
+    cover_image_url: 'https://images.unsplash.com/photo-1507035895480-2b3156c31fc8?w=1600&q=80',
+    category: 'general',
+    published_days_ago: 73,
+    tag_slugs: ['training', 'winter', 'road'],
+    content: {
+      type: 'doc',
+      content: [
+        p("Base training has a reputation for being endless slow miles. The reality is more boring and more effective: mostly easy, with just enough intensity to keep the top end from disappearing."),
+        h(2, 'The shape of a week'),
+        ul(
+          'Two or three easy endurance rides, genuinely easy, conversation-pace.',
+          'One ride with short, sharp efforts to keep the legs awake.',
+          'Rest that is actually rest, not easy riding pretending to be rest.',
+        ),
+        p("Consistency beats heroics here. Three sustainable months put you somewhere real by March. Three brilliant weeks followed by a cold do not."),
+      ],
+    },
+  },
+  {
+    slug: 'trail-building-ethics',
+    author_id: USERS[4].id,
+    title: 'Build trails the way you want to find them',
+    excerpt: 'Volunteering on the local trail crew taught me more about riding than any skills course. A few principles for anyone thinking about picking up a shovel.',
+    cover_image_url: 'https://images.unsplash.com/photo-1544191696-102dbdaeeaa0?w=1600&q=80',
+    category: 'general',
+    published_days_ago: 86,
+    tag_slugs: ['mtb'],
+    content: {
+      type: 'doc',
+      content: [
+        p("The trails you love were built and maintained by someone, usually for free, often in the rain. Spend one day on a trail crew and you will never look at a berm the same way again."),
+        h(2, 'A few rules'),
+        ul(
+          'Dig with permission. Rogue trails get whole networks closed.',
+          'Build for water first. Drainage is what makes a trail last a winter.',
+          'Leave it better than you found it, every single session.',
+        ),
+        p("Riding is taking. Trail work is giving some of it back, and it makes you a smoother rider in the bargain because you finally understand why the trail is shaped the way it is."),
+      ],
+    },
+  },
+  {
+    slug: 'commuter-tire-comparison',
+    author_id: USERS[5].id,
+    title: 'Three commuter tires, one rainy winter: a comparison',
+    excerpt: 'I ran three popular commuter tires back to back through a wet British winter and tracked every puncture. The results were not what the reviews promised.',
+    cover_image_url: 'https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=1600&q=80',
+    category: 'review',
+    published_days_ago: 97,
+    tag_slugs: ['commuting', 'tires', 'review'],
+    content: {
+      type: 'doc',
+      content: [
+        p("Commuter tire reviews are usually written by people who do not commute on them in January. I ran three sets through one wet winter and counted every flat."),
+        h(2, 'The trade-off nobody admits'),
+        p("The fastest tire flatted the most. The slowest, heaviest tire did not puncture once but felt like riding through wet sand. The middle option was, predictably, the one to buy."),
+        h(2, 'The verdict'),
+        p("For commuting, puncture protection beats rolling resistance every time. A flat on a cold dark morning costs you far more than a few watts ever will."),
+      ],
+    },
+  },
+  {
+    slug: 'first-century-ride',
+    author_id: USERS[0].id,
+    title: 'My first 100-mile day, and what it taught me about fuelling',
+    excerpt: 'The legs were ready. The stomach was not. A ride report from my first century, and the surprisingly small change that turned the last 20 miles around.',
+    cover_image_url: 'https://images.unsplash.com/photo-1558981285-6f0c94958bb6?w=1600&q=80',
+    category: 'ride_report',
+    published_days_ago: 112,
+    tag_slugs: ['road', 'ride-report', 'long-distance'],
+    content: {
+      type: 'doc',
+      content: [
+        p("I had trained for the distance. What I had not trained was eating on the bike for six hours straight, and by mile 75 my stomach had filed a formal complaint."),
+        h(2, 'The wall was not in my legs'),
+        p("People talk about the wall as a leg thing. Mine was entirely digestive. I had eaten too many sweet gels and nothing savoury, and my body simply refused the next one."),
+        h(2, 'The fix'),
+        p("A cheese sandwich from a petrol station at mile 80. Real food, a bit of salt, and twenty minutes later I was riding again. I finished on sandwiches, not gels."),
+        quote("Train your stomach like you train your legs. It is the part that quits first."),
+      ],
+    },
+  },
+  {
+    slug: 'chain-wear-checking',
+    author_id: USERS[1].id,
+    title: 'Check your chain before it eats your cassette',
+    excerpt: 'A worn chain is cheap. The cassette and chainrings it destroys are not. How to check chain wear in thirty seconds and when to replace.',
+    cover_image_url: 'https://images.unsplash.com/photo-1517263904808-5dc91e3e7044?w=1600&q=80',
+    category: 'maintenance_guide',
+    published_days_ago: 131,
+    tag_slugs: ['maintenance', 'drivetrain'],
+    content: {
+      type: 'doc',
+      content: [
+        p("A chain is a wear item that quietly takes the cassette and chainrings with it if you ignore it. The whole inspection takes less time than pumping up a tire."),
+        h(2, 'How to check'),
+        p("Use a chain wear gauge. When it reads past the 0.5 mark on most modern drivetrains, the chain is done. Replace it then and the cassette lives on. Wait until it skips under load and you are buying everything."),
+        h(2, 'The economics'),
+        ul(
+          'A chain costs a little and takes ten minutes.',
+          'A chain plus cassette costs several times more.',
+          'A chain plus cassette plus chainrings is a small bike service.',
+        ),
+        p("Check it monthly if you ride a lot. It is the cheapest insurance in cycling."),
+      ],
+    },
+  },
+  {
+    slug: 'gravel-race-recap',
+    author_id: USERS[8].id,
+    title: 'First gravel race: dropped, lost, and hooked',
+    excerpt: 'I went into my first gravel race expecting a hard ride. I got dropped in the first hour, took a wrong turn, and finished grinning. A recap of a brilliant disaster.',
+    cover_image_url: 'https://images.unsplash.com/photo-1541625602330-2277a4c46182?w=1600&q=80',
+    category: 'ride_report',
+    published_days_ago: 158,
+    tag_slugs: ['gravel', 'racing', 'ride-report'],
+    content: {
+      type: 'doc',
+      content: [
+        p("Gravel racing is road racing with the politeness removed and the navigation added. I had done neither, so naturally I signed up for a long one."),
+        h(2, 'The first hour'),
+        p("The front group rode away on a climb I had no answer for. By the first feed I was alone, which turned out to be the best thing that happened all day."),
+        h(2, 'Alone, but happy'),
+        p("Riding my own pace through empty forest, navigating off the route sheet, stopping to actually look at the view. I took a wrong turn that cost ten minutes and I did not even mind."),
+        p("I finished mid-pack and immediately looked up the next one. That is the trap, and I walked straight into it."),
+      ],
+    },
+  },
+];
+
+// Known-working cover photos, reused for bike hero images.
+const COVER_IMAGES = [
+  'https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=1600&q=80',
+  'https://images.unsplash.com/photo-1517263904808-5dc91e3e7044?w=1600&q=80',
+  'https://images.unsplash.com/photo-1558981285-6f0c94958bb6?w=1600&q=80',
+  'https://images.unsplash.com/photo-1541625602330-2277a4c46182?w=1600&q=80',
+  'https://images.unsplash.com/photo-1571068316344-75bc76f77890?w=1600&q=80',
+  'https://images.unsplash.com/photo-1507035895480-2b3156c31fc8?w=1600&q=80',
+  'https://images.unsplash.com/photo-1544191696-102dbdaeeaa0?w=1600&q=80',
+];
+
+// Deterministic PRNG (mulberry32) so generated bikes/maintenance/rides are the
+// same on every fresh seed. Avoids Math.random so re-runs are reproducible.
+function makeRng(seed: number): () => number {
+  let state = seed >>> 0;
+  return () => {
+    state = (state + 0x6d2b79f5) >>> 0;
+    let t = state;
+    t = Math.imul(t ^ (t >>> 15), t | 1);
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+const rng = makeRng(20260615);
+const randInt = (min: number, max: number): number =>
+  min + Math.floor(rng() * (max - min + 1));
+function pick<T>(items: readonly T[]): T {
+  const item = items[Math.floor(rng() * items.length)];
+  if (item === undefined) throw new Error('pick() called with an empty array');
+  return item;
+}
+const chance = (probability: number): boolean => rng() < probability;
+const userAt = (index: number): (typeof USERS)[number] => {
+  const user = USERS[index];
+  if (user === undefined) throw new Error(`No seed user at index ${index}`);
+  return user;
+};
+
+const DAY_MS = 24 * 60 * 60 * 1000;
+const dateOnly = (date: Date): string => date.toISOString().slice(0, 10);
+const daysAgo = (days: number): Date => new Date(Date.now() - days * DAY_MS);
+
+interface SeedBike {
+  id: string;
+  owner: number; // index into USERS
+  name: string;
+  brand: string;
+  model: string;
+  year: number;
+  type: BikeType;
+  is_public: boolean;
+  lifetimeKm: number; // realistic lifetime odometer; drives mileage everywhere
+  description: string;
+  hero?: string;
+}
+
+// Real, popular production bikes spread across the ten seed users (mix of
+// public and private). lifetimeKm is a believable odometer for the bike's age
+// and use; component and maintenance mileage are derived from it so every
+// number is internally consistent. Hero images are free-licensed stand-ins
+// (see COVER_IMAGES), not manufacturer product shots.
+const BIKES: SeedBike[] = [
+  { id: 'b1ce0001-0000-4000-8000-000000000000', owner: 0, name: 'Tarmac SL7', brand: 'Specialized', model: 'Tarmac SL7 Expert', year: 2021, type: 'road', is_public: true, lifetimeKm: 22000, description: 'Race-day road bike. Light, stiff, and quietly intimidating.', hero: COVER_IMAGES[0] },
+  { id: 'b1ce0002-0000-4000-8000-000000000000', owner: 0, name: 'Diverge', brand: 'Specialized', model: 'Diverge Comp', year: 2021, type: 'gravel', is_public: true, lifetimeKm: 14000, description: 'Gravel and winter bike. Takes 45 mm tires and full fenders.', hero: COVER_IMAGES[1] },
+  { id: 'b1ce0003-0000-4000-8000-000000000000', owner: 1, name: 'CAAD13', brand: 'Cannondale', model: 'CAAD13 105', year: 2019, type: 'road', is_public: false, lifetimeKm: 26000, description: 'The aluminium bike that rides like carbon. Summer road bike.' },
+  { id: 'b1ce0004-0000-4000-8000-000000000000', owner: 1, name: 'Fuel EX', brand: 'Trek', model: 'Fuel EX 8', year: 2020, type: 'mtb', is_public: true, lifetimeKm: 9000, description: 'Trail full-suspension. Does everything well enough.', hero: COVER_IMAGES[2] },
+  { id: 'b1ce0005-0000-4000-8000-000000000000', owner: 1, name: 'FX 3', brand: 'Trek', model: 'FX 3 Disc', year: 2018, type: 'urban', is_public: false, lifetimeKm: 31000, description: 'Beater commuter. Rack, fenders, lights, no shame.' },
+  { id: 'b1ce0006-0000-4000-8000-000000000000', owner: 2, name: 'Caledonia', brand: 'Cervélo', model: 'Caledonia 5', year: 2022, type: 'road', is_public: true, lifetimeKm: 30000, description: 'Endurance race bike for the long events that matter.', hero: COVER_IMAGES[3] },
+  { id: 'b1ce0007-0000-4000-8000-000000000000', owner: 2, name: 'Roubaix', brand: 'Specialized', model: 'Roubaix Sport', year: 2020, type: 'road', is_public: false, lifetimeKm: 38000, description: 'The ultra bike. Future Shock and a saddle I trust at hour twelve.' },
+  { id: 'b1ce0008-0000-4000-8000-000000000000', owner: 3, name: 'Bad Boy', brand: 'Cannondale', model: 'Bad Boy 3', year: 2018, type: 'urban', is_public: true, lifetimeKm: 33000, description: 'Lefty fork, blacked out, does the commute every day.', hero: COVER_IMAGES[4] },
+  { id: 'b1ce0009-0000-4000-8000-000000000000', owner: 3, name: 'Ultimate CF SL', brand: 'Canyon', model: 'Ultimate CF SL 7', year: 2016, type: 'road', is_public: false, lifetimeKm: 24000, description: 'Lightweight climbing bike for the weekend hills.' },
+  { id: 'b1ce000a-0000-4000-8000-000000000000', owner: 4, name: 'Hightower', brand: 'Santa Cruz', model: 'Hightower C', year: 2023, type: 'mtb', is_public: true, lifetimeKm: 5500, description: 'Full-suspension enduro bike. The fun one.', hero: COVER_IMAGES[5] },
+  { id: 'b1ce000b-0000-4000-8000-000000000000', owner: 4, name: 'Marlin', brand: 'Trek', model: 'Marlin 7', year: 2018, type: 'mtb', is_public: false, lifetimeKm: 9000, description: 'Hardtail for skills practice and winter.' },
+  { id: 'b1ce000c-0000-4000-8000-000000000000', owner: 5, name: 'Sirrus', brand: 'Specialized', model: 'Sirrus X 4.0', year: 2021, type: 'urban', is_public: true, lifetimeKm: 24000, description: 'Flat-bar commuter. Full fenders, dynamo lights, wet-ready.', hero: COVER_IMAGES[6] },
+  { id: 'b1ce000d-0000-4000-8000-000000000000', owner: 5, name: 'Domane', brand: 'Trek', model: 'Domane SL 5', year: 2019, type: 'road', is_public: false, lifetimeKm: 12000, description: 'The nice bike, only comes out when it is dry.' },
+  { id: 'b1ce000e-0000-4000-8000-000000000000', owner: 6, name: 'Trek 520', brand: 'Trek', model: '520', year: 2020, type: 'touring', is_public: true, lifetimeKm: 28000, description: 'Steel touring classic. Randonnees and a dynamo light.', hero: COVER_IMAGES[0] },
+  { id: 'b1ce000f-0000-4000-8000-000000000000', owner: 6, name: 'Warbird', brand: 'Salsa', model: 'Warbird C', year: 2019, type: 'gravel', is_public: false, lifetimeKm: 16000, description: 'Winter trainer with mudguards and studded tires.' },
+  { id: 'b1ce0010-0000-4000-8000-000000000000', owner: 7, name: '6061 Track', brand: 'State Bicycle Co.', model: '6061 Black Label', year: 2021, type: 'other', is_public: true, lifetimeKm: 15000, description: 'Fixed-gear track bike, also my city bike.', hero: COVER_IMAGES[1] },
+  { id: 'b1ce0011-0000-4000-8000-000000000000', owner: 7, name: 'Allez', brand: 'Specialized', model: 'Allez Sport', year: 2019, type: 'road', is_public: false, lifetimeKm: 13000, description: 'Geared road bike for the days with hills.' },
+  { id: 'b1ce0012-0000-4000-8000-000000000000', owner: 8, name: 'Spectral', brand: 'Canyon', model: 'Spectral 29', year: 2023, type: 'mtb', is_public: true, lifetimeKm: 5000, description: '150 mm of travel for the Wicklow descents.', hero: COVER_IMAGES[2] },
+  { id: 'b1ce0013-0000-4000-8000-000000000000', owner: 8, name: 'Stumpjumper', brand: 'Specialized', model: 'Stumpjumper Comp', year: 2021, type: 'mtb', is_public: false, lifetimeKm: 9500, description: 'The everyday trail bike, quick and predictable.' },
+  { id: 'b1ce0014-0000-4000-8000-000000000000', owner: 8, name: 'Chameleon', brand: 'Santa Cruz', model: 'Chameleon', year: 2018, type: 'mtb', is_public: false, lifetimeKm: 11000, description: 'Steel hardtail. Keeps me honest about line choice.' },
+  { id: 'b1ce0015-0000-4000-8000-000000000000', owner: 9, name: 'Long Haul Trucker', brand: 'Surly', model: 'Long Haul Trucker', year: 2020, type: 'touring', is_public: true, lifetimeKm: 26000, description: 'Loaded touring bike. Has carried me across three countries.', hero: COVER_IMAGES[3] },
+  { id: 'b1ce0016-0000-4000-8000-000000000000', owner: 9, name: 'Grizl', brand: 'Canyon', model: 'Grizl 7', year: 2019, type: 'gravel', is_public: false, lifetimeKm: 18000, description: 'Drop-bar gravel bike for unloaded day rides.' },
+];
+
+interface ComponentSpec {
+  category: ComponentCategory;
+  name: string;
+  brand?: string;
+  model?: string;
+}
+
+const GROUPSETS: Record<BikeType, readonly string[]> = {
+  road: ['Shimano 105 R7000', 'Shimano Ultegra R8000', 'SRAM Rival eTap AXS'],
+  gravel: ['Shimano GRX 810', 'SRAM Apex XPLR', 'Shimano GRX 600'],
+  mtb: ['Shimano Deore XT M8100', 'SRAM GX Eagle', 'Shimano SLX M7100'],
+  urban: ['Shimano Deore M6000', 'Shimano Alivio', 'Sturmey-Archer 3-speed'],
+  touring: ['Shimano Deore XT', 'Shimano GRX 600', 'microSHIFT Advent X'],
+  other: ['Single-speed', 'Fixed cog', 'Shimano 105'],
+};
+const TIRES: Record<BikeType, readonly string[]> = {
+  road: ['Continental GP5000 28', 'Pirelli P Zero 28', 'Vittoria Corsa 30'],
+  gravel: ['WTB Riddler 700x42', 'Panaracer GravelKing 43', 'Maxxis Rambler 40'],
+  mtb: ['Maxxis Minion DHF 2.5', 'Schwalbe Magic Mary 2.4', 'Maxxis Dissector 2.4'],
+  urban: ['Schwalbe Marathon Plus 35', 'Continental Contact 37', 'Panaracer Pasela 32'],
+  touring: ['Schwalbe Marathon Mondial 40', 'Continental Contact Travel 42'],
+  other: ['Continental Gatorskin 25', 'Vittoria Rubino 28'],
+};
+const WHEELS: Record<BikeType, readonly string[]> = {
+  road: ['DT Swiss PR 1400', 'Fulcrum Racing 5', 'Zipp 303 S'],
+  gravel: ['DT Swiss G 1800', 'Hunt 4 Season Gravel', 'Fulcrum Rapid Red'],
+  mtb: ['DT Swiss XM 1700', 'Stan’s Flow MK4', 'Race Face Turbine'],
+  urban: ['Mavic Aksium', 'Shimano RS010', 'hand-built 32h'],
+  touring: ['Ryde Andra 40 36h', 'DT Swiss 545d', 'hand-built touring 36h'],
+  other: ['H Plus Son Archetype', 'Mavic Open Pro'],
+};
+
+// Build a realistic component set for a bike. The frame carries the bike's own
+// brand and model; the wear items are picked from per-category pools.
+function componentsFor(bike: SeedBike): ComponentSpec[] {
+  const key = bike.type;
+  const set: ComponentSpec[] = [
+    { category: 'frame', name: `${bike.brand} ${bike.model} frame`, brand: bike.brand, model: bike.model },
+    { category: 'groupset', name: pick(GROUPSETS[key]), brand: 'Shimano' },
+    { category: 'wheels', name: pick(WHEELS[key]) },
+    { category: 'tires', name: pick(TIRES[key]) },
+    { category: 'chain', name: 'Shimano HG chain' },
+    { category: 'cassette', name: pick(['11-28T', '11-34T', '10-51T', '11-40T']) },
+    { category: 'saddle', name: pick(['Fizik Antares', 'Specialized Power', 'Brooks B17', 'SDG Bel-Air']) },
+  ];
+  if (key === 'mtb') {
+    set.push({ category: 'seatpost', name: pick(['OneUp V2 dropper', 'BikeYoke Revive dropper']) });
+    set.push({ category: 'brakes', name: pick(['Shimano XT 4-piston', 'SRAM Code R']) });
+  } else {
+    set.push({ category: 'brakes', name: pick(['Shimano 105 hydraulic', 'SRAM Rival hydraulic', 'rim brakes']) });
+  }
+  if (key === 'urban' || key === 'touring') {
+    set.push({ category: 'fenders', name: 'SKS Bluemels full fenders' });
+    set.push({ category: 'rack', name: 'Tubus Cargo rear rack' });
+    set.push({ category: 'lights', name: 'dynamo front and rear' });
+  }
+  return set;
+}
+
+// Maintenance templates. Some target a specific component category.
+const MAINTENANCE_TEMPLATES: ReadonlyArray<{
+  type: MaintenanceType;
+  title: string;
+  category?: ComponentCategory;
+}> = [
+  { type: 'service', title: 'Full drivetrain clean and lube' },
+  { type: 'repair', title: 'Replaced worn chain', category: 'chain' },
+  { type: 'repair', title: 'New tires fitted', category: 'tires' },
+  { type: 'service', title: 'Brake bleed and pad replacement', category: 'brakes' },
+  { type: 'upgrade', title: 'Upgraded wheelset', category: 'wheels' },
+  { type: 'inspection', title: 'Pre-season safety check' },
+  { type: 'service', title: 'Bottom bracket service' },
+  { type: 'repair', title: 'New cassette and chain', category: 'cassette' },
+  { type: 'service', title: 'Gear indexing and cable replacement' },
+  { type: 'repair', title: 'Tubeless top-up and plug' },
+];
+
+const RIDE_NOTES: readonly string[] = [
+  '',
+  '',
+  '',
+  'Easy recovery spin.',
+  'Felt strong, negative split.',
+  'Headwind the whole way home.',
+  'Coffee stop halfway, no regrets.',
+  'Wet roads, took the descents carefully.',
+  'New segment PR on the climb.',
+  'Long endurance day, kept it steady.',
+  'Commute, nothing exciting.',
+  'First ride on the new tires, big improvement.',
 ];
 
 async function seed(): Promise<void> {
@@ -607,6 +1190,260 @@ async function seed(): Promise<void> {
             content: 'The mud point is important. I ran a similar tire in the Vosges last winter and bailed on the wet singletrack after two corners.',
           },
         ])
+        .execute();
+    }
+  }
+
+  console.log('Seeding bikes...');
+  // Refresh the seed-owned bikes so re-runs pick up edits to the roster and its
+  // mileage. Deleting a bike cascades to its components, maintenance logs, and
+  // rides (ON DELETE CASCADE). Scoped strictly to seed bike ids, so real
+  // Google-auth users' bikes are never touched.
+  await db
+    .deleteFrom('bikes')
+    .where('id', 'in', BIKES.map((bike) => bike.id))
+    .execute();
+  for (const bike of BIKES) {
+    await db
+      .insertInto('bikes')
+      .values({
+        id: bike.id,
+        user_id: userAt(bike.owner).id,
+        name: bike.name,
+        brand: bike.brand,
+        model: bike.model,
+        year: bike.year,
+        type: bike.type,
+        description: bike.description,
+        hero_image_url: bike.hero ?? null,
+        is_public: bike.is_public,
+        total_mileage_km: bike.lifetimeKm,
+      })
+      .execute();
+  }
+
+  console.log('Seeding components...');
+  // Regularly-replaced wear parts vs. parts that live with the bike.
+  const wearCategories = new Set<ComponentCategory>([
+    'chain',
+    'tires',
+    'cassette',
+    'bar_tape',
+  ]);
+  for (const bike of BIKES) {
+    const hasComponents = await db
+      .selectFrom('bike_components')
+      .select('id')
+      .where('bike_id', '=', bike.id)
+      .executeTakeFirst();
+    if (hasComponents) continue;
+
+    for (const component of componentsFor(bike)) {
+      const isWearItem = wearCategories.has(component.category);
+      // The UI shows mileage_at_install as the component's "Distance". A durable
+      // part has carried almost the bike's whole odometer; a wear part only the
+      // distance since it was last fitted. Both stay within the lifetime total.
+      const distanceKm = isWearItem
+        ? Math.min(bike.lifetimeKm, randInt(150, 3500))
+        : Math.max(0, bike.lifetimeKm - randInt(0, Math.round(bike.lifetimeKm * 0.05)));
+      await db
+        .insertInto('bike_components')
+        .values({
+          bike_id: bike.id,
+          category: component.category,
+          name: component.name,
+          brand: component.brand ?? null,
+          model: component.model ?? null,
+          installed_at: isWearItem
+            ? dateOnly(daysAgo(randInt(20, 400)))
+            : `${bike.year}-03-15`,
+          mileage_at_install: distanceKm,
+        })
+        .execute();
+    }
+  }
+
+  console.log('Seeding maintenance logs...');
+  for (const bike of BIKES) {
+    const hasLogs = await db
+      .selectFrom('maintenance_logs')
+      .select('id')
+      .where('bike_id', '=', bike.id)
+      .executeTakeFirst();
+    if (hasLogs) continue;
+
+    const components = await db
+      .selectFrom('bike_components')
+      .select(['id', 'category'])
+      .where('bike_id', '=', bike.id)
+      .execute();
+    const componentByCategory = new Map(
+      components.map((component) => [component.category, component.id]),
+    );
+
+    const ownedDays = Math.max(365, (2026 - bike.year) * 365);
+    const logCount = randInt(3, 6);
+    for (let index = 0; index < logCount; index++) {
+      const template = pick(MAINTENANCE_TEMPLATES);
+      // Logs advance in mileage and date together: the oldest sits low on the
+      // odometer and far back in time, the newest near the current lifetime
+      // mileage and recent, so km-since-last-service stays realistic.
+      const fraction = (index + 1) / (logCount + 1);
+      const mileageAtService = Math.round(bike.lifetimeKm * fraction);
+      const daysAgoValue = Math.round(ownedDays * (1 - fraction)) + randInt(0, 25);
+      await db
+        .insertInto('maintenance_logs')
+        .values({
+          bike_id: bike.id,
+          component_id: template.category
+            ? componentByCategory.get(template.category) ?? null
+            : null,
+          type: template.type,
+          title: template.title,
+          description: chance(0.5) ? 'Routine work, no issues found.' : null,
+          cost: chance(0.7) ? randInt(15, 320) : null,
+          mileage_at_service: mileageAtService,
+          performed_at: dateOnly(daysAgo(daysAgoValue)),
+        })
+        .execute();
+    }
+  }
+
+  console.log('Seeding rides...');
+  for (const [userIndex, user] of USERS.entries()) {
+    const userId = user.id;
+    const hasRides = await db
+      .selectFrom('rides')
+      .select('id')
+      .where('user_id', '=', userId)
+      .executeTakeFirst();
+    if (hasRides) continue;
+
+    const ownedBikes = BIKES.filter((bike) => bike.owner === userIndex);
+    if (ownedBikes.length === 0) continue;
+
+    const rideCount = randInt(12, 26);
+    for (let index = 0; index < rideCount; index++) {
+      const bike = pick(ownedBikes);
+      const distanceKm = randInt(120, 1600) / 10; // 12.0 to 160.0 km
+      const durationMin = Math.round(distanceKm * (randInt(20, 32) / 10));
+      const note = pick(RIDE_NOTES);
+      await db
+        .insertInto('rides')
+        .values({
+          user_id: userId,
+          bike_id: bike.id,
+          distance_km: distanceKm,
+          duration_min: durationMin,
+          date: dateOnly(daysAgo(randInt(0, 360))),
+          notes: note === '' ? null : note,
+        })
+        .execute();
+    }
+  }
+
+  // total_mileage_km is the bike's lifetime odometer, set from lifetimeKm when
+  // the bike is inserted. The seeded rides are a recent sample for the feed and
+  // activity stats, not the full history, so they do not redefine the total.
+
+  console.log('Seeding follows...');
+  const followPairs: ReadonlyArray<readonly [number, number]> = [
+    [0, 1], [0, 2], [0, 3], [1, 0], [1, 4], [1, 2], [2, 0], [2, 6], [2, 1],
+    [3, 0], [3, 5], [3, 6], [4, 1], [4, 8], [5, 0], [5, 6], [6, 2], [6, 9],
+    [6, 3], [7, 0], [7, 1], [8, 4], [8, 1], [9, 6], [9, 0],
+  ];
+  for (const [follower, following] of followPairs) {
+    if (follower === following) continue;
+    await db
+      .insertInto('follows')
+      .values({
+        follower_id: userAt(follower).id,
+        following_id: userAt(following).id,
+      })
+      .onConflict((oc) => oc.doNothing())
+      .execute();
+  }
+
+  console.log('Seeding bookmarks...');
+  const bookmarkPosts = await db.selectFrom('posts').select('id').execute();
+  for (const user of USERS) {
+    // Guard per user so re-runs do not keep adding pairs (the deterministic RNG
+    // state diverges once the earlier bulk sections are skipped).
+    const hasBookmarks = await db
+      .selectFrom('bookmarks')
+      .select('user_id')
+      .where('user_id', '=', user.id)
+      .executeTakeFirst();
+    if (hasBookmarks) continue;
+    for (const post of bookmarkPosts) {
+      if (chance(0.25)) {
+        await db
+          .insertInto('bookmarks')
+          .values({ user_id: user.id, post_id: post.id })
+          .onConflict((oc) => oc.doNothing())
+          .execute();
+      }
+    }
+  }
+
+  console.log('Seeding threaded comments...');
+  const topLevelComments = [
+    'This is exactly what I needed, thanks for writing it up.',
+    'Solid advice. I learned this the hard way last season.',
+    'Curious how this holds up in the wet, but the dry-road logic is sound.',
+    'Saved for my next service. The step-by-step makes it approachable.',
+    'I disagree slightly on the pressure, but the rest matches my experience.',
+    'Great detail here, especially the part about preparation.',
+  ];
+  const replyComments = [
+    'Good point, I had not thought of it that way.',
+    'Same here, it took me a few tries to get it right.',
+    'Agreed, that detail makes all the difference.',
+    'Fair, it probably depends on the conditions you ride in.',
+  ];
+  const recentPosts = await db
+    .selectFrom('posts')
+    .select('id')
+    .orderBy('published_at', 'desc')
+    .limit(14)
+    .execute();
+  for (const post of recentPosts) {
+    const hasComments = await db
+      .selectFrom('comments')
+      .select('id')
+      .where('post_id', '=', post.id)
+      .executeTakeFirst();
+    if (hasComments) continue;
+
+    const parent = await db
+      .insertInto('comments')
+      .values({
+        post_id: post.id,
+        user_id: pick(USERS).id,
+        content: pick(topLevelComments),
+      })
+      .returning('id')
+      .executeTakeFirstOrThrow();
+
+    if (chance(0.7)) {
+      await db
+        .insertInto('comments')
+        .values({
+          post_id: post.id,
+          user_id: pick(USERS).id,
+          parent_id: parent.id,
+          content: pick(replyComments),
+        })
+        .execute();
+    }
+    if (chance(0.5)) {
+      await db
+        .insertInto('comments')
+        .values({
+          post_id: post.id,
+          user_id: pick(USERS).id,
+          content: pick(topLevelComments),
+        })
         .execute();
     }
   }
