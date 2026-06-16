@@ -184,7 +184,7 @@ const POSTS: SeedPost[] = [
     author_id: USERS[0].id,
     title: 'First 500 km on gravel tires: a real-world review',
     excerpt: 'Six weeks, two bike-packing weekends, and one very wet commute. What I learned running 42 mm gravel tires on everything from pavement to broken farm roads.',
-    cover_image_url: 'https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=1600&q=80',
+    cover_image_url: 'https://images.unsplash.com/photo-1497514789819-4190972b5575?w=1600&q=80',
     category: 'review',
     published_days_ago: 3,
     tag_slugs: ['gravel', 'review', 'tires'],
@@ -222,7 +222,7 @@ const POSTS: SeedPost[] = [
     author_id: USERS[1].id,
     title: 'How to lube your chain properly (and why most people get it wrong)',
     excerpt: 'A clean chain runs quieter, shifts better, and lasts two to three times longer. Here is the routine I recommend to anyone who will listen.',
-    cover_image_url: 'https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=1600&q=80',
+    cover_image_url: 'https://images.unsplash.com/photo-1617307326578-58d7d5eafa45?w=1600&q=80',
     category: 'maintenance_guide',
     published_days_ago: 8,
     tag_slugs: ['maintenance', 'drivetrain'],
@@ -266,7 +266,7 @@ const POSTS: SeedPost[] = [
     author_id: USERS[2].id,
     title: '7 hours, 134 km, 2,100 m of climbing: the Dolomites by bike',
     excerpt: 'A ride report from a loop that I underestimated, regretted, and would absolutely do again.',
-    cover_image_url: 'https://images.unsplash.com/photo-1517263904808-5dc91e3e7044?w=1600&q=80',
+    cover_image_url: 'https://images.unsplash.com/photo-1609774812592-ac74e4983509?w=1600&q=80',
     category: 'ride_report',
     published_days_ago: 11,
     tag_slugs: ['ride-report', 'climbing', 'road', 'long-distance'],
@@ -308,7 +308,7 @@ const POSTS: SeedPost[] = [
     author_id: USERS[3].id,
     title: 'Why I finally switched from rim brakes to discs',
     excerpt: "I held out for years. I was wrong — but not for the reasons disc fans usually give.",
-    cover_image_url: 'https://images.unsplash.com/photo-1558981285-6f0c94958bb6?w=1600&q=80',
+    cover_image_url: 'https://images.unsplash.com/photo-1541545009001-5b208f3e1116?w=1600&q=80',
     category: 'general',
     published_days_ago: 15,
     tag_slugs: ['road', 'review'],
@@ -352,7 +352,7 @@ const POSTS: SeedPost[] = [
     author_id: USERS[1].id,
     title: 'Replacing a chain: step-by-step, with torque specs',
     excerpt: "It takes 15 minutes and saves you from replacing the whole drivetrain six months later. If you can use a multi-tool, you can do this.",
-    cover_image_url: 'https://images.unsplash.com/photo-1541625602330-2277a4c46182?w=1600&q=80',
+    cover_image_url: 'https://images.unsplash.com/photo-1562615193-cbeef074a501?w=1600&q=80',
     category: 'maintenance_guide',
     published_days_ago: 21,
     tag_slugs: ['maintenance', 'drivetrain'],
@@ -408,7 +408,7 @@ const POSTS: SeedPost[] = [
     author_id: USERS[0].id,
     title: 'A year with the Specialized Tarmac SL7: an honest review',
     excerpt: "A full season and a winter of abuse. What held up, what didn't, and whether I'd buy another.",
-    cover_image_url: 'https://images.unsplash.com/photo-1571068316344-75bc76f77890?w=1600&q=80',
+    cover_image_url: 'https://images.unsplash.com/photo-1487803836022-91054ca05fdd?w=1600&q=80',
     category: 'review',
     published_days_ago: 28,
     tag_slugs: ['review', 'road'],
@@ -456,7 +456,7 @@ const POSTS: SeedPost[] = [
     author_id: USERS[3].id,
     title: 'Coffee-shop ride etiquette, and other things nobody tells you',
     excerpt: "Showing up for your first Saturday group ride is intimidating. Here is the unwritten rulebook, as plainly as I can put it.",
-    cover_image_url: 'https://images.unsplash.com/photo-1507035895480-2b3156c31fc8?w=1600&q=80',
+    cover_image_url: 'https://images.unsplash.com/photo-1539012824725-c85c4695b435?w=1600&q=80',
     category: 'general',
     published_days_ago: 32,
     tag_slugs: ['road'],
@@ -503,7 +503,7 @@ const POSTS: SeedPost[] = [
     author_id: USERS[2].id,
     title: 'Climbing Mont Ventoux in 34°C: what I learned the hard way',
     excerpt: "I thought I had prepared for the heat. I had not. Here is the ride, and here is what I would do differently.",
-    cover_image_url: 'https://images.unsplash.com/photo-1544191696-102dbdaeeaa0?w=1600&q=80',
+    cover_image_url: 'https://images.unsplash.com/photo-1654962398613-6ffaa862488b?w=1600&q=80',
     category: 'ride_report',
     published_days_ago: 40,
     tag_slugs: ['ride-report', 'climbing', 'road', 'long-distance'],
@@ -546,7 +546,7 @@ const POSTS: SeedPost[] = [
     author_id: USERS[5].id,
     title: 'The case for full fenders (and why clip-ons are a trap)',
     excerpt: 'Every winter the same argument resurfaces. After five years of year-round commuting in the rain, here is why I run full-coverage fenders and nothing less.',
-    cover_image_url: 'https://images.unsplash.com/photo-1507035895480-2b3156c31fc8?w=1600&q=80',
+    cover_image_url: 'https://images.unsplash.com/photo-1504495619773-d6762510888b?w=1600&q=80',
     category: 'general',
     published_days_ago: 6,
     tag_slugs: ['commuting', 'gear', 'winter'],
@@ -570,7 +570,7 @@ const POSTS: SeedPost[] = [
     author_id: USERS[1].id,
     title: 'A tubeless setup that actually seats on the first try',
     excerpt: 'Tubeless is great when it works and miserable when it does not. Here is the repeatable process I use so the tire seats, holds air, and stops weeping sealant by morning.',
-    cover_image_url: 'https://images.unsplash.com/photo-1517263904808-5dc91e3e7044?w=1600&q=80',
+    cover_image_url: 'https://images.unsplash.com/photo-1528357820498-97071922e38c?w=1600&q=80',
     category: 'maintenance_guide',
     published_days_ago: 11,
     tag_slugs: ['maintenance', 'tires', 'gear'],
@@ -596,7 +596,7 @@ const POSTS: SeedPost[] = [
     author_id: USERS[6].id,
     title: 'My first 200 km brevet: slower is faster',
     excerpt: 'A 200 km randonnee is not a race, but it punishes the same mistakes a race does. What I got wrong, and the two things that got me to the final control before the cutoff.',
-    cover_image_url: 'https://images.unsplash.com/photo-1541625602330-2277a4c46182?w=1600&q=80',
+    cover_image_url: 'https://images.unsplash.com/photo-1536062435605-f6f0e1fe8869?w=1600&q=80',
     category: 'ride_report',
     published_days_ago: 16,
     tag_slugs: ['long-distance', 'ride-report', 'training'],
@@ -617,7 +617,7 @@ const POSTS: SeedPost[] = [
     author_id: USERS[7].id,
     title: 'Why I still commute on a fixed gear',
     excerpt: 'A fixed-gear bike in city traffic teaches you to read the road further ahead than any other bike. A defence of the simplest drivetrain there is.',
-    cover_image_url: 'https://images.unsplash.com/photo-1544191696-102dbdaeeaa0?w=1600&q=80',
+    cover_image_url: 'https://images.unsplash.com/photo-1496147539180-13929f8aa03a?w=1600&q=80',
     category: 'general',
     published_days_ago: 22,
     tag_slugs: ['commuting', 'road'],
@@ -636,7 +636,7 @@ const POSTS: SeedPost[] = [
     author_id: USERS[8].id,
     title: 'Choosing an enduro bike without overbuying',
     excerpt: 'It is easy to spend a fortune on travel and electronics you will never use. Here is how I would pick an enduro bike today, working from the trail backwards.',
-    cover_image_url: 'https://images.unsplash.com/photo-1571068316344-75bc76f77890?w=1600&q=80',
+    cover_image_url: 'https://images.unsplash.com/photo-1515412512744-6e4adc8b5e55?w=1600&q=80',
     category: 'review',
     published_days_ago: 28,
     tag_slugs: ['mtb', 'review', 'gear'],
@@ -659,7 +659,7 @@ const POSTS: SeedPost[] = [
     author_id: USERS[9].id,
     title: 'Bikepacking the Algarve in the off-season',
     excerpt: 'Four days, one frame bag, and a coastline that empties out once the tourists leave. A loose route report from the south of Portugal in November.',
-    cover_image_url: 'https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=1600&q=80',
+    cover_image_url: 'https://images.unsplash.com/photo-1511994298241-608e28f14fde?w=1600&q=80',
     category: 'ride_report',
     published_days_ago: 34,
     tag_slugs: ['bikepacking', 'touring', 'ride-report'],
@@ -680,7 +680,7 @@ const POSTS: SeedPost[] = [
     author_id: USERS[1].id,
     title: 'Bleeding disc brakes without making a mess',
     excerpt: 'A clean brake bleed is mostly about preparation and patience. The full procedure, the mistakes that introduce air, and how to know when you are actually done.',
-    cover_image_url: 'https://images.unsplash.com/photo-1558981285-6f0c94958bb6?w=1600&q=80',
+    cover_image_url: 'https://images.unsplash.com/photo-1557485599-6137601b8c38?w=1600&q=80',
     category: 'maintenance_guide',
     published_days_ago: 41,
     tag_slugs: ['maintenance', 'gear'],
@@ -704,7 +704,7 @@ const POSTS: SeedPost[] = [
     author_id: USERS[2].id,
     title: 'A power meter changed how I train. Here is the honest review',
     excerpt: 'After one season training with power instead of feel, the numbers confirmed some things and quietly demolished others. What it is worth, and what it is not.',
-    cover_image_url: 'https://images.unsplash.com/photo-1517263904808-5dc91e3e7044?w=1600&q=80',
+    cover_image_url: 'https://images.unsplash.com/photo-1499438075715-fc23ef376ab9?w=1600&q=80',
     category: 'review',
     published_days_ago: 49,
     tag_slugs: ['training', 'gear', 'review'],
@@ -725,7 +725,7 @@ const POSTS: SeedPost[] = [
     author_id: USERS[1].id,
     title: 'Wheel truing for people who have never touched a spoke',
     excerpt: 'A slightly buckled wheel is not a reason to buy a new one. The basics of truing, the one rule that keeps you out of trouble, and when to stop and visit a shop.',
-    cover_image_url: 'https://images.unsplash.com/photo-1571068316344-75bc76f77890?w=1600&q=80',
+    cover_image_url: 'https://images.unsplash.com/photo-1523357585206-175e971f2ad9?w=1600&q=80',
     category: 'maintenance_guide',
     published_days_ago: 57,
     tag_slugs: ['maintenance', 'wheels'],
@@ -745,7 +745,7 @@ const POSTS: SeedPost[] = [
     author_id: USERS[3].id,
     title: 'I finally fitted an easier cassette and my ego survived',
     excerpt: 'For years I rode gearing that was too hard for the hills near me, out of pride. Swapping to a wider-range cassette was the cheapest performance upgrade I have made.',
-    cover_image_url: 'https://images.unsplash.com/photo-1541625602330-2277a4c46182?w=1600&q=80',
+    cover_image_url: 'https://images.unsplash.com/photo-1577181249057-5236e4c85036?w=1600&q=80',
     category: 'general',
     published_days_ago: 64,
     tag_slugs: ['climbing', 'drivetrain', 'gear'],
@@ -764,7 +764,7 @@ const POSTS: SeedPost[] = [
     author_id: USERS[2].id,
     title: 'What winter base training actually looks like',
     excerpt: 'Base season is not glamorous and it is not all slow. A plain-language look at how I structure the dark months so spring fitness is not an accident.',
-    cover_image_url: 'https://images.unsplash.com/photo-1507035895480-2b3156c31fc8?w=1600&q=80',
+    cover_image_url: 'https://images.unsplash.com/photo-1519546609862-f2b4be881be1?w=1600&q=80',
     category: 'general',
     published_days_ago: 73,
     tag_slugs: ['training', 'winter', 'road'],
@@ -787,7 +787,7 @@ const POSTS: SeedPost[] = [
     author_id: USERS[4].id,
     title: 'Build trails the way you want to find them',
     excerpt: 'Volunteering on the local trail crew taught me more about riding than any skills course. A few principles for anyone thinking about picking up a shovel.',
-    cover_image_url: 'https://images.unsplash.com/photo-1544191696-102dbdaeeaa0?w=1600&q=80',
+    cover_image_url: 'https://images.unsplash.com/photo-1502708194510-869867bd84ef?w=1600&q=80',
     category: 'general',
     published_days_ago: 86,
     tag_slugs: ['mtb'],
@@ -810,7 +810,7 @@ const POSTS: SeedPost[] = [
     author_id: USERS[5].id,
     title: 'Three commuter tires, one rainy winter: a comparison',
     excerpt: 'I ran three popular commuter tires back to back through a wet British winter and tracked every puncture. The results were not what the reviews promised.',
-    cover_image_url: 'https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=1600&q=80',
+    cover_image_url: 'https://images.unsplash.com/photo-1531999577375-41b90044d391?w=1600&q=80',
     category: 'review',
     published_days_ago: 97,
     tag_slugs: ['commuting', 'tires', 'review'],
@@ -830,7 +830,7 @@ const POSTS: SeedPost[] = [
     author_id: USERS[0].id,
     title: 'My first 100-mile day, and what it taught me about fuelling',
     excerpt: 'The legs were ready. The stomach was not. A ride report from my first century, and the surprisingly small change that turned the last 20 miles around.',
-    cover_image_url: 'https://images.unsplash.com/photo-1558981285-6f0c94958bb6?w=1600&q=80',
+    cover_image_url: 'https://images.unsplash.com/photo-1536044635785-467d51fc5880?w=1600&q=80',
     category: 'ride_report',
     published_days_ago: 112,
     tag_slugs: ['road', 'ride-report', 'long-distance'],
@@ -851,7 +851,7 @@ const POSTS: SeedPost[] = [
     author_id: USERS[1].id,
     title: 'Check your chain before it eats your cassette',
     excerpt: 'A worn chain is cheap. The cassette and chainrings it destroys are not. How to check chain wear in thirty seconds and when to replace.',
-    cover_image_url: 'https://images.unsplash.com/photo-1517263904808-5dc91e3e7044?w=1600&q=80',
+    cover_image_url: 'https://images.unsplash.com/photo-1585051569247-88eec539d5f0?w=1600&q=80',
     category: 'maintenance_guide',
     published_days_ago: 131,
     tag_slugs: ['maintenance', 'drivetrain'],
@@ -876,7 +876,7 @@ const POSTS: SeedPost[] = [
     author_id: USERS[8].id,
     title: 'First gravel race: dropped, lost, and hooked',
     excerpt: 'I went into my first gravel race expecting a hard ride. I got dropped in the first hour, took a wrong turn, and finished grinning. A recap of a brilliant disaster.',
-    cover_image_url: 'https://images.unsplash.com/photo-1541625602330-2277a4c46182?w=1600&q=80',
+    cover_image_url: 'https://images.unsplash.com/photo-1595525491210-ae5556191bf4?w=1600&q=80',
     category: 'ride_report',
     published_days_ago: 158,
     tag_slugs: ['gravel', 'racing', 'ride-report'],
@@ -892,17 +892,6 @@ const POSTS: SeedPost[] = [
       ],
     },
   },
-];
-
-// Known-working cover photos, reused for bike hero images.
-const COVER_IMAGES = [
-  'https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=1600&q=80',
-  'https://images.unsplash.com/photo-1517263904808-5dc91e3e7044?w=1600&q=80',
-  'https://images.unsplash.com/photo-1558981285-6f0c94958bb6?w=1600&q=80',
-  'https://images.unsplash.com/photo-1541625602330-2277a4c46182?w=1600&q=80',
-  'https://images.unsplash.com/photo-1571068316344-75bc76f77890?w=1600&q=80',
-  'https://images.unsplash.com/photo-1507035895480-2b3156c31fc8?w=1600&q=80',
-  'https://images.unsplash.com/photo-1544191696-102dbdaeeaa0?w=1600&q=80',
 ];
 
 // Deterministic PRNG (mulberry32) so generated bikes/maintenance/rides are the
@@ -937,6 +926,14 @@ const DAY_MS = 24 * 60 * 60 * 1000;
 const dateOnly = (date: Date): string => date.toISOString().slice(0, 10);
 const daysAgo = (days: number): Date => new Date(Date.now() - days * DAY_MS);
 
+// Each bike's hero photo is a local file at client/public/bike-photos/<slug>.jpg,
+// where <slug> is the bike name lower-cased with non-alphanumerics hyphenated.
+// Drop the real photo in with that name and it appears; otherwise the gallery
+// shows its placeholder. See client/public/bike-photos/README.md.
+const photoSlug = (name: string): string =>
+  name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+const heroImageUrl = (name: string): string => `/bike-photos/${photoSlug(name)}.jpg`;
+
 interface SeedBike {
   id: string;
   owner: number; // index into USERS
@@ -948,36 +945,36 @@ interface SeedBike {
   is_public: boolean;
   lifetimeKm: number; // realistic lifetime odometer; drives mileage everywhere
   description: string;
-  hero?: string;
 }
 
 // Real, popular production bikes spread across the ten seed users (mix of
 // public and private). lifetimeKm is a believable odometer for the bike's age
 // and use; component and maintenance mileage are derived from it so every
-// number is internally consistent. Hero images are free-licensed stand-ins
-// (see COVER_IMAGES), not manufacturer product shots.
+// number is internally consistent. Each bike's hero_image_url is wired to a
+// local file under client/public/bike-photos/ (see that folder's README); the
+// gallery falls back to a placeholder when the file is not present.
 const BIKES: SeedBike[] = [
-  { id: 'b1ce0001-0000-4000-8000-000000000000', owner: 0, name: 'Tarmac SL7', brand: 'Specialized', model: 'Tarmac SL7 Expert', year: 2021, type: 'road', is_public: true, lifetimeKm: 22000, description: 'Race-day road bike. Light, stiff, and quietly intimidating.', hero: COVER_IMAGES[0] },
-  { id: 'b1ce0002-0000-4000-8000-000000000000', owner: 0, name: 'Diverge', brand: 'Specialized', model: 'Diverge Comp', year: 2021, type: 'gravel', is_public: true, lifetimeKm: 14000, description: 'Gravel and winter bike. Takes 45 mm tires and full fenders.', hero: COVER_IMAGES[1] },
+  { id: 'b1ce0001-0000-4000-8000-000000000000', owner: 0, name: 'Tarmac SL7', brand: 'Specialized', model: 'Tarmac SL7 Expert', year: 2021, type: 'road', is_public: true, lifetimeKm: 22000, description: 'Race-day road bike. Light, stiff, and quietly intimidating.' },
+  { id: 'b1ce0002-0000-4000-8000-000000000000', owner: 0, name: 'Diverge', brand: 'Specialized', model: 'Diverge Comp', year: 2021, type: 'gravel', is_public: true, lifetimeKm: 14000, description: 'Gravel and winter bike. Takes 45 mm tires and full fenders.' },
   { id: 'b1ce0003-0000-4000-8000-000000000000', owner: 1, name: 'CAAD13', brand: 'Cannondale', model: 'CAAD13 105', year: 2019, type: 'road', is_public: false, lifetimeKm: 26000, description: 'The aluminium bike that rides like carbon. Summer road bike.' },
-  { id: 'b1ce0004-0000-4000-8000-000000000000', owner: 1, name: 'Fuel EX', brand: 'Trek', model: 'Fuel EX 8', year: 2020, type: 'mtb', is_public: true, lifetimeKm: 9000, description: 'Trail full-suspension. Does everything well enough.', hero: COVER_IMAGES[2] },
+  { id: 'b1ce0004-0000-4000-8000-000000000000', owner: 1, name: 'Fuel EX', brand: 'Trek', model: 'Fuel EX 8', year: 2020, type: 'mtb', is_public: true, lifetimeKm: 9000, description: 'Trail full-suspension. Does everything well enough.' },
   { id: 'b1ce0005-0000-4000-8000-000000000000', owner: 1, name: 'FX 3', brand: 'Trek', model: 'FX 3 Disc', year: 2018, type: 'urban', is_public: false, lifetimeKm: 31000, description: 'Beater commuter. Rack, fenders, lights, no shame.' },
-  { id: 'b1ce0006-0000-4000-8000-000000000000', owner: 2, name: 'Caledonia', brand: 'Cervélo', model: 'Caledonia 5', year: 2022, type: 'road', is_public: true, lifetimeKm: 30000, description: 'Endurance race bike for the long events that matter.', hero: COVER_IMAGES[3] },
+  { id: 'b1ce0006-0000-4000-8000-000000000000', owner: 2, name: 'Caledonia', brand: 'Cervélo', model: 'Caledonia 5', year: 2022, type: 'road', is_public: true, lifetimeKm: 30000, description: 'Endurance race bike for the long events that matter.' },
   { id: 'b1ce0007-0000-4000-8000-000000000000', owner: 2, name: 'Roubaix', brand: 'Specialized', model: 'Roubaix Sport', year: 2020, type: 'road', is_public: false, lifetimeKm: 38000, description: 'The ultra bike. Future Shock and a saddle I trust at hour twelve.' },
-  { id: 'b1ce0008-0000-4000-8000-000000000000', owner: 3, name: 'Bad Boy', brand: 'Cannondale', model: 'Bad Boy 3', year: 2018, type: 'urban', is_public: true, lifetimeKm: 33000, description: 'Lefty fork, blacked out, does the commute every day.', hero: COVER_IMAGES[4] },
+  { id: 'b1ce0008-0000-4000-8000-000000000000', owner: 3, name: 'Bad Boy', brand: 'Cannondale', model: 'Bad Boy 3', year: 2018, type: 'urban', is_public: true, lifetimeKm: 33000, description: 'Lefty fork, blacked out, does the commute every day.' },
   { id: 'b1ce0009-0000-4000-8000-000000000000', owner: 3, name: 'Ultimate CF SL', brand: 'Canyon', model: 'Ultimate CF SL 7', year: 2016, type: 'road', is_public: false, lifetimeKm: 24000, description: 'Lightweight climbing bike for the weekend hills.' },
-  { id: 'b1ce000a-0000-4000-8000-000000000000', owner: 4, name: 'Hightower', brand: 'Santa Cruz', model: 'Hightower C', year: 2023, type: 'mtb', is_public: true, lifetimeKm: 5500, description: 'Full-suspension enduro bike. The fun one.', hero: COVER_IMAGES[5] },
+  { id: 'b1ce000a-0000-4000-8000-000000000000', owner: 4, name: 'Hightower', brand: 'Santa Cruz', model: 'Hightower C', year: 2023, type: 'mtb', is_public: true, lifetimeKm: 5500, description: 'Full-suspension enduro bike. The fun one.' },
   { id: 'b1ce000b-0000-4000-8000-000000000000', owner: 4, name: 'Marlin', brand: 'Trek', model: 'Marlin 7', year: 2018, type: 'mtb', is_public: false, lifetimeKm: 9000, description: 'Hardtail for skills practice and winter.' },
-  { id: 'b1ce000c-0000-4000-8000-000000000000', owner: 5, name: 'Sirrus', brand: 'Specialized', model: 'Sirrus X 4.0', year: 2021, type: 'urban', is_public: true, lifetimeKm: 24000, description: 'Flat-bar commuter. Full fenders, dynamo lights, wet-ready.', hero: COVER_IMAGES[6] },
+  { id: 'b1ce000c-0000-4000-8000-000000000000', owner: 5, name: 'Sirrus', brand: 'Specialized', model: 'Sirrus X 4.0', year: 2021, type: 'urban', is_public: true, lifetimeKm: 24000, description: 'Flat-bar commuter. Full fenders, dynamo lights, wet-ready.' },
   { id: 'b1ce000d-0000-4000-8000-000000000000', owner: 5, name: 'Domane', brand: 'Trek', model: 'Domane SL 5', year: 2019, type: 'road', is_public: false, lifetimeKm: 12000, description: 'The nice bike, only comes out when it is dry.' },
-  { id: 'b1ce000e-0000-4000-8000-000000000000', owner: 6, name: 'Trek 520', brand: 'Trek', model: '520', year: 2020, type: 'touring', is_public: true, lifetimeKm: 28000, description: 'Steel touring classic. Randonnees and a dynamo light.', hero: COVER_IMAGES[0] },
+  { id: 'b1ce000e-0000-4000-8000-000000000000', owner: 6, name: 'Trek 520', brand: 'Trek', model: '520', year: 2020, type: 'touring', is_public: true, lifetimeKm: 28000, description: 'Steel touring classic. Randonnees and a dynamo light.' },
   { id: 'b1ce000f-0000-4000-8000-000000000000', owner: 6, name: 'Warbird', brand: 'Salsa', model: 'Warbird C', year: 2019, type: 'gravel', is_public: false, lifetimeKm: 16000, description: 'Winter trainer with mudguards and studded tires.' },
-  { id: 'b1ce0010-0000-4000-8000-000000000000', owner: 7, name: '6061 Track', brand: 'State Bicycle Co.', model: '6061 Black Label', year: 2021, type: 'other', is_public: true, lifetimeKm: 15000, description: 'Fixed-gear track bike, also my city bike.', hero: COVER_IMAGES[1] },
+  { id: 'b1ce0010-0000-4000-8000-000000000000', owner: 7, name: '6061 Track', brand: 'State Bicycle Co.', model: '6061 Black Label', year: 2021, type: 'other', is_public: true, lifetimeKm: 15000, description: 'Fixed-gear track bike, also my city bike.' },
   { id: 'b1ce0011-0000-4000-8000-000000000000', owner: 7, name: 'Allez', brand: 'Specialized', model: 'Allez Sport', year: 2019, type: 'road', is_public: false, lifetimeKm: 13000, description: 'Geared road bike for the days with hills.' },
-  { id: 'b1ce0012-0000-4000-8000-000000000000', owner: 8, name: 'Spectral', brand: 'Canyon', model: 'Spectral 29', year: 2023, type: 'mtb', is_public: true, lifetimeKm: 5000, description: '150 mm of travel for the Wicklow descents.', hero: COVER_IMAGES[2] },
+  { id: 'b1ce0012-0000-4000-8000-000000000000', owner: 8, name: 'Spectral', brand: 'Canyon', model: 'Spectral 29', year: 2023, type: 'mtb', is_public: true, lifetimeKm: 5000, description: '150 mm of travel for the Wicklow descents.' },
   { id: 'b1ce0013-0000-4000-8000-000000000000', owner: 8, name: 'Stumpjumper', brand: 'Specialized', model: 'Stumpjumper Comp', year: 2021, type: 'mtb', is_public: false, lifetimeKm: 9500, description: 'The everyday trail bike, quick and predictable.' },
   { id: 'b1ce0014-0000-4000-8000-000000000000', owner: 8, name: 'Chameleon', brand: 'Santa Cruz', model: 'Chameleon', year: 2018, type: 'mtb', is_public: false, lifetimeKm: 11000, description: 'Steel hardtail. Keeps me honest about line choice.' },
-  { id: 'b1ce0015-0000-4000-8000-000000000000', owner: 9, name: 'Long Haul Trucker', brand: 'Surly', model: 'Long Haul Trucker', year: 2020, type: 'touring', is_public: true, lifetimeKm: 26000, description: 'Loaded touring bike. Has carried me across three countries.', hero: COVER_IMAGES[3] },
+  { id: 'b1ce0015-0000-4000-8000-000000000000', owner: 9, name: 'Long Haul Trucker', brand: 'Surly', model: 'Long Haul Trucker', year: 2020, type: 'touring', is_public: true, lifetimeKm: 26000, description: 'Loaded touring bike. Has carried me across three countries.' },
   { id: 'b1ce0016-0000-4000-8000-000000000000', owner: 9, name: 'Grizl', brand: 'Canyon', model: 'Grizl 7', year: 2019, type: 'gravel', is_public: false, lifetimeKm: 18000, description: 'Drop-bar gravel bike for unloaded day rides.' },
 ];
 
@@ -1119,7 +1116,14 @@ async function seed(): Promise<void> {
       .executeTakeFirst();
 
     if (existing) {
-      console.log(`  - ${post.slug} already exists, skipping`);
+      // Keep the cover image in sync with the seed so re-seeding refreshes it
+      // (covers are now unique + topic-relevant per post).
+      await db
+        .updateTable('posts')
+        .set({ cover_image_url: post.cover_image_url })
+        .where('id', '=', existing.id)
+        .execute();
+      console.log(`  - ${post.slug} exists, refreshed cover image`);
       continue;
     }
 
@@ -1215,7 +1219,7 @@ async function seed(): Promise<void> {
         year: bike.year,
         type: bike.type,
         description: bike.description,
-        hero_image_url: bike.hero ?? null,
+        hero_image_url: heroImageUrl(bike.name),
         is_public: bike.is_public,
         total_mileage_km: bike.lifetimeKm,
       })

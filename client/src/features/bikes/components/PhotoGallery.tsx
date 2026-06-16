@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { ImageUploader } from './ImageUploader.js';
 import { isSafeImageUrl } from '../../../lib/safe-url.js';
 import './photo-gallery.css';
@@ -15,18 +16,25 @@ export function PhotoGallery({
   bikeName,
   onHeroChange,
 }: PhotoGalleryProps): React.JSX.Element {
+  const [failedSrc, setFailedSrc] = useState<string | null>(null);
+  // A safe URL whose image fails to load (e.g. a bike-photos file not dropped
+  // in yet) is treated the same as no photo, so the placeholder shows instead
+  // of a broken image.
+  const heroSrc = isSafeImageUrl(heroImageUrl) ? heroImageUrl : null;
+
   function handleUpload(url: string): void {
     onHeroChange?.(url);
   }
 
   return (
     <div className="photo-gallery">
-      {isSafeImageUrl(heroImageUrl) ? (
+      {heroSrc !== null && heroSrc !== failedSrc ? (
         <img
           className="photo-gallery__hero"
-          src={heroImageUrl}
+          src={heroSrc}
           alt={`${bikeName} hero image`}
           loading="lazy"
+          onError={() => setFailedSrc(heroSrc)}
         />
       ) : (
         <div

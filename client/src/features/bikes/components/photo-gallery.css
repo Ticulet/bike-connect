@@ -13,7 +13,11 @@
   width: 100%;
   aspect-ratio: 2 / 1;
   max-height: 28rem;
-  object-fit: cover;
+  /* contain (not cover) so the whole bike is visible and never cropped;
+     centred in the box, with the letterbox filled by the surface colour. */
+  object-fit: contain;
+  object-position: center;
+  background-color: var(--color-bg-subtle);
   border-radius: var(--radius-xl);
   display: block;
   box-shadow: var(--shadow-md);

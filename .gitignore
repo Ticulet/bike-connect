@@ -12,6 +12,11 @@ dist/
 # Uploads
 uploads/
 
+# Local bike hero photos: drop real images in here, but keep them out of git
+# (sourcing is the user's call; only the README is tracked). See that README.
+client/public/bike-photos/*
+!client/public/bike-photos/README.md
+
 # IDE
 .idea/
 *.swp
