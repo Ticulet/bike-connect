@@ -354,7 +354,7 @@ export function BikeDetailPage(): React.JSX.Element {
   const deleteComponentTarget = components.find((c) => c.id === deleteComponentId);
 
   const quickStats = [
-    { label: 'Total distance', value: formatKm(undefined) },
+    { label: 'Total distance', value: formatKm(Number(bike.total_mileage_km)) },
     { label: 'Total rides', value: rideStats?.ride_count ?? 0 },
     { label: 'Last ride', value: formatRelative(rides[0]?.date) },
     { label: 'Active reminders', value: reminders.filter(r => r.status === 'overdue' || r.status === 'due_soon').length },
@@ -440,6 +440,7 @@ export function BikeDetailPage(): React.JSX.Element {
             <ComponentList
               components={components}
               isOwner={isOwner}
+              bikeMileageKm={Number(bike.total_mileage_km)}
               numbered
               onEdit={(component) => {
                 setFormMode({ type: 'edit', component });

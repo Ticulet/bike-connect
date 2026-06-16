@@ -6,6 +6,8 @@ interface ComponentListProps {
   onEdit: (component: ComponentItem) => void;
   onDelete: (componentId: string) => void;
   isOwner: boolean;
+  /** The bike's lifetime odometer (km), used to show each component's distance ridden. */
+  bikeMileageKm?: number;
   /** When true, renders as a numbered workshop spec list instead of a table. */
   numbered?: boolean;
 }
@@ -23,22 +25,36 @@ function formatCategory(category: string): string {
   return category.replace(/_/g, ' ').replace(/\b\w/g, (c) => c.toUpperCase());
 }
 
+// Distance a component has been ridden = the bike's odometer now minus its
+// odometer when the component was installed. Null when either value is unknown.
+function distanceRiddenKm(
+  mileageAtInstall: number | null,
+  bikeMileageKm: number | undefined,
+): number | null {
+  if (mileageAtInstall === null || bikeMileageKm === undefined) return null;
+  return Math.max(0, Math.round(bikeMileageKm - mileageAtInstall));
+}
+
 // ── Numbered spec list (Workshop Catalog) ─────────────────────────────────
 
 function NumberedComponentList({
   components,
   isOwner,
+  bikeMileageKm,
   onEdit,
   onDelete,
 }: {
   components: ComponentItem[];
   isOwner: boolean;
+  bikeMileageKm: number | undefined;
   onEdit: (c: ComponentItem) => void;
   onDelete: (id: string) => void;
 }): React.JSX.Element {
   return (
     <ol className="component-list component-list--numbered">
-      {components.map((component, index) => (
+      {components.map((component, index) => {
+        const distanceKm = distanceRiddenKm(component.mileage_at_install, bikeMileageKm);
+        return (
         <li key={component.id} className="component-list__row">
           <span className="component-list__number" aria-hidden="true">
             {String(index + 1).padStart(2, '0')}
@@ -60,10 +76,10 @@ function NumberedComponentList({
                 <dd>{formatDate(component.installed_at)}</dd>
               </div>
             )}
-            {component.mileage_at_install !== null && (
+            {distanceKm !== null && (
               <div className="component-list__spec-item">
                 <dt>Distance</dt>
-                <dd>{component.mileage_at_install.toLocaleString()} km</dd>
+                <dd>{distanceKm.toLocaleString()} km</dd>
               </div>
             )}
           </dl>
@@ -89,7 +105,8 @@ function NumberedComponentList({
             </div>
           )}
         </li>
-      ))}
+        );
+      })}
     </ol>
   );
 }
@@ -101,6 +118,7 @@ export function ComponentList({
   onEdit,
   onDelete,
   isOwner,
+  bikeMileageKm,
   numbered = false,
 }: ComponentListProps): React.JSX.Element {
   if (components.length === 0) {
@@ -116,6 +134,7 @@ export function ComponentList({
       <NumberedComponentList
         components={components}
         isOwner={isOwner}
+        bikeMileageKm={bikeMileageKm}
         onEdit={onEdit}
         onDelete={onDelete}
       />

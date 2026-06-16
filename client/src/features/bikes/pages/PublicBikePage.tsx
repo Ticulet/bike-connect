@@ -141,6 +141,7 @@ export function PublicBikePage(): React.JSX.Element {
             <ComponentList
               components={components}
               isOwner={false}
+              bikeMileageKm={Number(bike.total_mileage_km)}
               numbered
               onEdit={() => undefined}
               onDelete={() => undefined}

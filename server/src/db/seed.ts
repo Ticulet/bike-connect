@@ -1240,12 +1240,15 @@ async function seed(): Promise<void> {
 
     for (const component of componentsFor(bike)) {
       const isWearItem = wearCategories.has(component.category);
-      // The UI shows mileage_at_install as the component's "Distance". A durable
-      // part has carried almost the bike's whole odometer; a wear part only the
-      // distance since it was last fitted. Both stay within the lifetime total.
-      const distanceKm = isWearItem
-        ? Math.min(bike.lifetimeKm, randInt(150, 3500))
-        : Math.max(0, bike.lifetimeKm - randInt(0, Math.round(bike.lifetimeKm * 0.05)));
+      // mileage_at_install is the bike's odometer when the component was fitted.
+      // Original parts went on near 0 km; wear parts were fitted recently, so
+      // their install odometer sits just below the current lifetime total. The
+      // list derives the distance ridden as (bike total - this value), so
+      // original parts show ~the full odometer and wear parts only recent km.
+      const recentKm = Math.min(bike.lifetimeKm, randInt(150, 3500));
+      const mileageAtInstall = isWearItem
+        ? bike.lifetimeKm - recentKm
+        : randInt(0, Math.round(bike.lifetimeKm * 0.02));
       await db
         .insertInto('bike_components')
         .values({
@@ -1257,7 +1260,7 @@ async function seed(): Promise<void> {
           installed_at: isWearItem
             ? dateOnly(daysAgo(randInt(20, 400)))
             : `${bike.year}-03-15`,
-          mileage_at_install: distanceKm,
+          mileage_at_install: mileageAtInstall,
         })
         .execute();
     }
