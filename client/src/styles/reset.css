@@ -15,6 +15,11 @@ html {
   font-size: 100%;
   -webkit-text-size-adjust: 100%;
   scroll-behavior: smooth;
+  /* Clip full-bleed (100vw) children — e.g. the post-detail cover — so the
+     vertical scrollbar's width can never produce a horizontal scrollbar.
+     overflow-x: clip keeps vertical scrolling intact (it does not force
+     overflow-y to auto) and stays stable under browser zoom (Ctrl +/-). */
+  overflow-x: clip;
 }
 
 body {
