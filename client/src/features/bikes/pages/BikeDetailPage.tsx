@@ -17,6 +17,7 @@ import { Skeleton } from '../../../components/ui/Skeleton.js';
 import { PhotoGallery } from '../components/PhotoGallery.js';
 import { useAuth } from '../../auth/hooks/useAuth.js';
 import { apiClient, ApiClientError } from '../../../lib/api-client.js';
+import { useToast } from '../../../components/ui/useToast.js';
 import type { CreateComponent } from '@bike-connect/shared';
 import {
   fetchMaintenanceLogs,
@@ -82,6 +83,7 @@ export function BikeDetailPage(): React.JSX.Element {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const toast = useToast();
 
   const [bike, setBike] = useState<BikeItem | null>(null);
   const [components, setComponents] = useState<ComponentItem[]>([]);
@@ -233,8 +235,10 @@ export function BikeDetailPage(): React.JSX.Element {
         body: JSON.stringify({ hero_image_url: url }),
       });
       setBike(updated);
-    } catch {
-      // Non-critical — silently ignore persist error.
+    } catch (err) {
+      const message =
+        err instanceof ApiClientError ? err.message : 'Could not save the photo. Please try again.';
+      toast.error(message);
     }
   }
 

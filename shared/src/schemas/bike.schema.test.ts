@@ -128,4 +128,48 @@ describe('updateBikeSchema', () => {
 
     expect(result.success).toBe(false);
   });
+
+  it('preserves hero_image_url instead of stripping it (regression)', () => {
+    const result = updateBikeSchema.safeParse({ hero_image_url: '/uploads/abc.png' });
+
+    expect(result.success).toBe(true);
+    if (result.success) {
+      expect(result.data.hero_image_url).toBe('/uploads/abc.png');
+    }
+  });
+});
+
+describe('hero_image_url validation', () => {
+  it('accepts an absolute https URL', () => {
+    const result = createBikeSchema.safeParse({
+      ...validBike,
+      hero_image_url: 'https://res.cloudinary.com/demo/image/upload/x.png',
+    });
+
+    expect(result.success).toBe(true);
+  });
+
+  it('accepts a root-relative server path', () => {
+    const result = createBikeSchema.safeParse({ ...validBike, hero_image_url: '/uploads/abc.png' });
+
+    expect(result.success).toBe(true);
+  });
+
+  it('accepts null (clearing the photo)', () => {
+    const result = createBikeSchema.safeParse({ ...validBike, hero_image_url: null });
+
+    expect(result.success).toBe(true);
+  });
+
+  it('rejects a bare string with no scheme or leading slash', () => {
+    const result = createBikeSchema.safeParse({ ...validBike, hero_image_url: 'not-a-url' });
+
+    expect(result.success).toBe(false);
+  });
+
+  it('rejects a protocol-relative URL (off-origin)', () => {
+    const result = createBikeSchema.safeParse({ ...validBike, hero_image_url: '//evil.com/x.png' });
+
+    expect(result.success).toBe(false);
+  });
 });
