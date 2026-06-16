@@ -10,6 +10,19 @@
   border-bottom: 1px solid var(--color-border);
 }
 
+/* Full-page capture (Print / "Save as PDF"): a sticky, blurred header gets
+   painted at the live scroll offset, so it lands mid-document over the content.
+   Pin it back into normal flow (and drop the blur, which prints poorly) so a
+   printed/PDF capture shows the header once, at the very top. */
+@media print {
+  .site-header {
+    position: static;
+    background-color: var(--color-surface-1);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+
 .site-header__inner {
   display: flex;
   align-items: center;
