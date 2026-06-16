@@ -12,6 +12,7 @@ export interface BikeItem {
   hero_image_url: string | null;
   is_public: boolean;
   user_id: string;
+  total_mileage_km: string; // decimal; lifetime odometer (cache of ride sums)
   created_at: string;
   updated_at: string;
 }
