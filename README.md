@@ -55,7 +55,7 @@ npm run dev                   # client + server concurrently
 ```bash
 npm run dev             # client and server in watch mode
 npm run build           # shared → server → client
-npm run lint            # ESLint across workspaces
+npm run lint            # ESLint — NOT configured yet (no eslint dep/config; script currently fails). Type safety is enforced by `npm run typecheck`.
 npm run typecheck       # tsc across workspaces
 npm test                # unit/integration tests (all workspaces)
 npm run test:coverage   # coverage with threshold check
