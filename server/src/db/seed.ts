@@ -894,17 +894,6 @@ const POSTS: SeedPost[] = [
   },
 ];
 
-// Known-working cover photos, reused for bike hero images.
-const COVER_IMAGES = [
-  'https://images.unsplash.com/photo-1485965120184-e220f721d03e?w=1600&q=80',
-  'https://images.unsplash.com/photo-1517263904808-5dc91e3e7044?w=1600&q=80',
-  'https://images.unsplash.com/photo-1558981285-6f0c94958bb6?w=1600&q=80',
-  'https://images.unsplash.com/photo-1541625602330-2277a4c46182?w=1600&q=80',
-  'https://images.unsplash.com/photo-1571068316344-75bc76f77890?w=1600&q=80',
-  'https://images.unsplash.com/photo-1507035895480-2b3156c31fc8?w=1600&q=80',
-  'https://images.unsplash.com/photo-1544191696-102dbdaeeaa0?w=1600&q=80',
-];
-
 // Deterministic PRNG (mulberry32) so generated bikes/maintenance/rides are the
 // same on every fresh seed. Avoids Math.random so re-runs are reproducible.
 function makeRng(seed: number): () => number {
@@ -937,6 +926,14 @@ const DAY_MS = 24 * 60 * 60 * 1000;
 const dateOnly = (date: Date): string => date.toISOString().slice(0, 10);
 const daysAgo = (days: number): Date => new Date(Date.now() - days * DAY_MS);
 
+// Each bike's hero photo is a local file at client/public/bike-photos/<slug>.jpg,
+// where <slug> is the bike name lower-cased with non-alphanumerics hyphenated.
+// Drop the real photo in with that name and it appears; otherwise the gallery
+// shows its placeholder. See client/public/bike-photos/README.md.
+const photoSlug = (name: string): string =>
+  name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+const heroImageUrl = (name: string): string => `/bike-photos/${photoSlug(name)}.jpg`;
+
 interface SeedBike {
   id: string;
   owner: number; // index into USERS
@@ -948,36 +945,36 @@ interface SeedBike {
   is_public: boolean;
   lifetimeKm: number; // realistic lifetime odometer; drives mileage everywhere
   description: string;
-  hero?: string;
 }
 
 // Real, popular production bikes spread across the ten seed users (mix of
 // public and private). lifetimeKm is a believable odometer for the bike's age
 // and use; component and maintenance mileage are derived from it so every
-// number is internally consistent. Hero images are free-licensed stand-ins
-// (see COVER_IMAGES), not manufacturer product shots.
+// number is internally consistent. Each bike's hero_image_url is wired to a
+// local file under client/public/bike-photos/ (see that folder's README); the
+// gallery falls back to a placeholder when the file is not present.
 const BIKES: SeedBike[] = [
-  { id: 'b1ce0001-0000-4000-8000-000000000000', owner: 0, name: 'Tarmac SL7', brand: 'Specialized', model: 'Tarmac SL7 Expert', year: 2021, type: 'road', is_public: true, lifetimeKm: 22000, description: 'Race-day road bike. Light, stiff, and quietly intimidating.', hero: COVER_IMAGES[0] },
-  { id: 'b1ce0002-0000-4000-8000-000000000000', owner: 0, name: 'Diverge', brand: 'Specialized', model: 'Diverge Comp', year: 2021, type: 'gravel', is_public: true, lifetimeKm: 14000, description: 'Gravel and winter bike. Takes 45 mm tires and full fenders.', hero: COVER_IMAGES[1] },
+  { id: 'b1ce0001-0000-4000-8000-000000000000', owner: 0, name: 'Tarmac SL7', brand: 'Specialized', model: 'Tarmac SL7 Expert', year: 2021, type: 'road', is_public: true, lifetimeKm: 22000, description: 'Race-day road bike. Light, stiff, and quietly intimidating.' },
+  { id: 'b1ce0002-0000-4000-8000-000000000000', owner: 0, name: 'Diverge', brand: 'Specialized', model: 'Diverge Comp', year: 2021, type: 'gravel', is_public: true, lifetimeKm: 14000, description: 'Gravel and winter bike. Takes 45 mm tires and full fenders.' },
   { id: 'b1ce0003-0000-4000-8000-000000000000', owner: 1, name: 'CAAD13', brand: 'Cannondale', model: 'CAAD13 105', year: 2019, type: 'road', is_public: false, lifetimeKm: 26000, description: 'The aluminium bike that rides like carbon. Summer road bike.' },
-  { id: 'b1ce0004-0000-4000-8000-000000000000', owner: 1, name: 'Fuel EX', brand: 'Trek', model: 'Fuel EX 8', year: 2020, type: 'mtb', is_public: true, lifetimeKm: 9000, description: 'Trail full-suspension. Does everything well enough.', hero: COVER_IMAGES[2] },
+  { id: 'b1ce0004-0000-4000-8000-000000000000', owner: 1, name: 'Fuel EX', brand: 'Trek', model: 'Fuel EX 8', year: 2020, type: 'mtb', is_public: true, lifetimeKm: 9000, description: 'Trail full-suspension. Does everything well enough.' },
   { id: 'b1ce0005-0000-4000-8000-000000000000', owner: 1, name: 'FX 3', brand: 'Trek', model: 'FX 3 Disc', year: 2018, type: 'urban', is_public: false, lifetimeKm: 31000, description: 'Beater commuter. Rack, fenders, lights, no shame.' },
-  { id: 'b1ce0006-0000-4000-8000-000000000000', owner: 2, name: 'Caledonia', brand: 'Cervélo', model: 'Caledonia 5', year: 2022, type: 'road', is_public: true, lifetimeKm: 30000, description: 'Endurance race bike for the long events that matter.', hero: COVER_IMAGES[3] },
+  { id: 'b1ce0006-0000-4000-8000-000000000000', owner: 2, name: 'Caledonia', brand: 'Cervélo', model: 'Caledonia 5', year: 2022, type: 'road', is_public: true, lifetimeKm: 30000, description: 'Endurance race bike for the long events that matter.' },
   { id: 'b1ce0007-0000-4000-8000-000000000000', owner: 2, name: 'Roubaix', brand: 'Specialized', model: 'Roubaix Sport', year: 2020, type: 'road', is_public: false, lifetimeKm: 38000, description: 'The ultra bike. Future Shock and a saddle I trust at hour twelve.' },
-  { id: 'b1ce0008-0000-4000-8000-000000000000', owner: 3, name: 'Bad Boy', brand: 'Cannondale', model: 'Bad Boy 3', year: 2018, type: 'urban', is_public: true, lifetimeKm: 33000, description: 'Lefty fork, blacked out, does the commute every day.', hero: COVER_IMAGES[4] },
+  { id: 'b1ce0008-0000-4000-8000-000000000000', owner: 3, name: 'Bad Boy', brand: 'Cannondale', model: 'Bad Boy 3', year: 2018, type: 'urban', is_public: true, lifetimeKm: 33000, description: 'Lefty fork, blacked out, does the commute every day.' },
   { id: 'b1ce0009-0000-4000-8000-000000000000', owner: 3, name: 'Ultimate CF SL', brand: 'Canyon', model: 'Ultimate CF SL 7', year: 2016, type: 'road', is_public: false, lifetimeKm: 24000, description: 'Lightweight climbing bike for the weekend hills.' },
-  { id: 'b1ce000a-0000-4000-8000-000000000000', owner: 4, name: 'Hightower', brand: 'Santa Cruz', model: 'Hightower C', year: 2023, type: 'mtb', is_public: true, lifetimeKm: 5500, description: 'Full-suspension enduro bike. The fun one.', hero: COVER_IMAGES[5] },
+  { id: 'b1ce000a-0000-4000-8000-000000000000', owner: 4, name: 'Hightower', brand: 'Santa Cruz', model: 'Hightower C', year: 2023, type: 'mtb', is_public: true, lifetimeKm: 5500, description: 'Full-suspension enduro bike. The fun one.' },
   { id: 'b1ce000b-0000-4000-8000-000000000000', owner: 4, name: 'Marlin', brand: 'Trek', model: 'Marlin 7', year: 2018, type: 'mtb', is_public: false, lifetimeKm: 9000, description: 'Hardtail for skills practice and winter.' },
-  { id: 'b1ce000c-0000-4000-8000-000000000000', owner: 5, name: 'Sirrus', brand: 'Specialized', model: 'Sirrus X 4.0', year: 2021, type: 'urban', is_public: true, lifetimeKm: 24000, description: 'Flat-bar commuter. Full fenders, dynamo lights, wet-ready.', hero: COVER_IMAGES[6] },
+  { id: 'b1ce000c-0000-4000-8000-000000000000', owner: 5, name: 'Sirrus', brand: 'Specialized', model: 'Sirrus X 4.0', year: 2021, type: 'urban', is_public: true, lifetimeKm: 24000, description: 'Flat-bar commuter. Full fenders, dynamo lights, wet-ready.' },
   { id: 'b1ce000d-0000-4000-8000-000000000000', owner: 5, name: 'Domane', brand: 'Trek', model: 'Domane SL 5', year: 2019, type: 'road', is_public: false, lifetimeKm: 12000, description: 'The nice bike, only comes out when it is dry.' },
-  { id: 'b1ce000e-0000-4000-8000-000000000000', owner: 6, name: 'Trek 520', brand: 'Trek', model: '520', year: 2020, type: 'touring', is_public: true, lifetimeKm: 28000, description: 'Steel touring classic. Randonnees and a dynamo light.', hero: COVER_IMAGES[0] },
+  { id: 'b1ce000e-0000-4000-8000-000000000000', owner: 6, name: 'Trek 520', brand: 'Trek', model: '520', year: 2020, type: 'touring', is_public: true, lifetimeKm: 28000, description: 'Steel touring classic. Randonnees and a dynamo light.' },
   { id: 'b1ce000f-0000-4000-8000-000000000000', owner: 6, name: 'Warbird', brand: 'Salsa', model: 'Warbird C', year: 2019, type: 'gravel', is_public: false, lifetimeKm: 16000, description: 'Winter trainer with mudguards and studded tires.' },
-  { id: 'b1ce0010-0000-4000-8000-000000000000', owner: 7, name: '6061 Track', brand: 'State Bicycle Co.', model: '6061 Black Label', year: 2021, type: 'other', is_public: true, lifetimeKm: 15000, description: 'Fixed-gear track bike, also my city bike.', hero: COVER_IMAGES[1] },
+  { id: 'b1ce0010-0000-4000-8000-000000000000', owner: 7, name: '6061 Track', brand: 'State Bicycle Co.', model: '6061 Black Label', year: 2021, type: 'other', is_public: true, lifetimeKm: 15000, description: 'Fixed-gear track bike, also my city bike.' },
   { id: 'b1ce0011-0000-4000-8000-000000000000', owner: 7, name: 'Allez', brand: 'Specialized', model: 'Allez Sport', year: 2019, type: 'road', is_public: false, lifetimeKm: 13000, description: 'Geared road bike for the days with hills.' },
-  { id: 'b1ce0012-0000-4000-8000-000000000000', owner: 8, name: 'Spectral', brand: 'Canyon', model: 'Spectral 29', year: 2023, type: 'mtb', is_public: true, lifetimeKm: 5000, description: '150 mm of travel for the Wicklow descents.', hero: COVER_IMAGES[2] },
+  { id: 'b1ce0012-0000-4000-8000-000000000000', owner: 8, name: 'Spectral', brand: 'Canyon', model: 'Spectral 29', year: 2023, type: 'mtb', is_public: true, lifetimeKm: 5000, description: '150 mm of travel for the Wicklow descents.' },
   { id: 'b1ce0013-0000-4000-8000-000000000000', owner: 8, name: 'Stumpjumper', brand: 'Specialized', model: 'Stumpjumper Comp', year: 2021, type: 'mtb', is_public: false, lifetimeKm: 9500, description: 'The everyday trail bike, quick and predictable.' },
   { id: 'b1ce0014-0000-4000-8000-000000000000', owner: 8, name: 'Chameleon', brand: 'Santa Cruz', model: 'Chameleon', year: 2018, type: 'mtb', is_public: false, lifetimeKm: 11000, description: 'Steel hardtail. Keeps me honest about line choice.' },
-  { id: 'b1ce0015-0000-4000-8000-000000000000', owner: 9, name: 'Long Haul Trucker', brand: 'Surly', model: 'Long Haul Trucker', year: 2020, type: 'touring', is_public: true, lifetimeKm: 26000, description: 'Loaded touring bike. Has carried me across three countries.', hero: COVER_IMAGES[3] },
+  { id: 'b1ce0015-0000-4000-8000-000000000000', owner: 9, name: 'Long Haul Trucker', brand: 'Surly', model: 'Long Haul Trucker', year: 2020, type: 'touring', is_public: true, lifetimeKm: 26000, description: 'Loaded touring bike. Has carried me across three countries.' },
   { id: 'b1ce0016-0000-4000-8000-000000000000', owner: 9, name: 'Grizl', brand: 'Canyon', model: 'Grizl 7', year: 2019, type: 'gravel', is_public: false, lifetimeKm: 18000, description: 'Drop-bar gravel bike for unloaded day rides.' },
 ];
 
@@ -1215,7 +1212,7 @@ async function seed(): Promise<void> {
         year: bike.year,
         type: bike.type,
         description: bike.description,
-        hero_image_url: bike.hero ?? null,
+        hero_image_url: heroImageUrl(bike.name),
         is_public: bike.is_public,
         total_mileage_km: bike.lifetimeKm,
       })
