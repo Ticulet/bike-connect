@@ -542,12 +542,14 @@
 .component-list__actions {
   display: flex;
   gap: var(--spacing-xs);
+  flex-shrink: 0;
 }
 
 .component-list__btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  white-space: nowrap;
   font-size: var(--font-size-xs);
   padding: 0.3rem 0.625rem;
   border: 1px solid var(--color-border);
@@ -602,6 +604,7 @@
 .component-list__row {
   display: flex;
   align-items: flex-start;
+  flex-wrap: wrap;
   gap: var(--spacing-md);
   padding: var(--spacing-md) var(--spacing-sm);
   border-bottom: 1px solid var(--color-border-light);
@@ -629,8 +632,8 @@
 }
 
 .component-list__name {
-  flex: 1;
-  min-width: 0;
+  flex: 1 1 12rem;
+  min-width: 9rem;
   display: flex;
   flex-direction: column;
   gap: var(--spacing-xs);
@@ -644,6 +647,7 @@
   color: var(--color-accent-deep);
   margin: 0;
   line-height: 1;
+  white-space: nowrap;
 }
 
 .component-list__model {
@@ -798,6 +802,7 @@
   display: flex;
   gap: var(--spacing-sm);
   align-items: center;
+  margin-top: var(--spacing-sm);
 }
 
 .component-form__submit {
