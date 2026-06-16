@@ -802,6 +802,7 @@
   display: flex;
   gap: var(--spacing-sm);
   align-items: center;
+  margin-top: var(--spacing-sm);
 }
 
 .component-form__submit {
