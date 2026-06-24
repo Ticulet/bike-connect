@@ -646,9 +646,10 @@
   font-weight: var(--font-weight-medium);
   color: var(--color-text);
   margin: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  /* Show the full model name: wrap to multiple lines instead of truncating
+     with an ellipsis. overflow-wrap breaks any unbroken token (e.g. a long
+     model code) so it can never spill out of the column. */
+  overflow-wrap: break-word;
 }
 
 .component-list__specs-dl {
