@@ -141,7 +141,7 @@ function DefaultBikeCard({ bike }: { bike: BikeCardProps['bike'] }): React.JSX.E
         </div>
 
         <p className="bike-card__subtitle">
-          {bike.brand} {bike.model} &mdash; {bike.year}
+          {bike.brand} {bike.model}, {bike.year}
         </p>
       </div>
     </article>
