@@ -156,7 +156,7 @@ export function PostListPage(): React.JSX.Element {
           )}
 
           <section aria-label="Blog posts" aria-live="polite" aria-busy={isLoading}>
-            {isLoading ? (
+            {isLoading && posts.length === 0 ? (
               <PostListSkeleton />
             ) : posts.length === 0 && !error ? (
               <EmptyState
@@ -190,14 +190,15 @@ export function PostListPage(): React.JSX.Element {
             )}
           </section>
 
-          {hasMore && !isLoading && (
+          {hasMore && (
             <div className="post-list__footer">
               <button
                 type="button"
                 className="btn btn-ghost post-list__load-more"
                 onClick={loadMore}
+                disabled={isLoading}
               >
-                Load more
+                {isLoading ? 'Loading…' : 'Load more'}
               </button>
             </div>
           )}
