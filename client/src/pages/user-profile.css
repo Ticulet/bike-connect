@@ -132,3 +132,39 @@
 }
 @media (max-width: 1200px) { .user-profile__posts-grid { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 640px)  { .user-profile__posts-grid { grid-template-columns: 1fr; } }
+
+/* Activity feed */
+.user-profile__activity {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.user-profile__activity-item {
+  border-block-end: 1px solid var(--color-border-light);
+}
+.user-profile__activity-item:last-child {
+  border-block-end: none;
+}
+.user-profile__activity-link {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--spacing-md);
+  padding: var(--spacing-md) var(--spacing-xs);
+  color: inherit;
+  text-decoration: none;
+  transition: background-color var(--transition-fast);
+}
+.user-profile__activity-link:hover {
+  background-color: var(--color-surface-2, var(--color-bg-subtle));
+}
+.user-profile__activity-label {
+  min-width: 0;
+  overflow-wrap: break-word;
+}
+.user-profile__activity-date {
+  flex-shrink: 0;
+  font-size: var(--font-size-sm);
+  color: var(--color-text-muted);
+  white-space: nowrap;
+}

@@ -25,10 +25,26 @@ interface UserProfile {
   created_at: string;
 }
 
+interface ActivityItem {
+  id: string;
+  type: 'post' | 'bike';
+  label: string;
+  timestamp: string;
+  href: string;
+}
+
 function formatMemberSince(dateString: string): string {
   return new Date(dateString).toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'long',
+  });
+}
+
+function formatActivityDate(iso: string): string {
+  return new Date(iso).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
   });
 }
 
@@ -112,6 +128,8 @@ export function UserProfilePage(): React.JSX.Element {
   const [postsLoading, setPostsLoading] = useState(false);
   const [bikes, setBikes] = useState<BikeItem[]>([]);
   const [bikesLoading, setBikesLoading] = useState(false);
+  const [activity, setActivity] = useState<ActivityItem[]>([]);
+  const [activityLoading, setActivityLoading] = useState(false);
 
   const [activeTab, setActiveTab] = useState<string>(() => {
     const hash = window.location.hash.replace('#', '');
@@ -165,6 +183,22 @@ export function UserProfilePage(): React.JSX.Element {
     [],
   );
 
+  const loadActivity = useCallback(
+    async (userId: string, signal: AbortSignal): Promise<void> => {
+      if (signal.aborted) return;
+      setActivityLoading(true);
+      try {
+        const result = await apiClient<ActivityItem[]>(`/users/${userId}/activity`, { signal });
+        if (!signal.aborted) setActivity(result);
+      } catch {
+        if (!signal.aborted) setActivity([]);
+      } finally {
+        if (!signal.aborted) setActivityLoading(false);
+      }
+    },
+    [],
+  );
+
   useEffect(() => {
     if (!id) return;
 
@@ -175,6 +209,7 @@ export function UserProfilePage(): React.JSX.Element {
     setFollowStats(null);
     setAuthorPosts([]);
     setBikes([]);
+    setActivity([]);
 
     apiClient<UserProfile>(`/users/${id}`, { signal: controller.signal })
       .then((result) => {
@@ -183,6 +218,7 @@ export function UserProfilePage(): React.JSX.Element {
           void loadFollowStats(id, controller.signal);
           void loadAuthorPosts(id, controller.signal);
           void loadBikes(id, controller.signal);
+          void loadActivity(id, controller.signal);
         }
       })
       .catch((err: unknown) => {
@@ -195,7 +231,7 @@ export function UserProfilePage(): React.JSX.Element {
       });
 
     return () => { controller.abort(); };
-  }, [id, loadFollowStats, loadAuthorPosts, loadBikes]);
+  }, [id, loadFollowStats, loadAuthorPosts, loadBikes, loadActivity]);
 
   function handleFollowStatsChange(update: Partial<FollowStatsData>): void {
     setFollowStats((prev) => {
@@ -247,7 +283,7 @@ export function UserProfilePage(): React.JSX.Element {
   const tabItems = [
     { id: 'posts', label: 'Posts', badge: authorPosts.length > 0 ? authorPosts.length : undefined },
     { id: 'bikes', label: 'Bikes', badge: bikes.length > 0 ? bikes.length : undefined },
-    { id: 'activity', label: 'Activity' },
+    { id: 'activity', label: 'Activity', badge: activity.length > 0 ? activity.length : undefined },
   ];
 
   return (
@@ -350,11 +386,34 @@ export function UserProfilePage(): React.JSX.Element {
             )}
 
             {activeTab === 'activity' && (
-              <EmptyState
-                icon={<ActivityEmptyIcon />}
-                title="Quiet for now"
-                description="Activity will appear here."
-              />
+              activityLoading ? (
+                <ul className="user-profile__activity">
+                  {Array.from({ length: 4 }, (_, i) => (
+                    <li key={i} className="user-profile__activity-item">
+                      <Skeleton variant="card" height={48} />
+                    </li>
+                  ))}
+                </ul>
+              ) : activity.length === 0 ? (
+                <EmptyState
+                  icon={<ActivityEmptyIcon />}
+                  title="Quiet for now"
+                  description={isOwnProfile ? 'Your published posts and public bikes will show up here.' : 'Activity will appear here.'}
+                />
+              ) : (
+                <ul role="list" className="user-profile__activity">
+                  {activity.map((item) => (
+                    <li key={`${item.type}-${item.id}`} className="user-profile__activity-item">
+                      <Link to={item.href} className="user-profile__activity-link">
+                        <span className="user-profile__activity-label">{item.label}</span>
+                        <time className="user-profile__activity-date" dateTime={item.timestamp}>
+                          {formatActivityDate(item.timestamp)}
+                        </time>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              )
             )}
           </div>
         </div>
