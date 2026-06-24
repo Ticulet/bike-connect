@@ -15,7 +15,7 @@ export function Header(): React.JSX.Element {
         <NavLink
           to="/"
           className="site-header__brand"
-          aria-label="Bike Connect — home"
+          aria-label="Bike Connect home"
         >
           <BrandMark />
           <span className="site-header__brand-name">Bike Connect</span>

@@ -135,7 +135,7 @@ export function HomePage(): React.JSX.Element {
             <h3 className="home-problem__card-title">Scattered ride notes</h3>
             <p className="home-problem__card-copy">
               Photos in your camera roll, a route in Strava, half a paragraph in
-              Notes &mdash; the story of the ride is in five different apps.
+              Notes. The story of the ride is in five different apps.
             </p>
           </li>
           <li className="home-problem__card">
@@ -150,7 +150,7 @@ export function HomePage(): React.JSX.Element {
             <LostReceiptsIcon className="home-problem__icon" />
             <h3 className="home-problem__card-title">Lost gear receipts</h3>
             <p className="home-problem__card-copy">
-              Warranty claims, insurance, resale &mdash; all easier when you can
+              Warranty claims, insurance, resale: all easier when you can
               prove what you bought, when, and what bike it&rsquo;s on.
             </p>
           </li>
@@ -167,7 +167,7 @@ export function HomePage(): React.JSX.Element {
           <p className="home-how__lead">
             Bike Connect is built around the actual rhythm of riding. You write
             what happened, you register what you ride, and you log what you fix.
-            Everything else &mdash; reminders, history, public profiles &mdash;
+            Everything else (reminders, history, public profiles)
             falls out of those three habits.
           </p>
         </header>
@@ -184,7 +184,7 @@ export function HomePage(): React.JSX.Element {
             <BikeIcon className="home-how__step-icon" />
             <h3 className="home-how__step-title">Register</h3>
             <p className="home-how__step-copy">
-              Add every bike &mdash; brand, year, components down to the chain,
+              Add every bike: brand, year, components down to the chain,
               photos, mileage. Public if you want, private by default.
             </p>
           </li>
@@ -222,7 +222,7 @@ export function HomePage(): React.JSX.Element {
             </p>
             <ul className="home-feature__list">
               <li>Drafts, scheduled posts, and tags</li>
-              <li>Markdown-style toolbar &mdash; no lock-in</li>
+              <li>Markdown-style toolbar, no lock-in</li>
               <li>Public author profile with bio + bike list</li>
             </ul>
             <Link to="/posts" className="home-feature__cta">
@@ -241,7 +241,7 @@ export function HomePage(): React.JSX.Element {
               the years.
             </p>
             <ul className="home-feature__list">
-              <li>Frame, drivetrain, wheels, brakes, contact &mdash; all itemised</li>
+              <li>Frame, drivetrain, wheels, brakes, contact: all itemised</li>
               <li>Multiple photos per bike with a built-in gallery</li>
               <li>Lifetime mileage from logged rides</li>
             </ul>
@@ -264,7 +264,7 @@ export function HomePage(): React.JSX.Element {
             <p className="home-feature__lead">
               Log services per bike, set service-interval reminders, see the full
               timeline. Overdue, due-soon, and scheduled states are colour
-              <em> and</em> icon coded &mdash; not colour alone.
+              <em> and</em> icon coded, not colour alone.
             </p>
             <ul className="home-feature__list">
               <li>Per-bike service timeline</li>
@@ -356,7 +356,7 @@ export function HomePage(): React.JSX.Element {
           </li>
           <li className="home-principle">
             <ExportIcon className="home-principle__icon" />
-            <p className="home-principle__copy">Your data, your bikes, your stories &mdash; exportable.</p>
+            <p className="home-principle__copy">Your data, your bikes, your stories: exportable.</p>
           </li>
           <li className="home-principle">
             <OpenStandardsIcon className="home-principle__icon" />
@@ -389,7 +389,7 @@ export function HomePage(): React.JSX.Element {
             <summary className="home-faq__question">Do I need a Google account?</summary>
             <div className="home-faq__answer">
               <p>
-                For now, yes &mdash; sign-in is &ldquo;Sign in with Google&rdquo; only. We use
+                For now, yes, sign-in is &ldquo;Sign in with Google&rdquo; only. We use
                 Google as the identity provider so we don&rsquo;t have to store passwords.
                 Email + password (and other providers) may arrive later; if you don&rsquo;t
                 want a Google account, wait for that.
@@ -421,7 +421,7 @@ export function HomePage(): React.JSX.Element {
             <summary className="home-faq__question">Does it work on my phone?</summary>
             <div className="home-faq__answer">
               <p>
-                Yes &mdash; the site is responsive from 360&nbsp;px upward and is intended
+                Yes, the site is responsive from 360&nbsp;px upward and is intended
                 to work without horizontal scroll on every common phone size. There is
                 no native app today; the web version is the product.
               </p>
@@ -431,7 +431,7 @@ export function HomePage(): React.JSX.Element {
             <summary className="home-faq__question">Why not just use Strava?</summary>
             <div className="home-faq__answer">
               <p>
-                Use both! Strava is built around the activity feed &mdash; speed, segments,
+                Use both! Strava is built around the activity feed: speed, segments,
                 kudos. Bike Connect is built around the long-form story, the bike, and the
                 maintenance log. Different tools, different jobs. Many riders keep a Strava
                 account for the data and a Bike Connect account for the writing.
@@ -442,7 +442,7 @@ export function HomePage(): React.JSX.Element {
             <summary className="home-faq__question">Who built this?</summary>
             <div className="home-faq__answer">
               <p>
-                One person, as a university project &mdash; built openly with React, Node,
+                One person, as a university project, built openly with React, Node,
                 and Postgres. The code is auditable, the brand is honest, and the roadmap
                 is shaped by real rider feedback rather than growth metrics.
               </p>

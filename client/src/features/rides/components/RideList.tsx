@@ -104,7 +104,7 @@ export function RideList({
             </div>
             <div className="ride-list__spec">
               <dt>Duration</dt>
-              <dd>{ride.duration_min !== null ? formatDuration(ride.duration_min) : '—'}</dd>
+              <dd>{ride.duration_min !== null ? formatDuration(ride.duration_min) : '-'}</dd>
             </div>
           </dl>
 

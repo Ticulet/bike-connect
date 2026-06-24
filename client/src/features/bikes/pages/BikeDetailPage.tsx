@@ -63,12 +63,12 @@ type RideDrawerMode =
   | { open: true; rideId?: string; initialData?: RideItem };
 
 function formatKm(km: number | undefined): string {
-  if (km === undefined) return '—';
+  if (km === undefined) return '-';
   return `${km.toLocaleString()} km`;
 }
 
 function formatRelative(dateStr: string | null | undefined): string {
-  if (!dateStr) return '—';
+  if (!dateStr) return '-';
   const diff = Date.now() - new Date(dateStr).getTime();
   const days = Math.floor(diff / (1000 * 60 * 60 * 24));
   if (days === 0) return 'Today';

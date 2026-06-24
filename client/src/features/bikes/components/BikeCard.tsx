@@ -20,12 +20,12 @@ export interface BikeCardProps {
 // ── Format helpers ─────────────────────────────────────────────────────────
 
 function formatKm(km: number | undefined): string {
-  if (km === undefined) return '—';
+  if (km === undefined) return '-';
   return `${km.toLocaleString()} km`;
 }
 
 function formatRelative(dateStr: string | null | undefined): string {
-  if (!dateStr) return '—';
+  if (!dateStr) return '-';
   const diff = Date.now() - new Date(dateStr).getTime();
   const days = Math.floor(diff / (1000 * 60 * 60 * 24));
   if (days === 0) return 'Today';
@@ -79,7 +79,7 @@ function WorkshopBikeCard({ bike }: { bike: BikeCardProps['bike'] }): React.JSX.
             </div>
             <div className="bike-card__spec">
               <dt>Components</dt>
-              <dd>{bike.componentCount ?? '—'}</dd>
+              <dd>{bike.componentCount ?? '-'}</dd>
             </div>
           </dl>
 
@@ -141,7 +141,7 @@ function DefaultBikeCard({ bike }: { bike: BikeCardProps['bike'] }): React.JSX.E
         </div>
 
         <p className="bike-card__subtitle">
-          {bike.brand} {bike.model} &mdash; {bike.year}
+          {bike.brand} {bike.model}, {bike.year}
         </p>
       </div>
     </article>
