@@ -9,6 +9,7 @@ import { BookmarkButton } from '../components/BookmarkButton.js';
 import { CommentList } from '../components/CommentList.js';
 import { ApiClientError } from '../../../lib/api-client.js';
 import { isSafeImageUrl } from '../../../lib/safe-url.js';
+import { CoverImage } from '../components/CoverImage.js';
 import { useAuth } from '../../auth/hooks/useAuth.js';
 import { Skeleton } from '../../../components/ui/Skeleton.js';
 import './post-detail.css';
@@ -132,7 +133,7 @@ export function PostDetailPage(): React.JSX.Element {
       {/* Full-bleed cover */}
       {isSafeImageUrl(post.cover_image_url) && (
         <figure className="post-detail__cover">
-          <img
+          <CoverImage
             src={post.cover_image_url}
             alt={`Cover image for ${post.title}`}
             className="post-detail__cover-img"
