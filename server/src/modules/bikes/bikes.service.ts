@@ -14,6 +14,10 @@ export const bikesService = {
     return bikesRepository.findByUserId(userId);
   },
 
+  async listPublicBikes(userId: string): Promise<Bike[]> {
+    return bikesRepository.findPublicByUserId(userId);
+  },
+
   async getBike(bikeId: string, requesterId?: string): Promise<Bike> {
     const bike = await bikesRepository.findById(bikeId);
     if (!bike) throw ApiError.notFound('Bike');

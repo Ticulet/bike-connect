@@ -11,6 +11,16 @@ export async function listMine(req: Request, res: Response, next: NextFunction):
   }
 }
 
+export async function listPublicByUser(req: Request, res: Response, next: NextFunction): Promise<void> {
+  try {
+    const userId = req.params['id'] as string;
+    const bikes = await bikesService.listPublicBikes(userId);
+    res.json(bikes);
+  } catch (err) {
+    next(err);
+  }
+}
+
 export async function getById(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
     const id = req.params['id'] as string;
