@@ -1,6 +1,7 @@
 /* Bike Connect — global stylesheet entry point.
    Tokens, reset, typography, a11y, utilities, and shell are split into client/src/styles/. */
 
+@import "./styles/fonts.css";
 @import "./styles/tokens.css";
 @import "./styles/reset.css";
 @import "./styles/typography.css";
