@@ -33,6 +33,7 @@ npm-debug.log*
 # Coverage + test output
 coverage/
 test-results/
+playwright-report/
 backups/
 
 # TypeScript incremental build cache
