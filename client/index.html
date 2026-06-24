@@ -7,6 +7,25 @@
     <meta name="theme-color" content="#2F5233" />
     <title>Bike Connect</title>
     <!-- Fonts are self-hosted: see client/src/styles/fonts.css (@font-face -> /fonts/*.woff2) -->
+    <!-- Apply the saved (or system) colour theme before first paint so there is
+         no flash of the wrong theme. Mirrors resolveInitialTheme() in
+         src/lib/theme.ts — keep the storage key ('bike-connect:theme') in sync. -->
+    <script>
+      (function () {
+        try {
+          var stored = localStorage.getItem('bike-connect:theme');
+          var prefersDark =
+            window.matchMedia &&
+            window.matchMedia('(prefers-color-scheme: dark)').matches;
+          document.documentElement.dataset.theme =
+            stored === 'dark' || (stored !== 'light' && prefersDark)
+              ? 'dark'
+              : 'light';
+        } catch (e) {
+          /* localStorage / matchMedia unavailable — fall back to light (CSS default) */
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>
