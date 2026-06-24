@@ -246,7 +246,7 @@ export function UserProfilePage(): React.JSX.Element {
 
   const tabItems = [
     { id: 'posts', label: 'Posts', badge: authorPosts.length > 0 ? authorPosts.length : undefined },
-    { id: 'bikes', label: 'Bikes' },
+    { id: 'bikes', label: 'Bikes', badge: bikes.length > 0 ? bikes.length : undefined },
     { id: 'activity', label: 'Activity' },
   ];
 
