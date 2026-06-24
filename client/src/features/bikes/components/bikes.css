@@ -96,7 +96,9 @@
 
 .bike-card__badge--type {
   background-color: var(--color-accent-light);
-  color: var(--color-accent-dark);
+  /* accent-deep (not accent-dark) — small badge text needs >=4.5:1 AA on
+     accent-light; accent-dark is only 4.14:1, accent-deep is ~6.5:1. */
+  color: var(--color-accent-deep);
 }
 
 .bike-card__badge--public {
