@@ -45,6 +45,12 @@ svg {
   max-width: 100%;
 }
 
+/* <picture> is a transparent wrapper for its <source>s — let the inner <img>
+   drive layout so its width/aspect-ratio classes still apply. */
+picture {
+  display: contents;
+}
+
 input,
 button,
 textarea,

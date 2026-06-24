@@ -1,6 +1,7 @@
 import { Link } from 'react-router';
 import type { PostSummary } from '../api/posts.api.js';
 import { isSafeImageUrl } from '../../../lib/safe-url.js';
+import { CoverImage } from './CoverImage.js';
 import './post-card.css';
 
 interface PostCardProps {
@@ -43,11 +44,10 @@ export function PostCard({ post, variant = 'medium', dropCap = false }: PostCard
   return (
     <article className={articleClass}>
       {isSafeImageUrl(post.cover_image_url) && (
-        <img
+        <CoverImage
           src={post.cover_image_url}
           alt={`Cover image for ${post.title}`}
           className="post-card__cover"
-          loading="lazy"
         />
       )}
       <div className="post-card__body">
