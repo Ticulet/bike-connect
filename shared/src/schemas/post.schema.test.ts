@@ -74,6 +74,15 @@ describe('createPostSchema', () => {
     expect(result.success).toBe(false);
   });
 
+  it('accepts a root-relative cover_image_url (local image)', () => {
+    const result = createPostSchema.safeParse({
+      ...validPost,
+      cover_image_url: '/blog-covers/dolomites-by-bike.jpg',
+    });
+
+    expect(result.success).toBe(true);
+  });
+
   it('rejects a non-positive tag id', () => {
     const result = createPostSchema.safeParse({ ...validPost, tag_ids: [0, 1] });
 
