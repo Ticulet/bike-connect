@@ -10,6 +10,8 @@ import { FollowButton } from '../features/follows/components/FollowButton.js';
 import { FollowStats } from '../features/follows/components/FollowStats.js';
 import { fetchPosts, type PostSummary } from '../features/blog/api/posts.api.js';
 import { PostCard } from '../features/blog/components/PostCard.js';
+import { fetchUserPublicBikes, type BikeItem } from '../features/bikes/api/bikes.api.js';
+import { isSafeImageUrl } from '../lib/safe-url.js';
 import { Tabs } from '../components/ui/Tabs.js';
 import { EmptyState } from '../components/ui/EmptyState.js';
 import { Skeleton } from '../components/ui/Skeleton.js';
@@ -60,6 +62,40 @@ function ActivityEmptyIcon(): React.JSX.Element {
   );
 }
 
+function ProfileBikeCard({ bike }: { bike: BikeItem }): React.JSX.Element {
+  return (
+    <article className="bike-card">
+      <Link to={`/bikes/${bike.id}`} className="bike-card__link" aria-label={`View ${bike.name}`}>
+        {isSafeImageUrl(bike.hero_image_url) ? (
+          <img
+            className="bike-card__image"
+            src={bike.hero_image_url ?? ''}
+            alt={`${bike.name} hero image`}
+            loading="lazy"
+          />
+        ) : (
+          <div className="bike-card__image-placeholder" aria-hidden="true">
+            🚲
+          </div>
+        )}
+      </Link>
+      <div className="bike-card__body">
+        <div className="bike-card__header">
+          <h2 className="bike-card__name">
+            <Link to={`/bikes/${bike.id}`} className="bike-card__name-link">
+              {bike.name}
+            </Link>
+          </h2>
+          <span className="bike-card__badge bike-card__badge--type">{bike.type}</span>
+        </div>
+        <p className="bike-card__subtitle">
+          {bike.brand} {bike.model}, {bike.year}
+        </p>
+      </div>
+    </article>
+  );
+}
+
 const TAB_IDS = ['posts', 'bikes', 'activity'] as const;
 
 export function UserProfilePage(): React.JSX.Element {
@@ -74,6 +110,8 @@ export function UserProfilePage(): React.JSX.Element {
   const [followStats, setFollowStats] = useState<FollowStatsData | null>(null);
   const [authorPosts, setAuthorPosts] = useState<PostSummary[]>([]);
   const [postsLoading, setPostsLoading] = useState(false);
+  const [bikes, setBikes] = useState<BikeItem[]>([]);
+  const [bikesLoading, setBikesLoading] = useState(false);
 
   const [activeTab, setActiveTab] = useState<string>(() => {
     const hash = window.location.hash.replace('#', '');
@@ -111,6 +149,22 @@ export function UserProfilePage(): React.JSX.Element {
     [],
   );
 
+  const loadBikes = useCallback(
+    async (userId: string, signal: AbortSignal): Promise<void> => {
+      if (signal.aborted) return;
+      setBikesLoading(true);
+      try {
+        const result = await fetchUserPublicBikes(userId, { signal });
+        if (!signal.aborted) setBikes(result);
+      } catch {
+        if (!signal.aborted) setBikes([]);
+      } finally {
+        if (!signal.aborted) setBikesLoading(false);
+      }
+    },
+    [],
+  );
+
   useEffect(() => {
     if (!id) return;
 
@@ -120,6 +174,7 @@ export function UserProfilePage(): React.JSX.Element {
     setError(null);
     setFollowStats(null);
     setAuthorPosts([]);
+    setBikes([]);
 
     apiClient<UserProfile>(`/users/${id}`, { signal: controller.signal })
       .then((result) => {
@@ -127,6 +182,7 @@ export function UserProfilePage(): React.JSX.Element {
           setProfile(result);
           void loadFollowStats(id, controller.signal);
           void loadAuthorPosts(id, controller.signal);
+          void loadBikes(id, controller.signal);
         }
       })
       .catch((err: unknown) => {
@@ -139,7 +195,7 @@ export function UserProfilePage(): React.JSX.Element {
       });
 
     return () => { controller.abort(); };
-  }, [id, loadFollowStats, loadAuthorPosts]);
+  }, [id, loadFollowStats, loadAuthorPosts, loadBikes]);
 
   function handleFollowStatsChange(update: Partial<FollowStatsData>): void {
     setFollowStats((prev) => {
@@ -270,11 +326,27 @@ export function UserProfilePage(): React.JSX.Element {
             )}
 
             {activeTab === 'bikes' && (
-              <EmptyState
-                icon={<BikeEmptyIcon />}
-                title="No public bikes"
-                description="None of their bikes are visible publicly."
-              />
+              bikesLoading ? (
+                <div className="user-profile__posts-grid">
+                  {Array.from({ length: 3 }, (_, i) => (
+                    <Skeleton key={i} variant="card" height={200} />
+                  ))}
+                </div>
+              ) : bikes.length === 0 ? (
+                <EmptyState
+                  icon={<BikeEmptyIcon />}
+                  title="No public bikes"
+                  description={isOwnProfile ? "You haven't made any bikes public yet." : 'None of their bikes are visible publicly.'}
+                />
+              ) : (
+                <ul role="list" className="user-profile__posts-grid">
+                  {bikes.map((bike) => (
+                    <li key={bike.id}>
+                      <ProfileBikeCard bike={bike} />
+                    </li>
+                  ))}
+                </ul>
+              )
             )}
 
             {activeTab === 'activity' && (

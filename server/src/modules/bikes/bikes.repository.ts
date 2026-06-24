@@ -32,6 +32,16 @@ export const bikesRepository = {
       .execute();
   },
 
+  async findPublicByUserId(userId: string): Promise<Bike[]> {
+    return db
+      .selectFrom('bikes')
+      .selectAll()
+      .where('user_id', '=', userId)
+      .where('is_public', '=', true)
+      .orderBy('created_at', 'desc')
+      .execute();
+  },
+
   async findById(id: string): Promise<Bike | undefined> {
     return db
       .selectFrom('bikes')

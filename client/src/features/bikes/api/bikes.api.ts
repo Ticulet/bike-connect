@@ -21,6 +21,13 @@ export function fetchMyBikes(): Promise<BikeItem[]> {
   return apiClient<BikeItem[]>('/bikes');
 }
 
+export function fetchUserPublicBikes(
+  userId: string,
+  options?: { signal?: AbortSignal },
+): Promise<BikeItem[]> {
+  return apiClient<BikeItem[]>(`/users/${userId}/bikes`, options);
+}
+
 export function fetchBike(id: string): Promise<BikeItem> {
   return apiClient<BikeItem>(`/bikes/${id}`);
 }
