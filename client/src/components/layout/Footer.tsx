@@ -8,7 +8,7 @@ export function Footer(): React.JSX.Element {
   return (
     <footer className="site-footer" role="contentinfo">
       <div className="site-footer__inner">
-        <Link to="/" className="site-footer__brand" aria-label="Bike Connect — home">
+        <Link to="/" className="site-footer__brand" aria-label="Bike Connect home">
           <BrandMark />
           <span>Bike Connect</span>
         </Link>
@@ -26,7 +26,7 @@ export function Footer(): React.JSX.Element {
         </nav>
 
         <p className="site-footer__copy">
-          &copy; {year} Bike Connect — A field guide for cyclists.
+          &copy; {year} Bike Connect: A field guide for cyclists.
         </p>
       </div>
     </footer>

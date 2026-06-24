@@ -95,7 +95,7 @@ export function LikeButton({ postId, isAuthenticated }: LikeButtonProps): React.
       <span className="btn-toggle__icon like-btn__icon" aria-hidden="true">
         {isLiked ? <HeartFilledIcon /> : <HeartOutlineIcon />}
       </span>
-      <span className="like-btn__count">{isLoading ? '—' : count}</span>
+      <span className="like-btn__count">{isLoading ? '-' : count}</span>
     </button>
   );
 }

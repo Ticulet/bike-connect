@@ -13,7 +13,7 @@ interface ComponentListProps {
 }
 
 function formatDate(dateStr: string | null): string {
-  if (!dateStr) return '—';
+  if (!dateStr) return '-';
   return new Date(dateStr).toLocaleDateString(undefined, {
     year: 'numeric',
     month: 'short',
@@ -170,7 +170,7 @@ export function ComponentList({
               <td>
                 {component.brand !== null || component.model !== null
                   ? [component.brand, component.model].filter(Boolean).join(' / ')
-                  : '—'}
+                  : '-'}
               </td>
               <td className="component-list__col-installed">
                 {formatDate(component.installed_at ?? null)}
@@ -178,7 +178,7 @@ export function ComponentList({
               <td className="component-list__col-mileage">
                 {component.mileage_at_install !== null
                   ? `${component.mileage_at_install.toLocaleString()} km`
-                  : '—'}
+                  : '-'}
               </td>
               {isOwner && (
                 <td>
