@@ -43,7 +43,21 @@
 .post-detail__cover {
   width: 100vw;
   margin-inline-start: calc(50% - 50vw);
+  /* Pull the cover up by .main-content's top padding (shell.css) so the
+     full-bleed image sits flush against the sticky header instead of leaving a
+     gap. Kept in step with that padding at each breakpoint below. */
+  margin-block-start: calc(-1 * var(--spacing-xl));
   margin-block-end: var(--spacing-2xl);
+}
+@media (min-width: 48rem) {
+  .post-detail__cover {
+    margin-block-start: calc(-1 * var(--spacing-2xl));
+  }
+}
+@media (min-width: 64rem) {
+  .post-detail__cover {
+    margin-block-start: calc(-1 * var(--spacing-3xl));
+  }
 }
 .post-detail__cover-img {
   width: 100%;
