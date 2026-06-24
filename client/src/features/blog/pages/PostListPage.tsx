@@ -112,7 +112,7 @@ export function PostListPage(): React.JSX.Element {
         variant="editorial"
       />
 
-      <div className="post-list__filters" data-sticky="true">
+      <div className="post-list__filters">
         <SearchBar
           onResults={handleSearchResults}
           onClear={handleSearchClear}

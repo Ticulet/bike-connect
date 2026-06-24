@@ -18,12 +18,12 @@
 }
 
 /* Sticky filter bar */
+/* Not pinned: scrolls with the page. `relative` (not `static`) keeps the
+   ::after shadow anchored to the bar. */
 .post-list__filters {
-  position: sticky;
-  top: var(--header-height);
+  position: relative;
   background: var(--color-bg);
   padding-block: var(--spacing-md);
-  z-index: 100;
   border-block-end: 1px solid var(--color-border);
   display: flex;
   flex-direction: column;
@@ -39,17 +39,6 @@
   height: 8px;
   background: linear-gradient(to bottom, var(--color-shadow-faint, var(--color-border-light)), transparent);
   pointer-events: none;
-}
-
-/* Mobile: don't pin the filter bar. It stacks tall (search + category + tag
-   rows), so when sticky it covers a large part of the small viewport while
-   scrolling. `relative` (not `static`) keeps the ::after shadow anchored. */
-@media (max-width: 640px) {
-  .post-list__filters {
-    position: relative;
-    top: auto;
-    z-index: auto;
-  }
 }
 
 /* Featured post (full-width row) */
