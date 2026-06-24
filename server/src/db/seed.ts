@@ -210,7 +210,7 @@ const POSTS: SeedPost[] = [
           'Loose fire roads: cornering grip is way higher than anything with slick centre tread.',
         ),
         h(2, 'Where they did not'),
-        p('Sustained efforts above 35 km/h on smooth pavement — sprinting from a traffic light still feels like the tire is flexing more than it should. If your weekly ride is a Saturday paceline group, these probably feel slow.'),
+        p('Sustained efforts above 35 km/h on smooth pavement, sprinting from a traffic light still feels like the tire is flexing more than it should. If your weekly ride is a Saturday paceline group, these probably feel slow.'),
         p("Also: mud. The knobs are small and closely spaced, so once a clay-based mud loads them up, grip disappears fast. In proper mud you want something more aggressive, or wider spacing."),
         h(2, 'Verdict'),
         p("For a one-bike garage, a supple 42 mm tubeless gravel tire is a remarkable default. It's 90% as fast as a road tire on tarmac and 200% more enjoyable everywhere else. I'm keeping them on the winter bike, and I'm seriously considering fitting a second set to my summer bike too."),
@@ -250,10 +250,10 @@ const POSTS: SeedPost[] = [
         p("Remove it (or use an on-bike degreaser tank), scrub the cassette, scrub the chainrings, then re-lube. A filthy chain with fresh lube on top is just grinding paste."),
         h(2, 'Signs you are doing it wrong'),
         ul(
-          'Your chain is black and shiny — too much lube, not enough wiping.',
-          'Your chain is dry and clicky — not enough lube, or your lube is not reaching the rollers.',
-          'Your cassette cogs have a ring of black sludge at the base of the teeth — this is dirt-lube paste.',
-          'You feel sand-like grit when you pinch the chain between your fingers — time to clean, not re-lube.',
+          'Your chain is black and shiny: too much lube, not enough wiping.',
+          'Your chain is dry and clicky: not enough lube, or your lube is not reaching the rollers.',
+          'Your cassette cogs have a ring of black sludge at the base of the teeth: this is dirt-lube paste.',
+          'You feel sand-like grit when you pinch the chain between your fingers: time to clean, not re-lube.',
         ),
         quote("A good chain run at 60% load (cleaned regularly) will outlive three chains run at 100% load (never cleaned). It is the single highest-leverage maintenance habit in cycling."),
         h(2, 'Tools I actually use'),
@@ -278,7 +278,7 @@ const POSTS: SeedPost[] = [
         p('Starts in Cortina d\'Ampezzo. Up to Passo Giau (2,236 m), down through Selva di Cadore, up again to Passo Falzarego, and back. On paper: 134 km and 2,100 m of climbing. In practice: a lot of 10% and above gradients, one punishing descent into a headwind, and a final 12 km that I will remember forever.'),
         h(2, 'The first climb'),
         pRich(
-          { text: "Giau is not long by Alpine standards — about 10 km from Pocol — but it is ", bold: false },
+          { text: "Giau is not long by Alpine standards, about 10 km from Pocol, but it is ", bold: false },
           { text: "relentless", bold: true, italic: true },
           { text: ". There is no part where you can recover. The average gradient is 9.3% and there are sections where I looked down and saw 13%.", bold: false },
         ),
@@ -289,7 +289,7 @@ const POSTS: SeedPost[] = [
         h(2, 'What worked'),
         ul(
           'Carrying 2 L of water instead of 1 L. I finished the first bottle by Pocol.',
-          'Eating early — I took my first gel at 40 minutes. The ride was too hard for "I\'ll eat when I\'m hungry."',
+          'Eating early: I took my first gel at 40 minutes. The ride was too hard for "I\'ll eat when I\'m hungry."',
           'Switching to a 36-tooth cassette from my usual 32. I would have walked otherwise.',
         ),
         h(2, "What didn't"),
@@ -307,7 +307,7 @@ const POSTS: SeedPost[] = [
     slug: 'switched-to-disc-brakes',
     author_id: USERS[3].id,
     title: 'Why I finally switched from rim brakes to discs',
-    excerpt: "I held out for years. I was wrong — but not for the reasons disc fans usually give.",
+    excerpt: "I held out for years. I was wrong, but not for the reasons disc fans usually give.",
     cover_image_url: 'https://images.unsplash.com/photo-1541545009001-5b208f3e1116?w=1600&q=80',
     category: 'general',
     published_days_ago: 15,
@@ -335,7 +335,7 @@ const POSTS: SeedPost[] = [
         p("Disc brakes have no such lag. The first squeeze of the lever produces the same bite as the last, in any conditions. It is the kind of thing I did not realise I wanted until I rode a long wet descent without it. Then I wanted nothing else."),
         quote("I have crashed exactly twice on bikes in the last decade, and both were wet-descent corners where I got on the brakes late. I still think about those when I'm descending in the rain. Discs do not make me faster but they make me less frightened, and that is worth quite a lot."),
         h(2, 'The other benefit, which surprised me'),
-        p("Tire clearance. Disc frames tend to allow more tire, because the brake is no longer clamped around the rim. My current bike takes 34 mm tires without complaint. That single change — running 32 mm tubeless at 4.5 bar instead of 25 mm at 7 bar — made a bigger difference to my riding than any other upgrade in the last five years."),
+        p("Tire clearance. Disc frames tend to allow more tire, because the brake is no longer clamped around the rim. My current bike takes 34 mm tires without complaint. That single change, running 32 mm tubeless at 4.5 bar instead of 25 mm at 7 bar, made a bigger difference to my riding than any other upgrade in the last five years."),
         h(2, 'What still annoys me'),
         ul(
           'Rotor rub. Eight months in, I still chase it occasionally.',
@@ -343,7 +343,7 @@ const POSTS: SeedPost[] = [
           "Through-axles. They're fine, but they add 30 seconds to every wheel change, which adds up on a weekend of mechanicals.",
         ),
         h(2, 'Verdict'),
-        p("I will not go back. Not because discs are universally better, but because for the way I ride — year-round, in weather, on long descents — they solve a real problem I did not fully appreciate I had. If your riding is summer-only on smooth roads, I would not sweat it."),
+        p("I will not go back. Not because discs are universally better, but because for the way I ride (year-round, in weather, on long descents), they solve a real problem I did not fully appreciate I had. If your riding is summer-only on smooth roads, I would not sweat it."),
       ],
     },
   },
@@ -361,7 +361,7 @@ const POSTS: SeedPost[] = [
       content: [
         p("A chain is cheap. A cassette is not. A chainring is not. Replacing a chain at the right time is the cheapest serious maintenance job in cycling, and it is easy to do badly."),
         h(2, 'When to replace'),
-        p("Use a chain-wear gauge — they are 10-15 euros and they pay for themselves the first time. Replace at 0.5% wear for 11-speed and faster, 0.75% for 10-speed or slower. By the time your chain skips on the cassette under load, you have already worn the cassette."),
+        p("Use a chain-wear gauge. They are 10-15 euros and they pay for themselves the first time. Replace at 0.5% wear for 11-speed and faster, 0.75% for 10-speed or slower. By the time your chain skips on the cassette under load, you have already worn the cassette."),
         h(2, 'What you need'),
         ul(
           'New chain, correct speed rating (11-speed chain for 11-speed drivetrain)',
@@ -373,17 +373,17 @@ const POSTS: SeedPost[] = [
         h(2, 'The steps'),
         ol(
           'Clean the drivetrain. Degreaser on the old chain, run it backwards, wipe it dry. You want to see what you are doing.',
-          'Check cassette wear by running the chain on the outer cog under light load. If it skips, you need a cassette too — the new chain will not mesh with a worn cassette.',
+          'Check cassette wear by running the chain on the outer cog under light load. If it skips, you need a cassette too. The new chain will not mesh with a worn cassette.',
           'Count the links on the old chain. Write the number down.',
-          'Lay the new chain next to the old one. Size the new chain to the same number of full links. Do not eyeball this — count.',
-          'Break the new chain to length using your chain tool. Push the pin out most of the way but not all the way through — you will need it if the chain is too short.',
+          'Lay the new chain next to the old one. Size the new chain to the same number of full links. Do not eyeball this. Count.',
+          'Break the new chain to length using your chain tool. Push the pin out most of the way but not all the way through. You will need it if the chain is too short.',
           'Thread the new chain through the derailleur in the correct orientation (most chains have a direction arrow; orient it in the direction of drive rotation on the drive-side).',
-          'Join the chain with the quick link. Squeeze the two halves together, then apply tension by pedalling forward — the link clicks into place.',
+          'Join the chain with the quick link. Squeeze the two halves together, then apply tension by pedalling forward. The link clicks into place.',
           'Visually inspect the quick link from both sides. It should sit flush, with no gap at the pins.',
           'Run through all gears twice. Check for skipping under load.',
         ),
         h(2, 'Torque specs'),
-        p("A chain itself has no torque spec — it's pressed, not bolted. But if you are replacing a cassette at the same time:"),
+        p("A chain itself has no torque spec: it's pressed, not bolted. But if you are replacing a cassette at the same time:"),
         ul(
           'Cassette lockring: 40 Nm',
           'Chainring bolts (alloy): 12-14 Nm',
@@ -436,7 +436,7 @@ const POSTS: SeedPost[] = [
         ul(
           'Bottom bracket: developed a creak at 5,000 km. Replaced at 6,500 km. Not surprising.',
           'Rear derailleur hanger: bent on a careful gravel detour. Replaced for €40. Normal.',
-          "Rear shifter: started missing shifts at 7,500 km. Not yet fixed — suspected cable fray inside the bar.",
+          "Rear shifter: started missing shifts at 7,500 km. Not yet fixed: suspected cable fray inside the bar.",
           'Tires: I got through four pairs this year, mostly puncture-driven. Tire choice is on me, not the bike.',
         ),
         h(2, 'Parts that impressed me'),
@@ -445,9 +445,9 @@ const POSTS: SeedPost[] = [
           'Brakes: still feel as sharp as day one after a winter of wet riding.',
           'Wheels: trued once, still spinning straight.',
         ),
-        quote("I like this bike more now than I did at six months. Most bikes I have owned have gone the other way — they fade as the shine wears off and the quirks grate. This one has grown on me as I have learned its habits."),
+        quote("I like this bike more now than I did at six months. Most bikes I have owned have gone the other way: they fade as the shine wears off and the quirks grate. This one has grown on me as I have learned its habits."),
         h(2, 'Would I buy another?'),
-        p("Yes, with two caveats. First, I would not buy one if I was planning to do my own cable work; it's genuinely more painful than a conventional bike. Second, I would budget for consumables — this is an expensive bike to run, not just to buy. But as a ride-every-day race bike, it has earned its place in my garage."),
+        p("Yes, with two caveats. First, I would not buy one if I was planning to do my own cable work; it's genuinely more painful than a conventional bike. Second, I would budget for consumables: this is an expensive bike to run, not just to buy. But as a ride-every-day race bike, it has earned its place in my garage."),
       ],
     },
   },
@@ -463,7 +463,7 @@ const POSTS: SeedPost[] = [
     content: {
       type: 'doc',
       content: [
-        p("I've been riding with the same Saturday group for four years. When I joined I knew almost nobody, I didn't know the routes, and I certainly didn't know the rules — and there are rules. Nobody tells you them explicitly, because long-time riders have internalised them to the point of forgetting they exist. So here is the unwritten rulebook, written down."),
+        p("I've been riding with the same Saturday group for four years. When I joined I knew almost nobody, I didn't know the routes, and I certainly didn't know the rules, and there are rules. Nobody tells you them explicitly, because long-time riders have internalised them to the point of forgetting they exist. So here is the unwritten rulebook, written down."),
         h(2, 'Before the ride'),
         ul(
           "Show up five minutes early. The ride leaves on the advertised time, not five minutes after.",
@@ -492,7 +492,7 @@ const POSTS: SeedPost[] = [
           'Stay for at least one drink. The café is half the reason the ride exists.',
         ),
         h(2, 'The ride home'),
-        p("Some people ride home after. Some people wait for the next group. Both are fine. What is not fine is leaving without saying goodbye — rides are social, and so are their endings."),
+        p("Some people ride home after. Some people wait for the next group. Both are fine. What is not fine is leaving without saying goodbye. Rides are social, and so are their endings."),
         quote("Group rides teach you things no solo ride can. How to ride with people bigger and faster than you. How to descend in a line. How to ask for a pull when your legs are gone. These skills do not show up anywhere else."),
         p("And if the Saturday group feels intimidating the first time, try the Tuesday recovery ride instead. The rules are the same. The pace is slower. And the coffee is usually just as good."),
       ],
@@ -516,7 +516,7 @@ const POSTS: SeedPost[] = [
         h(2, 'The first 6 km'),
         p("Gentle. 4-5%. I set a pace I could hold all day, drank one bottle, and told myself this was going to be fun."),
         h(2, 'The forest'),
-        p("This is the hardest part of Ventoux on a normal day — 10 km of relentless 9-10%, in the trees, with no view to distract you. At 34°C in the trees, the air was completely still and the road radiated like an oven. I watched my heart rate climb 15 bpm without going any faster."),
+        p("This is the hardest part of Ventoux on a normal day: 10 km of relentless 9-10%, in the trees, with no view to distract you. At 34°C in the trees, the air was completely still and the road radiated like an oven. I watched my heart rate climb 15 bpm without going any faster."),
         pRich(
           { text: "I drank my second bottle before the forest ended. That was a ", bold: false },
           { text: "mistake", bold: true, italic: true },
@@ -1116,14 +1116,21 @@ async function seed(): Promise<void> {
       .executeTakeFirst();
 
     if (existing) {
-      // Keep the cover image in sync with the seed so re-seeding refreshes it
-      // (covers are now unique + topic-relevant per post).
+      // Keep seed-owned posts in sync with the seed source so re-seeding
+      // refreshes their content (e.g. the de-em-dashed bodies), not just the
+      // cover image.
       await db
         .updateTable('posts')
-        .set({ cover_image_url: post.cover_image_url })
+        .set({
+          title: post.title,
+          excerpt: post.excerpt,
+          content: post.content,
+          cover_image_url: post.cover_image_url,
+          category: post.category,
+        })
         .where('id', '=', existing.id)
         .execute();
-      console.log(`  - ${post.slug} exists, refreshed cover image`);
+      console.log(`  - ${post.slug} exists, refreshed content`);
       continue;
     }
 
@@ -1186,7 +1193,7 @@ async function seed(): Promise<void> {
           {
             post_id: firstPost.id,
             user_id: USERS[1].id,
-            content: 'Great write-up. Curious what pressure you ran on the road sections — I find 2.3 bar on 42 mm a bit squirmy on smooth tarmac.',
+            content: 'Great write-up. Curious what pressure you ran on the road sections. I find 2.3 bar on 42 mm a bit squirmy on smooth tarmac.',
           },
           {
             post_id: firstPost.id,
