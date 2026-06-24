@@ -1,6 +1,7 @@
 import { NavLink } from 'react-router';
 import { useAuth } from '../../features/auth/hooks/useAuth.js';
 import { BrandMark } from './BrandMark.js';
+import { ThemeToggle } from './ThemeToggle.js';
 import './header.css';
 
 export function Header(): React.JSX.Element {
@@ -55,6 +56,7 @@ export function Header(): React.JSX.Element {
         </nav>
 
         <div className="site-header__account">
+          <ThemeToggle />
           {isAuthenticated && user != null ? (
             <NavLink
               to="/me"

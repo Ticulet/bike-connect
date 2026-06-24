@@ -1,6 +1,11 @@
 /* tokens.css — all CSS custom properties (the design system) — see docs/implementations/design-modernization/concept.md §5 */
 
 :root {
+  /* Light is the default theme; the [data-theme="dark"] block below overrides
+     these values. color-scheme keeps native UI (scrollbars, form controls,
+     autofill) in step with the active theme. */
+  color-scheme: light;
+
   /* Brand palette — outdoor/nature */
   --color-primary: #2f5233;             /* forest green */
   --color-primary-dark: #1f3a22;        /* deep forest */
@@ -198,6 +203,104 @@
 
   /* Focus ring — separate from solid focus colour */
   --color-focus-ring: rgb(47 82 51 / 0.35);
+}
+
+/* ============================================================================
+   Dark theme — warm "forest after dusk" palette.
+
+   Same nature/MTB language as light mode (forest green + clay orange on warm,
+   earthy neutrals) but inverted for low light: near-black bark backgrounds,
+   cream-white text, and moss/clay accents lightened so they glow rather than
+   recede. Every text/background and UI-boundary pair below is verified to meet
+   WCAG 2.1 AA (4.5:1 text, 3:1 UI components).
+
+   Note on the "-dark"/"-deep" accent variants: in light mode they are DEEPER
+   shades used for emphasis text and :hover fills (more contrast on a light
+   page). The codebase uses them mostly as `color:` on light surfaces, so in
+   dark mode they must become LIGHTER than their base to keep that same
+   "more emphasis / readable on hover-fill" intent on a dark page.
+
+   Elevation in dark mode runs the opposite way to light: the page is darkest
+   and nested surfaces get lighter. Aliases (--color-surface-1/2/3) and the body
+   gradient resolve automatically from the redefined tokens below. The warm
+   stone ramp is inverted (50 = darkest, 900 = lightest) — every component use
+   is a light-surface background in light mode, so inversion keeps each one a
+   correctly-dark surface here without touching the components.
+   ============================================================================ */
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  /* Brand palette — moss + clay, lifted for low light */
+  --color-primary: #6fa775;             /* moss green (interactive / brand) */
+  --color-primary-dark: #8cbf90;        /* lighter sage — emphasis text + :hover fills */
+  --color-primary-light: #1d2b1f;       /* deep moss tint — subtle green surfaces / body glow */
+  --color-primary-soft: #25342a;        /* mid moss surface */
+  --color-accent: #e88a4a;              /* clay orange */
+  --color-accent-dark: #f2a063;         /* lighter clay — emphasis text + :hover fills */
+  --color-accent-deep: #f3a86e;         /* light clay for small accent text on dark surfaces */
+  --color-accent-light: #2a1c12;        /* deep clay-brown tint — accent surfaces */
+  --color-olive: #9caf6e;               /* lifted olive secondary */
+  --color-terracotta: #d97048;          /* lifted terracotta */
+
+  /* Warm neutrals — bark/charcoal, never cool slate */
+  --color-bg: #14120d;                  /* near-black warm page */
+  --color-bg-subtle: #211e15;           /* raised warm tint (surface-2) */
+  --color-surface: #1c1a13;             /* card surface (lifted from page) */
+  --color-surface-alt: #232016;         /* alt surface */
+  --color-text: #ece6da;                /* warm cream-white */
+  --color-text-muted: #b4ab99;          /* warm gray */
+  --color-text-subtle: #9a917f;         /* lighter warm gray (still AA 4.5:1 on surfaces) */
+  --color-text-inverse: #1c1a13;        /* dark text for light/accent fills */
+  --color-border: #383226;              /* warm card border */
+  --color-border-light: #2a2519;        /* subtle border */
+  --color-border-strong: #787058;       /* input / divider border (AA 3:1 on surfaces) */
+
+  /* Status colors — lightened foregrounds on deep tinted backgrounds */
+  --color-error: #e99592;
+  --color-error-bg: #2d1817;
+  --color-success: #84bd8e;
+  --color-success-bg: #16251a;
+  --color-warning: #e2b35c;
+  --color-warning-bg: #2b2110;
+  --color-info: #74b3c3;
+  --color-info-bg: #13252a;
+
+  --color-focus: #6fa775;
+
+  /* Shadows — black-based and deeper (warm-tinted shadows vanish on dark) */
+  --shadow-xs: 0 1px 1px 0 rgb(0 0 0 / 0.30);
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.40),
+              0 1px 3px 0 rgb(0 0 0 / 0.30);
+  --shadow-md: 0 2px 6px -1px rgb(0 0 0 / 0.45),
+              0 4px 12px -2px rgb(0 0 0 / 0.35);
+  --shadow-lg: 0 8px 20px -4px rgb(0 0 0 / 0.50),
+              0 12px 32px -6px rgb(0 0 0 / 0.40);
+  --shadow-xl: 0 16px 40px -8px rgb(0 0 0 / 0.55),
+              0 24px 56px -12px rgb(0 0 0 / 0.45);
+  --shadow-inset: inset 0 1px 2px 0 rgb(0 0 0 / 0.40);
+  --shadow-2xl:
+    0 32px 64px -16px rgb(0 0 0 / 0.60),
+    0 12px 24px -8px rgb(0 0 0 / 0.45),
+    0 4px 8px -2px rgb(0 0 0 / 0.35);
+  --shadow-pressed: inset 0 2px 4px rgb(0 0 0 / 0.50);
+  --shadow-glow-primary: 0 0 0 4px rgb(111 167 117 / 0.22);
+  --shadow-glow-accent: 0 0 0 4px rgb(232 138 74 / 0.22);
+
+  /* Warm stone ramp — inverted (50 darkest → 900 lightest) */
+  --color-stone-50:  #16140e;
+  --color-stone-100: #221f16;
+  --color-stone-200: #2c2719;
+  --color-stone-300: #383225;
+  --color-stone-400: #564e3b;
+  --color-stone-500: #787058;
+  --color-stone-600: #9b917b;
+  --color-stone-700: #bcb29d;
+  --color-stone-800: #d9d0bf;
+  --color-stone-900: #f1ece1;
+
+  /* Overlay + focus ring — stronger scrim, moss-tinted ring */
+  --color-overlay: rgb(0 0 0 / 0.66);
+  --color-focus-ring: rgb(111 167 117 / 0.45);
 }
 
 /* Responsive token overrides */

@@ -34,6 +34,11 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
+  /* Ease the page background/text between light and dark themes.
+     The global prefers-reduced-motion override (a11y.css) zeroes this. */
+  transition:
+    background-color var(--motion-duration-normal) var(--motion-easing-standard),
+    color var(--motion-duration-normal) var(--motion-easing-standard);
 }
 
 img,
