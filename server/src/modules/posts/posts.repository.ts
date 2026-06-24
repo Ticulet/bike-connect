@@ -127,6 +127,17 @@ export const postsRepository = {
       .execute();
   },
 
+  async findPublishedByAuthor(authorId: string, limit = 20): Promise<Post[]> {
+    return db
+      .selectFrom('posts')
+      .selectAll()
+      .where('author_id', '=', authorId)
+      .where('status', '=', 'published')
+      .orderBy('published_at', 'desc')
+      .limit(limit)
+      .execute();
+  },
+
   async create(post: NewPost, tagIds?: number[]): Promise<Post> {
     return db.transaction().execute(async (trx) => {
       const created = await trx

@@ -12,4 +12,5 @@ export const usersRouter = Router();
 usersRouter.patch('/me', requireAuth, validate(updateUserSchema, 'body'), usersController.updateMe);
 usersRouter.get('/:id', usersController.getProfile);
 usersRouter.get('/:id/bikes', bikesController.listPublicByUser);
+usersRouter.get('/:id/activity', usersController.getActivity);
 usersRouter.use('/:id/follows', userFollowsRouter);
