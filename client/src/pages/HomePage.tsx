@@ -337,33 +337,6 @@ export function HomePage(): React.JSX.Element {
         </section>
       )}
 
-      {/* SECTION 8: principles */}
-      <section className="home-principles" aria-labelledby="home-principles-title">
-        <header className="home-principles__header">
-          <p className="home-principles__eyebrow">Principles</p>
-          <h2 id="home-principles-title" className="home-principles__title">
-            A few promises I plan to keep.
-          </h2>
-        </header>
-        <ul className="home-principles__row">
-          <li className="home-principle">
-            <RidersIcon className="home-principle__icon" />
-            <p className="home-principle__copy">Built by riders, not VCs.</p>
-          </li>
-          <li className="home-principle">
-            <FreeIcon className="home-principle__icon" />
-            <p className="home-principle__copy">Free forever for personal use.</p>
-          </li>
-          <li className="home-principle">
-            <ExportIcon className="home-principle__icon" />
-            <p className="home-principle__copy">Your data, your bikes, your stories: exportable.</p>
-          </li>
-          <li className="home-principle">
-            <OpenStandardsIcon className="home-principle__icon" />
-            <p className="home-principle__copy">Built on open standards, no lock-in.</p>
-          </li>
-        </ul>
-      </section>
 
       {/* SECTION 9: FAQ — native <details>, no JS */}
       <section className="home-faq" aria-labelledby="home-faq-title">
@@ -619,45 +592,6 @@ function MaintenanceIllustration({ className }: IconProps): React.JSX.Element {
   );
 }
 
-// Principle icons
-
-function RidersIcon({ className }: IconProps): React.JSX.Element {
-  return (
-    <svg className={className} width="32" height="32" viewBox="0 0 32 32" fill="none" aria-hidden="true">
-      <circle cx="11" cy="9" r="3" stroke="currentColor" strokeWidth="1.5" />
-      <path d="M6 24 C6 19, 16 19, 16 24" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-      <circle cx="22" cy="9" r="3" stroke="currentColor" strokeWidth="1.5" />
-      <path d="M17 24 C17 19, 27 19, 27 24" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-    </svg>
-  );
-}
-
-function FreeIcon({ className }: IconProps): React.JSX.Element {
-  return (
-    <svg className={className} width="32" height="32" viewBox="0 0 32 32" fill="none" aria-hidden="true">
-      <path d="M16 25 C8 19, 6 14, 9 11 C12 8, 16 11, 16 13 C16 11, 20 8, 23 11 C26 14, 24 19, 16 25 Z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" />
-    </svg>
-  );
-}
-
-function ExportIcon({ className }: IconProps): React.JSX.Element {
-  return (
-    <svg className={className} width="32" height="32" viewBox="0 0 32 32" fill="none" aria-hidden="true">
-      <path d="M7 14 V25 H21 V14" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" />
-      <path d="M14 19 V6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-      <path d="M10 10 L14 6 L18 10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
-
-function OpenStandardsIcon({ className }: IconProps): React.JSX.Element {
-  return (
-    <svg className={className} width="32" height="32" viewBox="0 0 32 32" fill="none" aria-hidden="true">
-      <path d="M5 9 C9 8, 14 9, 16 11 C18 9, 23 8, 27 9 V24 C23 23, 18 24, 16 26 C14 24, 9 23, 5 24 Z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" />
-      <path d="M16 11 V26" stroke="currentColor" strokeWidth="1.5" />
-    </svg>
-  );
-}
 
 // Final CTA topographic background
 
