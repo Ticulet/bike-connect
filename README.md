@@ -74,6 +74,12 @@ flowchart LR
   API -.->|"IMAGE_STORAGE=cloudinary"| Cloud["Cloudinary"]
   Shared["@bike-connect/shared<br/>Zod schemas · types · constants"] -.-> Browser
   Shared -.-> API
+  classDef node fill:#2f5233,stroke:#16291a,color:#fff
+  classDef store fill:#1d4e89,stroke:#10325c,color:#fff
+  classDef ext fill:#8a4016,stroke:#5c2a0e,color:#fff
+  class Browser,API,Shared node
+  class DB store
+  class Up,Cloud ext
 ```
 
 The server is layered per domain — **routes → controller → service → repository →

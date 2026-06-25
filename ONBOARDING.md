@@ -12,21 +12,38 @@ for the deep dive.
 
 ## Table of contents
 
-1. [The product in one picture](#1-the-product-in-one-picture)
-2. [The monorepo](#2-the-monorepo)
-3. [Local development setup](#3-local-development-setup)
-4. [How the backend is organized](#4-how-the-backend-is-organized)
-5. [The database layer](#5-the-database-layer)
-6. [The API surface](#6-the-api-surface)
-7. [How the frontend is organized](#7-how-the-frontend-is-organized)
-8. [The shared package](#8-the-shared-package)
-9. [Conventions & standards](#9-conventions--standards)
-10. [Authentication deep dive](#10-authentication-deep-dive)
-11. [Images & uploads](#11-images--uploads)
-12. [Testing strategy](#12-testing-strategy)
-13. [Common recipes](#13-common-recipes)
-14. [Gotchas that will bite you](#14-gotchas-that-will-bite-you)
-15. [Where to find things](#15-where-to-find-things)
+- [Onboarding — Bike Connect](#onboarding--bike-connect)
+  - [Table of contents](#table-of-contents)
+  - [1. The product in one picture](#1-the-product-in-one-picture)
+  - [2. The monorepo](#2-the-monorepo)
+  - [3. Local development setup](#3-local-development-setup)
+    - [Environment variables](#environment-variables)
+  - [4. How the backend is organized](#4-how-the-backend-is-organized)
+    - [Middleware chain (order matters)](#middleware-chain-order-matters)
+    - [Layered modules](#layered-modules)
+    - [Shared backend building blocks](#shared-backend-building-blocks)
+    - [Request lifecycle (trace: create a bike)](#request-lifecycle-trace-create-a-bike)
+  - [5. The database layer](#5-the-database-layer)
+    - [Migrations](#migrations)
+    - [Patterns you'll meet](#patterns-youll-meet)
+  - [6. The API surface](#6-the-api-surface)
+  - [7. How the frontend is organized](#7-how-the-frontend-is-organized)
+    - [Feature folders](#feature-folders)
+    - [Routing (`client/src/App.tsx`)](#routing-clientsrcapptsx)
+    - [Talking to the API](#talking-to-the-api)
+    - [Other client building blocks](#other-client-building-blocks)
+    - [Styling \& theming](#styling--theming)
+  - [8. The shared package](#8-the-shared-package)
+  - [9. Conventions \& standards](#9-conventions--standards)
+  - [10. Authentication deep dive](#10-authentication-deep-dive)
+  - [11. Images \& uploads](#11-images--uploads)
+  - [12. Testing strategy](#12-testing-strategy)
+  - [13. Common recipes](#13-common-recipes)
+    - [Add a new API endpoint (end to end)](#add-a-new-api-endpoint-end-to-end)
+    - [Add a client page](#add-a-client-page)
+    - [Add a database column / table](#add-a-database-column--table)
+  - [14. Gotchas that will bite you](#14-gotchas-that-will-bite-you)
+  - [15. Where to find things](#15-where-to-find-things)
 
 ---
 
@@ -227,25 +244,25 @@ bikesRouter.use('/:id/reminders',   remindersRouter);
 
 ```mermaid
 sequenceDiagram
-  participant C as Client (api-client)
+  participant C as Client
   participant MW as Middleware
   participant R as bikesRouter
-  participant Ctl as bikes.controller
-  participant Svc as bikes.service
-  participant Repo as bikes.repository
+  participant Ctl as bikesController
+  participant Svc as bikesService
+  participant Repo as bikesRepository
   participant DB as PostgreSQL
-  C->>MW: POST /api/bikes  (JWT cookie + JSON body)
+  C->>MW: POST /api/bikes (JWT cookie + JSON body)
   MW->>R: helmet, cors, rateLimit, cookieParser, json
   R->>R: requireAuth → req.user
-  R->>R: validate(createBikeSchema, 'body')
+  R->>R: validate(createBikeSchema, body)
   R->>Ctl: bikesController.create
   Ctl->>Svc: createBike(userId, data)
-  Svc->>Repo: create({ user_id, ... })
+  Svc->>Repo: create the bike row
   Repo->>DB: INSERT ... RETURNING *
   DB-->>Repo: row
   Repo-->>Ctl: Bike
   Ctl-->>C: 201 JSON
-  Note over C,MW: Any thrown ApiError → errorHandler → { status, code, message }
+  Note over C,MW: any thrown ApiError → errorHandler → status, code, message
 ```
 
 ---
