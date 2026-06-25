@@ -31,7 +31,9 @@
 
 .me-hub__links {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  /* Fixed-size tiles: each link is a constant 12.5rem wide and wraps to the
+     next row, rather than stretching (1fr) to fill the available width. */
+  grid-template-columns: repeat(auto-fill, 12.5rem);
   gap: var(--spacing-md);
   list-style: none;
   padding: 0;
@@ -46,6 +48,9 @@
   align-items: flex-start;
   gap: var(--spacing-sm);
   padding: var(--spacing-lg);
+  /* Constant tile height so every link is the same size regardless of whether
+     it carries a count badge. */
+  min-height: 8.5rem;
   background-color: var(--color-surface-1);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-card);
