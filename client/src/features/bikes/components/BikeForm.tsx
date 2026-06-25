@@ -287,7 +287,7 @@ export function BikeForm({
             />
             <button
               type="button"
-              className="btn btn-ghost"
+              className="btn bike-form__photo-remove"
               onClick={() => { setValues((prev) => ({ ...prev, heroImageUrl: '' })); }}
             >
               Remove photo

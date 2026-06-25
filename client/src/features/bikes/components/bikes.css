@@ -351,6 +351,19 @@
   border: 1px solid var(--color-border);
 }
 
+/* Destructive "Remove photo" — solid red with white text, matching the blog's
+   remove button. White is a literal because the red background is fixed across
+   themes. */
+.bike-form__photo-remove {
+  background-color: var(--color-error-solid);
+  color: #fff;
+  border-color: transparent;
+}
+
+.bike-form__photo-remove:hover:not(:disabled) {
+  background-color: color-mix(in srgb, var(--color-error-solid) 88%, black);
+}
+
 .bike-form__label {
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-semibold);
