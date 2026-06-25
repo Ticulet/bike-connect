@@ -44,13 +44,13 @@
    bike is clearly separated. Light mode keeps its light backdrop, which already
    frames the black photos. */
 [data-theme="dark"] .bike-card__image {
-  background-color: color-mix(in srgb, var(--color-accent) 28%, var(--color-bg-subtle));
+  background-color: color-mix(in srgb, var(--color-accent) 16%, var(--color-bg-subtle));
   padding: var(--spacing-sm);
 }
 
 [data-theme="dark"] .bike-card__image-wrap,
 [data-theme="dark"] .bike-card__image-placeholder {
-  background-color: color-mix(in srgb, var(--color-accent) 28%, var(--color-bg-subtle));
+  background-color: color-mix(in srgb, var(--color-accent) 16%, var(--color-bg-subtle));
 }
 
 .bike-card__image-placeholder {
