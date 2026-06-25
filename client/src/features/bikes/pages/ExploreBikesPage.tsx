@@ -135,19 +135,12 @@ const FRAME_TYPE_OPTIONS = BIKE_TYPES.map((t) => ({
   label: t.charAt(0).toUpperCase() + t.slice(1),
 }));
 
-// Discipline and region are client-side filters (API supports type only)
+// Discipline is a client-side filter (the API supports type only)
 const DISCIPLINE_OPTIONS: { value: string; label: string }[] = [
   { value: 'commute', label: 'Commute' },
   { value: 'race', label: 'Race' },
   { value: 'trail', label: 'Trail' },
   { value: 'touring', label: 'Touring' },
-];
-
-const REGION_OPTIONS: { value: string; label: string }[] = [
-  { value: 'europe', label: 'Europe' },
-  { value: 'north_america', label: 'North America' },
-  { value: 'asia', label: 'Asia' },
-  { value: 'other', label: 'Other' },
 ];
 
 /* ------------------------------------------------------------------ */
@@ -157,10 +150,9 @@ const REGION_OPTIONS: { value: string; label: string }[] = [
 interface Filters {
   frameType: string | null;
   discipline: string | null;
-  region: string | null;
 }
 
-const EMPTY_FILTERS: Filters = { frameType: null, discipline: null, region: null };
+const EMPTY_FILTERS: Filters = { frameType: null, discipline: null };
 
 export function ExploreBikesPage(): React.JSX.Element {
   const [allBikes, setAllBikes] = useState<BikeWithOwner[]>([]);
@@ -226,10 +218,6 @@ export function ExploreBikesPage(): React.JSX.Element {
     setFilters((prev) => ({ ...prev, discipline: value }));
   }
 
-  function handleRegionChange(value: string | null): void {
-    setFilters((prev) => ({ ...prev, region: value }));
-  }
-
   function resetFilters(): void {
     setFilters(EMPTY_FILTERS);
   }
@@ -240,7 +228,7 @@ export function ExploreBikesPage(): React.JSX.Element {
     }
   }
 
-  // Client-side discipline + region filtering (API only supports type)
+  // Client-side discipline filtering (the API only supports type)
   const bikes = allBikes.filter((b) => {
     if (filters.discipline !== null) {
       // Discipline is a best-effort client-side filter based on bike type mapping
@@ -253,11 +241,10 @@ export function ExploreBikesPage(): React.JSX.Element {
       const types = disciplineTypeMap[filters.discipline];
       if (types && !types.includes(b.type)) return false;
     }
-    // Region cannot be filtered without server data — show all when region selected
     return true;
   });
 
-  const hasActiveFilters = filters.frameType !== null || filters.discipline !== null || filters.region !== null;
+  const hasActiveFilters = filters.frameType !== null || filters.discipline !== null;
 
   return (
     <div className="explore-bikes">
@@ -281,12 +268,6 @@ export function ExploreBikesPage(): React.JSX.Element {
             options={DISCIPLINE_OPTIONS}
             value={filters.discipline}
             onChange={handleDisciplineChange}
-          />
-          <FilterGroup
-            label="Region"
-            options={REGION_OPTIONS}
-            value={filters.region}
-            onChange={handleRegionChange}
           />
           {hasActiveFilters && (
             <button
