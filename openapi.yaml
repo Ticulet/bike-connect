@@ -808,6 +808,25 @@ paths:
         '401': { $ref: '#/components/responses/Unauthorized' }
         default: { $ref: '#/components/responses/Error' }
 
+  /users/me/reminders:
+    get:
+      tags: [Reminders]
+      summary: Active maintenance reminders across all my bikes
+      description: >
+        Due-soon and overdue components across every bike the user owns,
+        most-urgent first; each item also carries `bike_id` and `bike_name`.
+        Computed on read (powers the /me hub panel).
+      responses:
+        '200':
+          description: Active reminders
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Reminder' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        default: { $ref: '#/components/responses/Error' }
+
   /users/{id}:
     get:
       tags: [Users]

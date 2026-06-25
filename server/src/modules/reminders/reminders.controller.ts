@@ -10,3 +10,12 @@ export async function getReminders(req: Request, res: Response, next: NextFuncti
     next(err);
   }
 }
+
+export async function getMyActiveReminders(req: Request, res: Response, next: NextFunction): Promise<void> {
+  try {
+    const reminders = await remindersService.getUserActiveReminders(req.user!.id);
+    res.json(reminders);
+  } catch (err) {
+    next(err);
+  }
+}

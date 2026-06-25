@@ -61,6 +61,7 @@ export function ReminderList({ reminders, compact = false, onDismiss }: Reminder
           <div className="reminder-list__detail">
             <p className="reminder-list__title">{reminder.component_name}</p>
             <p className="reminder-list__meta">
+              {reminder.bike_name !== undefined && reminder.bike_name !== '' && `${reminder.bike_name} · `}
               {reminder.component_category}
               {reminder.km_since_last_service !== null && ` · ${reminder.km_since_last_service} km since last service`}
             </p>
