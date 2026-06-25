@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { Link } from 'react-router';
-import { fetchMyBikes, deleteBike, type BikeItem } from '../api/bikes.api.js';
+import { fetchMyBikes, deleteBike, type MyBikeListItem } from '../api/bikes.api.js';
 import { BikeCard } from '../components/BikeCard.js';
 import { ConfirmDialog } from '../../../components/ui/ConfirmDialog.js';
 import { PageHeader } from '../../../components/ui/PageHeader.js';
@@ -52,7 +52,7 @@ function BikesSkeleton(): React.JSX.Element {
 // ── Page ───────────────────────────────────────────────────────────────────
 
 export function MyBikesPage(): React.JSX.Element {
-  const [bikes, setBikes] = useState<BikeItem[]>([]);
+  const [bikes, setBikes] = useState<MyBikeListItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
@@ -139,7 +139,15 @@ export function MyBikesPage(): React.JSX.Element {
         <ul className="my-bikes__list">
           {bikes.map((bike) => (
             <li key={bike.id} className="my-bikes__item">
-              <BikeCard bike={bike} variant="workshop" />
+              <BikeCard
+                bike={{
+                  ...bike,
+                  totalKm: Number(bike.total_mileage_km),
+                  lastRideAt: bike.last_ride_at,
+                  componentCount: bike.component_count,
+                }}
+                variant="workshop"
+              />
               <div className="my-bikes__card-actions">
                 <button
                   type="button"

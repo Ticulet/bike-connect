@@ -1,5 +1,5 @@
 import { bikesRepository } from './bikes.repository.js';
-import type { BikeWithOwner } from './bikes.repository.js';
+import type { BikeWithOwner, BikeWithStats } from './bikes.repository.js';
 import { ApiError } from '../../lib/api-error.js';
 import type { Bike, BikeType } from '../../db/types.js';
 import type { CreateBike, UpdateBike } from '@bike-connect/shared';
@@ -10,7 +10,7 @@ interface PaginatedBikes {
 }
 
 export const bikesService = {
-  async listMyBikes(userId: string): Promise<Bike[]> {
+  async listMyBikes(userId: string): Promise<BikeWithStats[]> {
     return bikesRepository.findByUserId(userId);
   },
 
