@@ -181,3 +181,20 @@
   border-radius: var(--radius-md);
   padding: 0.75rem var(--spacing-md);
 }
+
+/* Cover image preview — shown above the uploader once a cover is set */
+.post-form__cover-preview {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-sm);
+}
+
+.post-form__cover-preview-img {
+  width: 100%;
+  max-width: 28rem;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+}
