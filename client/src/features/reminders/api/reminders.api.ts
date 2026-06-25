@@ -17,8 +17,16 @@ export interface ComponentReminder {
   km_since_last_service: number | null;
   days_since_last_service: number | null;
   threshold: { km: number; months: number } | null;
+  /** Set only by the cross-bike hub aggregate. */
+  bike_id?: string;
+  bike_name?: string;
 }
 
 export function fetchReminders(bikeId: string): Promise<ComponentReminder[]> {
   return apiClient<ComponentReminder[]>(`/bikes/${bikeId}/reminders`);
+}
+
+/** Active (due-soon / overdue) reminders across all of the signed-in user's bikes. */
+export function fetchMyActiveReminders(): Promise<ComponentReminder[]> {
+  return apiClient<ComponentReminder[]>('/users/me/reminders');
 }

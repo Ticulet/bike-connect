@@ -214,9 +214,9 @@ ol.ride-list {
   font-weight: var(--font-weight-medium);
   color: var(--color-text);
   margin: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  /* Let the (60-char-capped) note wrap within the column instead of being
+     truncated to a single line with an ellipsis. */
+  overflow-wrap: anywhere;
 }
 
 .ride-list__meta {

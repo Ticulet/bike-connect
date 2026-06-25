@@ -43,6 +43,7 @@ export function MaintenanceFormDrawer({
       width="md"
     >
       <MaintenanceForm
+        key={logId ?? 'new'}
         bikeId={bikeId}
         logId={logId}
         components={components}

@@ -168,6 +168,13 @@ export function MaintenanceForm({
         result = await createMaintenanceLog(bikeId, payload);
       }
       onSuccess(result);
+      if (!isEditMode) {
+        // The drawer keeps this form mounted between opens, so clear it after a
+        // create — otherwise the next "Log maintenance" shows the values just saved.
+        setValues(buildDefaults());
+        setErrors({});
+        setTouched({});
+      }
     } catch (err: unknown) {
       setSubmitError(err instanceof Error ? err.message : 'An unexpected error occurred.');
     } finally {

@@ -35,14 +35,13 @@ function validate(values: FormValues): FormErrors {
 
 // ───────────────────────── Section config ─────────────────────────
 
-const SECTION_IDS = ['profile', 'account', 'privacy', 'notifications'] as const;
+const SECTION_IDS = ['profile', 'account', 'privacy'] as const;
 type SectionId = (typeof SECTION_IDS)[number];
 
 const SECTIONS: { id: SectionId; label: string }[] = [
   { id: 'profile', label: 'Profile' },
   { id: 'account', label: 'Account' },
   { id: 'privacy', label: 'Privacy' },
-  { id: 'notifications', label: 'Notifications' },
 ];
 
 function initialSection(): SectionId {
@@ -236,30 +235,6 @@ function PrivacyToggles(): React.JSX.Element {
   );
 }
 
-// NOTE: local state only — no backend notifications endpoint yet.
-function NotificationToggles(): React.JSX.Element {
-  const [emailNotifs, setEmailNotifs] = useState(true);
-
-  return (
-    <div className="settings-toggles">
-      <label className="settings-toggle">
-        <span className="settings-toggle__label">Email notifications</span>
-        <input
-          type="checkbox"
-          className="settings-toggle__input"
-          checked={emailNotifs}
-          onChange={(e) => setEmailNotifs(e.target.checked)}
-          aria-label="Enable email notifications"
-        />
-        <span className="settings-toggle__track" aria-hidden="true" />
-      </label>
-      <p className="settings-toggle__hint">
-        Receive email updates for comments and follows.
-      </p>
-    </div>
-  );
-}
-
 // ───────────────────────── SettingsPage ─────────────────────────
 
 export function SettingsPage(): React.JSX.Element {
@@ -316,7 +291,7 @@ export function SettingsPage(): React.JSX.Element {
       <PageHeader
         eyebrow="Personal"
         title="Settings"
-        subtitle="Tune what we collect, what we show, and what we email."
+        subtitle="Tune what we collect and what we show."
         variant="workshop"
       />
 
@@ -364,10 +339,6 @@ export function SettingsPage(): React.JSX.Element {
 
           <SettingsCard id="privacy" title="Privacy">
             <PrivacyToggles />
-          </SettingsCard>
-
-          <SettingsCard id="notifications" title="Notifications">
-            <NotificationToggles />
           </SettingsCard>
         </div>
       </div>
