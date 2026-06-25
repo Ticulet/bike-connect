@@ -38,6 +38,7 @@ export const bikesService = {
       year: data.year,
       type: data.type,
       description: data.description ?? null,
+      hero_image_url: data.hero_image_url ?? null,
       is_public: data.is_public,
     });
   },
