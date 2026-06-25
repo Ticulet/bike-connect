@@ -1,0 +1,1472 @@
+openapi: 3.0.3
+
+info:
+  title: Bike Connect API
+  version: 1.0.0
+  description: >
+    REST API for Bike Connect — a platform that unifies bikes, maintenance,
+    rides, and long-form writing under one identity.
+
+
+    **Hand-authored** from the Express routes (`server/src/modules/*/`) and the
+    shared Zod schemas (`shared/src/schemas/`). It has no runtime dependency and
+    is not generated — keep it in sync when the API changes. View it in the
+    [Swagger Editor](https://editor.swagger.io), Redoc, or an IDE OpenAPI plugin.
+
+
+    ### Conventions
+
+    - **Base path:** every route below is served under `/api`
+      (e.g. `POST /api/bikes`). The server is `http://localhost:3000` in dev.
+
+    - **Auth:** Google OAuth 2.0. `GET /auth/google` starts the flow; the
+      callback sets a stateless JWT in an **httpOnly cookie**
+      (`bike_connect_token`). Browsers send it automatically; programmatic
+      clients must send the cookie (the SPA uses `credentials: 'include'`).
+
+    - **Errors:** every error is the JSON shape
+      `{ status, code, message, details? }` (see `Error`). Endpoints under
+      `/api` are rate limited and may return **429**.
+
+    - **Decimals as strings:** Postgres `numeric` columns
+      (`distance_km`, `total_mileage_km`, `cost`) are serialized as **strings**
+      by the database driver.
+
+    - **List vs detail:** list/feed/search responses return *summaries* — the
+      full post `content` may be omitted and author/count fields may be added;
+      detail endpoints return the full entity. Schemas allow extra properties.
+
+    - **Reminders are computed** from maintenance logs, mileage, and thresholds
+      (there is no reminders table).
+  license:
+    name: MIT
+
+servers:
+  - url: http://localhost:3000/api
+    description: Local development
+
+tags:
+  - name: Auth
+  - name: Posts
+  - name: Comments
+  - name: Likes
+  - name: Bookmarks
+  - name: Tags
+  - name: Bikes
+  - name: Components
+  - name: Maintenance
+  - name: Rides
+  - name: Reminders
+  - name: Users
+  - name: Follows
+  - name: Feed
+  - name: Images
+  - name: Health
+
+paths:
+  /health:
+    get:
+      tags: [Health]
+      summary: Health check
+      security: []
+      responses:
+        '200':
+          description: Service is up
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status: { type: string, example: ok }
+
+  # ----------------------------------------------------------------- Auth
+  /auth/google:
+    get:
+      tags: [Auth]
+      summary: Start Google OAuth
+      security: []
+      responses:
+        '302': { description: Redirect to Google's consent screen }
+
+  /auth/google/callback:
+    get:
+      tags: [Auth]
+      summary: Google OAuth callback
+      description: Passport verifies the code, upserts the user, signs a JWT and sets the `bike_connect_token` cookie, then redirects into the app (or to `/login` on failure).
+      security: []
+      parameters:
+        - { in: query, name: code, schema: { type: string } }
+        - { in: query, name: state, schema: { type: string } }
+      responses:
+        '302': { description: Redirect to the app (cookie set) or to /login }
+
+  /auth/logout:
+    post:
+      tags: [Auth]
+      summary: Log out (clear the auth cookie)
+      responses:
+        '200':
+          description: Logged out
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message: { type: string, example: Logged out }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        default: { $ref: '#/components/responses/Error' }
+
+  /auth/me:
+    get:
+      tags: [Auth]
+      summary: Current authenticated user
+      responses:
+        '200':
+          description: The current user
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/CurrentUser' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        default: { $ref: '#/components/responses/Error' }
+
+  # ----------------------------------------------------------------- Posts
+  /posts:
+    get:
+      tags: [Posts]
+      summary: List published posts
+      security: []
+      parameters:
+        - $ref: '#/components/parameters/Cursor'
+        - $ref: '#/components/parameters/Limit'
+        - { in: query, name: category, schema: { $ref: '#/components/schemas/PostCategory' } }
+        - { in: query, name: tag, schema: { type: string }, description: Tag slug }
+        - { in: query, name: author, schema: { type: string, format: uuid } }
+      responses:
+        '200':
+          description: Paginated list of post summaries
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/PaginatedPosts' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        default: { $ref: '#/components/responses/Error' }
+    post:
+      tags: [Posts]
+      summary: Create a post
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/CreatePost' }
+      responses:
+        '201':
+          description: Created post
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Post' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        default: { $ref: '#/components/responses/Error' }
+
+  /posts/me:
+    get:
+      tags: [Posts]
+      summary: List my posts (including drafts)
+      responses:
+        '200':
+          description: The current user's posts
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/PostSummary' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        default: { $ref: '#/components/responses/Error' }
+
+  /posts/by-id/{id}:
+    get:
+      tags: [Posts]
+      summary: Get one of my posts by id (for editing)
+      parameters: [ { $ref: '#/components/parameters/PostId' } ]
+      responses:
+        '200':
+          description: Post
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Post' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        default: { $ref: '#/components/responses/Error' }
+
+  /posts/search:
+    get:
+      tags: [Posts]
+      summary: Full-text search published posts
+      security: []
+      parameters:
+        - { in: query, name: q, required: true, schema: { type: string, minLength: 1, maxLength: 200 } }
+        - $ref: '#/components/parameters/Limit'
+      responses:
+        '200':
+          description: Matching post summaries
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/PostSummary' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        default: { $ref: '#/components/responses/Error' }
+
+  /posts/{slug}:
+    get:
+      tags: [Posts]
+      summary: Get a published post by slug
+      security: []
+      parameters: [ { $ref: '#/components/parameters/Slug' } ]
+      responses:
+        '200':
+          description: Full post
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Post' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        default: { $ref: '#/components/responses/Error' }
+
+  /posts/{id}:
+    patch:
+      tags: [Posts]
+      summary: Update a post
+      description: Optimistic locking — `expected_updated_at` must match the stored timestamp or the request fails with **409**.
+      parameters: [ { $ref: '#/components/parameters/PostId' } ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/UpdatePost' }
+      responses:
+        '200':
+          description: Updated post
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Post' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '409': { $ref: '#/components/responses/Conflict' }
+        default: { $ref: '#/components/responses/Error' }
+    delete:
+      tags: [Posts]
+      summary: Delete a post
+      parameters: [ { $ref: '#/components/parameters/PostId' } ]
+      responses:
+        '204': { description: Deleted }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        default: { $ref: '#/components/responses/Error' }
+
+  # ------------------------------------------------- Comments / Likes / Bookmark (nested under a post)
+  /posts/{postId}/comments:
+    get:
+      tags: [Comments]
+      summary: List a post's comments (one reply level)
+      security: []
+      parameters: [ { $ref: '#/components/parameters/PostIdPath' } ]
+      responses:
+        '200':
+          description: Comments
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Comment' }
+        default: { $ref: '#/components/responses/Error' }
+    post:
+      tags: [Comments]
+      summary: Add a comment
+      parameters: [ { $ref: '#/components/parameters/PostIdPath' } ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/CreateComment' }
+      responses:
+        '201':
+          description: Created comment
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Comment' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        default: { $ref: '#/components/responses/Error' }
+
+  /posts/{postId}/likes:
+    get:
+      tags: [Likes]
+      summary: Like count + whether the viewer liked it
+      security: []
+      parameters: [ { $ref: '#/components/parameters/PostIdPath' } ]
+      responses:
+        '200':
+          description: Like info
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/LikeInfo' }
+        default: { $ref: '#/components/responses/Error' }
+
+  /posts/{postId}/likes/toggle:
+    post:
+      tags: [Likes]
+      summary: Like / unlike a post
+      parameters: [ { $ref: '#/components/parameters/PostIdPath' } ]
+      responses:
+        '200':
+          description: Updated like info
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/LikeInfo' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        default: { $ref: '#/components/responses/Error' }
+
+  /posts/{postId}/bookmark:
+    get:
+      tags: [Bookmarks]
+      summary: Whether the viewer bookmarked this post
+      security: []
+      parameters: [ { $ref: '#/components/parameters/PostIdPath' } ]
+      responses:
+        '200':
+          description: Bookmark info
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/BookmarkInfo' }
+        default: { $ref: '#/components/responses/Error' }
+
+  /posts/{postId}/bookmark/toggle:
+    post:
+      tags: [Bookmarks]
+      summary: Bookmark / un-bookmark a post
+      parameters: [ { $ref: '#/components/parameters/PostIdPath' } ]
+      responses:
+        '200':
+          description: Updated bookmark info
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/BookmarkInfo' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        default: { $ref: '#/components/responses/Error' }
+
+  /comments/{id}:
+    patch:
+      tags: [Comments]
+      summary: Edit a comment
+      parameters: [ { $ref: '#/components/parameters/Id' } ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/UpdateComment' }
+      responses:
+        '200':
+          description: Updated comment
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Comment' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        default: { $ref: '#/components/responses/Error' }
+    delete:
+      tags: [Comments]
+      summary: Delete a comment
+      parameters: [ { $ref: '#/components/parameters/Id' } ]
+      responses:
+        '204': { description: Deleted }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        default: { $ref: '#/components/responses/Error' }
+
+  # ----------------------------------------------------------------- Tags
+  /tags:
+    get:
+      tags: [Tags]
+      summary: List all tags
+      security: []
+      responses:
+        '200':
+          description: Tags
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Tag' }
+        default: { $ref: '#/components/responses/Error' }
+
+  /tags/{slug}:
+    get:
+      tags: [Tags]
+      summary: Get a tag by slug
+      security: []
+      parameters: [ { $ref: '#/components/parameters/Slug' } ]
+      responses:
+        '200':
+          description: Tag
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Tag' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        default: { $ref: '#/components/responses/Error' }
+
+  # ----------------------------------------------------------------- Bikes
+  /bikes:
+    get:
+      tags: [Bikes]
+      summary: List my bikes (with workshop stats)
+      responses:
+        '200':
+          description: The current user's bikes
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Bike' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        default: { $ref: '#/components/responses/Error' }
+    post:
+      tags: [Bikes]
+      summary: Create a bike
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/CreateBike' }
+      responses:
+        '201':
+          description: Created bike
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Bike' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        default: { $ref: '#/components/responses/Error' }
+
+  /bikes/explore:
+    get:
+      tags: [Bikes]
+      summary: Browse public bikes
+      security: []
+      parameters:
+        - $ref: '#/components/parameters/Cursor'
+        - { in: query, name: limit, schema: { type: integer, minimum: 1, maximum: 50, default: 12 } }
+        - { in: query, name: type, schema: { $ref: '#/components/schemas/BikeType' } }
+      responses:
+        '200':
+          description: Paginated public bikes (with owner info)
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/PaginatedBikes' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        default: { $ref: '#/components/responses/Error' }
+
+  /bikes/{id}:
+    get:
+      tags: [Bikes]
+      summary: Get a bike (public, or owner's private bike)
+      security: []
+      parameters: [ { $ref: '#/components/parameters/Id' } ]
+      responses:
+        '200':
+          description: Bike
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Bike' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        default: { $ref: '#/components/responses/Error' }
+    patch:
+      tags: [Bikes]
+      summary: Update a bike
+      parameters: [ { $ref: '#/components/parameters/Id' } ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/UpdateBike' }
+      responses:
+        '200':
+          description: Updated bike
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Bike' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        default: { $ref: '#/components/responses/Error' }
+    delete:
+      tags: [Bikes]
+      summary: Delete a bike
+      parameters: [ { $ref: '#/components/parameters/Id' } ]
+      responses:
+        '204': { description: Deleted }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        default: { $ref: '#/components/responses/Error' }
+
+  # ----------------------------------------- Components (nested under a bike)
+  /bikes/{id}/components:
+    get:
+      tags: [Components]
+      summary: List a bike's components
+      security: []
+      parameters: [ { $ref: '#/components/parameters/Id' } ]
+      responses:
+        '200':
+          description: Components
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/BikeComponent' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        default: { $ref: '#/components/responses/Error' }
+    post:
+      tags: [Components]
+      summary: Add a component
+      parameters: [ { $ref: '#/components/parameters/Id' } ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/CreateComponent' }
+      responses:
+        '201':
+          description: Created component
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/BikeComponent' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        default: { $ref: '#/components/responses/Error' }
+
+  /bikes/{id}/components/{componentId}:
+    patch:
+      tags: [Components]
+      summary: Update a component
+      parameters:
+        - $ref: '#/components/parameters/Id'
+        - { in: path, name: componentId, required: true, schema: { type: string, format: uuid } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/UpdateComponent' }
+      responses:
+        '200':
+          description: Updated component
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/BikeComponent' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        default: { $ref: '#/components/responses/Error' }
+    delete:
+      tags: [Components]
+      summary: Delete a component
+      parameters:
+        - $ref: '#/components/parameters/Id'
+        - { in: path, name: componentId, required: true, schema: { type: string, format: uuid } }
+      responses:
+        '204': { description: Deleted }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        default: { $ref: '#/components/responses/Error' }
+
+  # ----------------------------------------- Maintenance (nested under a bike)
+  /bikes/{id}/maintenance:
+    get:
+      tags: [Maintenance]
+      summary: List a bike's maintenance logs
+      parameters: [ { $ref: '#/components/parameters/Id' } ]
+      responses:
+        '200':
+          description: Maintenance logs
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/MaintenanceLog' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        default: { $ref: '#/components/responses/Error' }
+    post:
+      tags: [Maintenance]
+      summary: Add a maintenance log
+      parameters: [ { $ref: '#/components/parameters/Id' } ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/CreateMaintenanceLog' }
+      responses:
+        '201':
+          description: Created log
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/MaintenanceLog' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        default: { $ref: '#/components/responses/Error' }
+
+  /bikes/{id}/maintenance/{logId}:
+    patch:
+      tags: [Maintenance]
+      summary: Update a maintenance log
+      parameters:
+        - $ref: '#/components/parameters/Id'
+        - { in: path, name: logId, required: true, schema: { type: string, format: uuid } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/UpdateMaintenanceLog' }
+      responses:
+        '200':
+          description: Updated log
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/MaintenanceLog' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        default: { $ref: '#/components/responses/Error' }
+    delete:
+      tags: [Maintenance]
+      summary: Delete a maintenance log
+      parameters:
+        - $ref: '#/components/parameters/Id'
+        - { in: path, name: logId, required: true, schema: { type: string, format: uuid } }
+      responses:
+        '204': { description: Deleted }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        default: { $ref: '#/components/responses/Error' }
+
+  # ----------------------------------------- Rides (nested under a bike)
+  /bikes/{id}/rides:
+    get:
+      tags: [Rides]
+      summary: List a bike's rides
+      parameters: [ { $ref: '#/components/parameters/Id' } ]
+      responses:
+        '200':
+          description: Rides
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Ride' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        default: { $ref: '#/components/responses/Error' }
+    post:
+      tags: [Rides]
+      summary: Log a ride
+      parameters: [ { $ref: '#/components/parameters/Id' } ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/CreateRide' }
+      responses:
+        '201':
+          description: Created ride
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Ride' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        default: { $ref: '#/components/responses/Error' }
+
+  /bikes/{id}/rides/stats:
+    get:
+      tags: [Rides]
+      summary: Aggregate ride stats for a bike
+      parameters: [ { $ref: '#/components/parameters/Id' } ]
+      responses:
+        '200':
+          description: Ride stats (ride count, total distance, etc.)
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/RideStats' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        default: { $ref: '#/components/responses/Error' }
+
+  /bikes/{id}/rides/{rideId}:
+    patch:
+      tags: [Rides]
+      summary: Update a ride
+      parameters:
+        - $ref: '#/components/parameters/Id'
+        - { in: path, name: rideId, required: true, schema: { type: string, format: uuid } }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/UpdateRide' }
+      responses:
+        '200':
+          description: Updated ride
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Ride' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        default: { $ref: '#/components/responses/Error' }
+    delete:
+      tags: [Rides]
+      summary: Delete a ride
+      parameters:
+        - $ref: '#/components/parameters/Id'
+        - { in: path, name: rideId, required: true, schema: { type: string, format: uuid } }
+      responses:
+        '204': { description: Deleted }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        default: { $ref: '#/components/responses/Error' }
+
+  # ----------------------------------------- Reminders (nested under a bike)
+  /bikes/{id}/reminders:
+    get:
+      tags: [Reminders]
+      summary: Computed maintenance reminders for a bike
+      description: Derived on the fly from maintenance logs, mileage, and per-category thresholds — not stored.
+      parameters: [ { $ref: '#/components/parameters/Id' } ]
+      responses:
+        '200':
+          description: Reminders
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Reminder' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        default: { $ref: '#/components/responses/Error' }
+
+  # ----------------------------------------------------------------- Users
+  /users/me:
+    patch:
+      tags: [Users]
+      summary: Update my profile
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/UpdateUser' }
+      responses:
+        '200':
+          description: Updated user
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/CurrentUser' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        default: { $ref: '#/components/responses/Error' }
+
+  /users/me/ride-stats:
+    get:
+      tags: [Users]
+      summary: My ride stats for the current month
+      responses:
+        '200':
+          description: Monthly ride stats
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/MonthlyRideStats' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        default: { $ref: '#/components/responses/Error' }
+
+  /users/{id}:
+    get:
+      tags: [Users]
+      summary: Public user profile
+      security: []
+      parameters: [ { $ref: '#/components/parameters/Id' } ]
+      responses:
+        '200':
+          description: User profile
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/User' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        default: { $ref: '#/components/responses/Error' }
+
+  /users/{id}/bikes:
+    get:
+      tags: [Users]
+      summary: A user's public bikes
+      security: []
+      parameters: [ { $ref: '#/components/parameters/Id' } ]
+      responses:
+        '200':
+          description: Public bikes
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Bike' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        default: { $ref: '#/components/responses/Error' }
+
+  /users/{id}/activity:
+    get:
+      tags: [Users]
+      summary: A user's recent activity
+      security: []
+      parameters: [ { $ref: '#/components/parameters/Id' } ]
+      responses:
+        '200':
+          description: Activity summary (recent posts/rides/etc.)
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Activity payload (shape is endpoint-specific).
+                additionalProperties: true
+        '404': { $ref: '#/components/responses/NotFound' }
+        default: { $ref: '#/components/responses/Error' }
+
+  /users/{id}/follows/stats:
+    get:
+      tags: [Follows]
+      summary: Follower / following counts (+ viewer's follow state)
+      security: []
+      parameters: [ { $ref: '#/components/parameters/Id' } ]
+      responses:
+        '200':
+          description: Follow stats
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/FollowStats' }
+        default: { $ref: '#/components/responses/Error' }
+
+  /users/{id}/follows/toggle:
+    post:
+      tags: [Follows]
+      summary: Follow / unfollow a user
+      parameters: [ { $ref: '#/components/parameters/Id' } ]
+      responses:
+        '200':
+          description: Updated follow state
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  following: { type: boolean }
+                additionalProperties: true
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        default: { $ref: '#/components/responses/Error' }
+
+  /users/{id}/follows/followers:
+    get:
+      tags: [Follows]
+      summary: Users who follow this user
+      security: []
+      parameters: [ { $ref: '#/components/parameters/Id' } ]
+      responses:
+        '200':
+          description: Followers
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/User' }
+        default: { $ref: '#/components/responses/Error' }
+
+  /users/{id}/follows/following:
+    get:
+      tags: [Follows]
+      summary: Users this user follows
+      security: []
+      parameters: [ { $ref: '#/components/parameters/Id' } ]
+      responses:
+        '200':
+          description: Following
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/User' }
+        default: { $ref: '#/components/responses/Error' }
+
+  # ----------------------------------------------------------------- Feed
+  /feed:
+    get:
+      tags: [Feed]
+      summary: Personal feed (posts from followed authors)
+      parameters:
+        - $ref: '#/components/parameters/Cursor'
+        - $ref: '#/components/parameters/Limit'
+        - { in: query, name: category, schema: { $ref: '#/components/schemas/PostCategory' } }
+        - { in: query, name: tag, schema: { type: string } }
+        - { in: query, name: author, schema: { type: string, format: uuid } }
+      responses:
+        '200':
+          description: Paginated feed
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/PaginatedPosts' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        default: { $ref: '#/components/responses/Error' }
+
+  # ----------------------------------------------------------------- Images
+  /images/upload:
+    post:
+      tags: [Images]
+      summary: Upload an image
+      description: >
+        `multipart/form-data` with field `image`. Allowed types: JPEG, PNG, WebP.
+        Max size 5 MB. Returns the URL to reference (a `/uploads/...` path for
+        local storage, or a CDN URL for Cloudinary).
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [image]
+              properties:
+                image: { type: string, format: binary }
+      responses:
+        '200':
+          description: Uploaded
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/ImageUploadResult' }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        default: { $ref: '#/components/responses/Error' }
+
+  # ------------------------------------------------- Bookmarks (current user)
+  /me/bookmarks:
+    get:
+      tags: [Bookmarks]
+      summary: List my bookmarked posts
+      responses:
+        '200':
+          description: Bookmarked posts
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/PostSummary' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        default: { $ref: '#/components/responses/Error' }
+
+components:
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: bike_connect_token
+      description: httpOnly JWT cookie set by the OAuth callback.
+
+  parameters:
+    Id:
+      in: path
+      name: id
+      required: true
+      schema: { type: string, format: uuid }
+    PostId:
+      in: path
+      name: id
+      required: true
+      schema: { type: string, format: uuid }
+    PostIdPath:
+      in: path
+      name: postId
+      required: true
+      schema: { type: string, format: uuid }
+    Slug:
+      in: path
+      name: slug
+      required: true
+      schema: { type: string, pattern: '^[a-z0-9]+(?:-[a-z0-9]+)*$' }
+    Cursor:
+      in: query
+      name: cursor
+      required: false
+      schema: { type: string }
+      description: Opaque keyset-pagination cursor from a previous response.
+    Limit:
+      in: query
+      name: limit
+      required: false
+      schema: { type: integer, minimum: 1, maximum: 50, default: 10 }
+
+  responses:
+    Error:
+      description: Error
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+    BadRequest:
+      description: Validation failed
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+    Unauthorized:
+      description: Missing or invalid auth cookie
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+    Forbidden:
+      description: Authenticated but not allowed (not the owner)
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+    Conflict:
+      description: Optimistic-lock conflict (resource changed since you read it)
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+
+  schemas:
+    # ---- enums ----
+    BikeType:
+      type: string
+      enum: [road, mtb, gravel, urban, touring, other]
+    ComponentCategory:
+      type: string
+      enum: [frame, fork, groupset, wheels, tires, saddle, handlebar, seatpost,
+        pedals, brakes, chain, cassette, crankset, bottom_bracket, headset, stem,
+        bar_tape, computer, lights, rack, fenders, bottle_cage, other]
+    MaintenanceType:
+      type: string
+      enum: [service, repair, upgrade, inspection]
+    PostCategory:
+      type: string
+      enum: [review, maintenance_guide, ride_report, general]
+    PostStatus:
+      type: string
+      enum: [draft, published]
+
+    # ---- shared ----
+    Error:
+      type: object
+      required: [status, code, message]
+      properties:
+        status: { type: integer, example: 400 }
+        code: { type: string, example: VALIDATION_ERROR }
+        message: { type: string }
+        details:
+          description: Optional structured detail (e.g. Zod's flattened errors).
+          nullable: true
+      additionalProperties: true
+    Pagination:
+      type: object
+      properties:
+        next_cursor: { type: string, nullable: true }
+        has_more: { type: boolean }
+
+    # ---- users ----
+    User:
+      type: object
+      description: Public user profile.
+      properties:
+        id: { type: string, format: uuid }
+        display_name: { type: string }
+        avatar_url: { type: string, nullable: true }
+        bio: { type: string, nullable: true }
+        created_at: { type: string, format: date-time }
+      additionalProperties: true
+    CurrentUser:
+      type: object
+      description: The authenticated user's record (from GET /auth/me, PATCH /users/me).
+      properties:
+        id: { type: string, format: uuid }
+        email: { type: string, format: email }
+        display_name: { type: string }
+        avatar_url: { type: string, nullable: true }
+        bio: { type: string, nullable: true }
+        created_at: { type: string, format: date-time }
+        updated_at: { type: string, format: date-time }
+      additionalProperties: true
+
+    # ---- posts ----
+    Post:
+      type: object
+      description: A full blog post.
+      required: [id, title, slug, content, category, status]
+      properties:
+        id: { type: string, format: uuid }
+        author_id: { type: string, format: uuid }
+        title: { type: string }
+        slug: { type: string }
+        content:
+          type: object
+          description: Tiptap/ProseMirror document (JSONB).
+          additionalProperties: true
+        excerpt: { type: string, nullable: true }
+        cover_image_url: { type: string, nullable: true }
+        category: { $ref: '#/components/schemas/PostCategory' }
+        status: { $ref: '#/components/schemas/PostStatus' }
+        published_at: { type: string, format: date-time, nullable: true }
+        created_at: { type: string, format: date-time }
+        updated_at: { type: string, format: date-time }
+      additionalProperties: true
+    PostSummary:
+      type: object
+      description: List/feed/search item — a post without the full `content`, usually enriched with author info and counts.
+      properties:
+        id: { type: string, format: uuid }
+        author_id: { type: string, format: uuid }
+        title: { type: string }
+        slug: { type: string }
+        excerpt: { type: string, nullable: true }
+        cover_image_url: { type: string, nullable: true }
+        category: { $ref: '#/components/schemas/PostCategory' }
+        status: { $ref: '#/components/schemas/PostStatus' }
+        published_at: { type: string, format: date-time, nullable: true }
+        created_at: { type: string, format: date-time }
+      additionalProperties: true
+    PaginatedPosts:
+      type: object
+      properties:
+        data:
+          type: array
+          items: { $ref: '#/components/schemas/PostSummary' }
+        pagination: { $ref: '#/components/schemas/Pagination' }
+    CreatePost:
+      type: object
+      required: [title, content, category]
+      properties:
+        title: { type: string, minLength: 1, maxLength: 200 }
+        content:
+          type: object
+          description: Tiptap/ProseMirror document.
+          additionalProperties: true
+        excerpt: { type: string, maxLength: 500, nullable: true }
+        cover_image_url:
+          type: string
+          maxLength: 2048
+          nullable: true
+          description: Absolute http(s) URL or a root-relative server path (e.g. /blog-covers/x.jpg).
+        category: { $ref: '#/components/schemas/PostCategory' }
+        status: { type: string, enum: [draft, published], default: draft }
+        tag_ids:
+          type: array
+          items: { type: integer, minimum: 1 }
+    UpdatePost:
+      type: object
+      description: All CreatePost fields are optional, but `expected_updated_at` is required for optimistic locking.
+      required: [expected_updated_at]
+      properties:
+        title: { type: string, minLength: 1, maxLength: 200 }
+        content: { type: object, additionalProperties: true }
+        excerpt: { type: string, maxLength: 500, nullable: true }
+        cover_image_url: { type: string, maxLength: 2048, nullable: true }
+        category: { $ref: '#/components/schemas/PostCategory' }
+        status: { $ref: '#/components/schemas/PostStatus' }
+        tag_ids:
+          type: array
+          items: { type: integer, minimum: 1 }
+        expected_updated_at:
+          type: string
+          format: date-time
+          description: The `updated_at` you last read; must still match.
+
+    # ---- comments ----
+    Comment:
+      type: object
+      required: [id, post_id, content]
+      properties:
+        id: { type: string, format: uuid }
+        post_id: { type: string, format: uuid }
+        user_id: { type: string, format: uuid }
+        parent_id: { type: string, format: uuid, nullable: true }
+        content: { type: string }
+        created_at: { type: string, format: date-time }
+      additionalProperties: true
+    CreateComment:
+      type: object
+      required: [content]
+      properties:
+        content: { type: string, minLength: 1, maxLength: 2000 }
+        parent_id:
+          type: string
+          format: uuid
+          nullable: true
+          description: Set to reply to a top-level comment (one level only).
+    UpdateComment:
+      type: object
+      required: [content]
+      properties:
+        content: { type: string, minLength: 1, maxLength: 2000 }
+
+    LikeInfo:
+      type: object
+      properties:
+        liked: { type: boolean }
+        count: { type: integer }
+    BookmarkInfo:
+      type: object
+      properties:
+        bookmarked: { type: boolean }
+
+    # ---- tags ----
+    Tag:
+      type: object
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        slug: { type: string }
+      additionalProperties: true
+
+    # ---- bikes ----
+    Bike:
+      type: object
+      required: [id, name, brand, model, year, type]
+      properties:
+        id: { type: string, format: uuid }
+        user_id: { type: string, format: uuid }
+        name: { type: string }
+        brand: { type: string }
+        model: { type: string }
+        year: { type: integer }
+        type: { $ref: '#/components/schemas/BikeType' }
+        description: { type: string, nullable: true }
+        hero_image_url: { type: string, nullable: true }
+        is_public: { type: boolean }
+        total_mileage_km:
+          type: string
+          description: Decimal serialized as a string.
+        created_at: { type: string, format: date-time }
+        updated_at: { type: string, format: date-time }
+      additionalProperties: true
+    PaginatedBikes:
+      type: object
+      properties:
+        data:
+          type: array
+          items: { $ref: '#/components/schemas/Bike' }
+        pagination: { $ref: '#/components/schemas/Pagination' }
+    CreateBike:
+      type: object
+      required: [name, brand, model, year, type]
+      properties:
+        name: { type: string, minLength: 1, maxLength: 100 }
+        brand: { type: string, minLength: 1, maxLength: 100 }
+        model: { type: string, minLength: 1, maxLength: 100 }
+        year:
+          type: integer
+          minimum: 1900
+          description: At most one year in the future.
+        type: { $ref: '#/components/schemas/BikeType' }
+        description: { type: string, maxLength: 2000 }
+        is_public: { type: boolean, default: false }
+        hero_image_url:
+          type: string
+          maxLength: 2048
+          nullable: true
+          description: Absolute http(s) URL or a root-relative server path (e.g. /uploads/x.png).
+    UpdateBike:
+      type: object
+      description: All CreateBike fields, optional.
+      properties:
+        name: { type: string, minLength: 1, maxLength: 100 }
+        brand: { type: string, minLength: 1, maxLength: 100 }
+        model: { type: string, minLength: 1, maxLength: 100 }
+        year: { type: integer, minimum: 1900 }
+        type: { $ref: '#/components/schemas/BikeType' }
+        description: { type: string, maxLength: 2000 }
+        is_public: { type: boolean }
+        hero_image_url: { type: string, maxLength: 2048, nullable: true }
+
+    # ---- components ----
+    BikeComponent:
+      type: object
+      required: [id, bike_id, category, name]
+      properties:
+        id: { type: string, format: uuid }
+        bike_id: { type: string, format: uuid }
+        category: { $ref: '#/components/schemas/ComponentCategory' }
+        name: { type: string }
+        brand: { type: string, nullable: true }
+        model: { type: string, nullable: true }
+        installed_at: { type: string, format: date, nullable: true }
+        mileage_at_install: { type: integer, nullable: true }
+        notes: { type: string, nullable: true }
+      additionalProperties: true
+    CreateComponent:
+      type: object
+      required: [category, name]
+      properties:
+        category: { $ref: '#/components/schemas/ComponentCategory' }
+        name: { type: string, minLength: 1, maxLength: 100 }
+        brand: { type: string, maxLength: 100 }
+        model: { type: string, maxLength: 100 }
+        installed_at: { type: string, format: date }
+        mileage_at_install: { type: integer, minimum: 0 }
+        notes: { type: string, maxLength: 2000 }
+    UpdateComponent:
+      type: object
+      description: All CreateComponent fields, optional.
+      properties:
+        category: { $ref: '#/components/schemas/ComponentCategory' }
+        name: { type: string, minLength: 1, maxLength: 100 }
+        brand: { type: string, maxLength: 100 }
+        model: { type: string, maxLength: 100 }
+        installed_at: { type: string, format: date }
+        mileage_at_install: { type: integer, minimum: 0 }
+        notes: { type: string, maxLength: 2000 }
+
+    # ---- maintenance ----
+    MaintenanceLog:
+      type: object
+      required: [id, bike_id, type, title, performed_at]
+      properties:
+        id: { type: string, format: uuid }
+        bike_id: { type: string, format: uuid }
+        component_id: { type: string, format: uuid, nullable: true }
+        type: { $ref: '#/components/schemas/MaintenanceType' }
+        title: { type: string }
+        description: { type: string, nullable: true }
+        cost:
+          type: string
+          nullable: true
+          description: Decimal serialized as a string.
+        mileage_at_service: { type: integer, nullable: true }
+        performed_at: { type: string, format: date }
+        created_at: { type: string, format: date-time }
+      additionalProperties: true
+    CreateMaintenanceLog:
+      type: object
+      required: [type, title, performed_at]
+      properties:
+        component_id: { type: string, format: uuid, nullable: true }
+        type: { $ref: '#/components/schemas/MaintenanceType' }
+        title: { type: string, minLength: 1, maxLength: 200 }
+        description: { type: string, maxLength: 5000 }
+        cost: { type: number, minimum: 0, multipleOf: 0.01, nullable: true }
+        mileage_at_service: { type: integer, minimum: 0 }
+        performed_at: { type: string, format: date }
+    UpdateMaintenanceLog:
+      type: object
+      description: All CreateMaintenanceLog fields, optional.
+      properties:
+        component_id: { type: string, format: uuid, nullable: true }
+        type: { $ref: '#/components/schemas/MaintenanceType' }
+        title: { type: string, minLength: 1, maxLength: 200 }
+        description: { type: string, maxLength: 5000 }
+        cost: { type: number, minimum: 0, multipleOf: 0.01, nullable: true }
+        mileage_at_service: { type: integer, minimum: 0 }
+        performed_at: { type: string, format: date }
+
+    # ---- rides ----
+    Ride:
+      type: object
+      required: [id, bike_id, distance_km, date]
+      properties:
+        id: { type: string, format: uuid }
+        user_id: { type: string, format: uuid }
+        bike_id: { type: string, format: uuid }
+        distance_km:
+          type: string
+          description: Decimal serialized as a string.
+        duration_min: { type: integer, nullable: true }
+        date: { type: string, format: date }
+        notes: { type: string, nullable: true }
+        created_at: { type: string, format: date-time }
+      additionalProperties: true
+    CreateRide:
+      type: object
+      required: [distance_km, date]
+      properties:
+        distance_km: { type: number, exclusiveMinimum: true, minimum: 0, maximum: 9999, multipleOf: 0.01 }
+        duration_min: { type: integer, minimum: 1 }
+        date: { type: string, format: date }
+        notes: { type: string, maxLength: 2000 }
+    UpdateRide:
+      type: object
+      description: All CreateRide fields, optional.
+      properties:
+        distance_km: { type: number, minimum: 0, maximum: 9999, multipleOf: 0.01 }
+        duration_min: { type: integer, minimum: 1 }
+        date: { type: string, format: date }
+        notes: { type: string, maxLength: 2000 }
+    RideStats:
+      type: object
+      description: Aggregate ride stats for a bike (e.g. ride count, total distance).
+      additionalProperties: true
+    MonthlyRideStats:
+      type: object
+      description: The current user's ride stats for the current month.
+      properties:
+        km_this_month: { type: number }
+      additionalProperties: true
+
+    # ---- reminders ----
+    Reminder:
+      type: object
+      description: A computed maintenance reminder (status + due thresholds).
+      properties:
+        status: { type: string, description: e.g. ok / due / overdue }
+      additionalProperties: true
+
+    # ---- follows ----
+    FollowStats:
+      type: object
+      properties:
+        followers_count: { type: integer }
+        following_count: { type: integer }
+        is_following:
+          type: boolean
+          description: Present when a viewer is authenticated.
+      additionalProperties: true
+
+    # ---- updates ----
+    UpdateUser:
+      type: object
+      properties:
+        display_name: { type: string, minLength: 1, maxLength: 100 }
+        bio: { type: string, maxLength: 500 }
+
+    # ---- images ----
+    ImageUploadResult:
+      type: object
+      properties:
+        url: { type: string, description: URL/path to reference the uploaded image. }
+
+security:
+  - cookieAuth: []
