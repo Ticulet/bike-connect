@@ -18,6 +18,14 @@ export interface ToggleBookmarkResult {
   bookmarked: boolean;
 }
 
+export interface BookmarkInfo {
+  bookmarked: boolean;
+}
+
+export function fetchBookmarkInfo(postId: string): Promise<BookmarkInfo> {
+  return apiClient<BookmarkInfo>(`/posts/${postId}/bookmark`);
+}
+
 export function toggleBookmark(postId: string): Promise<ToggleBookmarkResult> {
   return apiClient<ToggleBookmarkResult>(`/posts/${postId}/bookmark/toggle`, {
     method: 'POST',

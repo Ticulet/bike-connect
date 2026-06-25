@@ -11,6 +11,16 @@ export async function toggle(req: Request, res: Response, next: NextFunction): P
   }
 }
 
+export async function getInfo(req: Request, res: Response, next: NextFunction): Promise<void> {
+  try {
+    const postId = req.params['postId'] as string;
+    const result = await bookmarksService.getInfo(postId, req.user?.id);
+    res.json(result);
+  } catch (err) {
+    next(err);
+  }
+}
+
 export async function listMine(req: Request, res: Response, next: NextFunction): Promise<void> {
   try {
     const bookmarks = await bookmarksService.listMine(req.user!.id);
