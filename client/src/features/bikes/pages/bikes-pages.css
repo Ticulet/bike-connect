@@ -570,11 +570,11 @@
     position: static;
     display: flex;
     flex-direction: row;
-    flex-wrap: nowrap;
+    /* Wrap the groups (and their chips) instead of forcing one non-wrapping row
+       with overflow-x scroll — that cropped and overlapped the chips on tablet. */
+    flex-wrap: wrap;
     gap: var(--spacing-lg);
-    overflow-x: auto;
-    padding-block-end: var(--spacing-sm);
-    scrollbar-width: thin;
+    overflow-x: visible;
   }
 }
 
@@ -607,12 +607,6 @@
   display: flex;
   flex-wrap: wrap;
   gap: var(--spacing-xs);
-}
-
-@media (max-width: 1023px) and (min-width: 768px) {
-  .filter-group__chips {
-    flex-wrap: nowrap;
-  }
 }
 
 .filter-group__reset {
@@ -673,6 +667,14 @@
 .view-switcher__btn:focus-visible {
   outline: 2px solid var(--color-focus);
   outline-offset: 2px;
+}
+
+/* Grid and masonry collapse to the same 1–2 column layout on tablet and below,
+   so the switcher has no visible effect there — hide it. */
+@media (max-width: 1023px) {
+  .view-switcher {
+    display: none;
+  }
 }
 
 /* ---- Bike list views ---- */
