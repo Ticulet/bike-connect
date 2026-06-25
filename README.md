@@ -105,7 +105,7 @@ docker-compose.yml   PostgreSQL 16 for local development
 nvm use                       # Node 22
 npm install                   # all workspaces
 cp .env.example .env          # then fill in / adjust (see below)
-docker compose up -d          # PostgreSQL 16 on localhost:5432
+docker compose up -d postgres # just PostgreSQL 16 on localhost:5432
 npm run db:migrate            # apply migrations
 npm run db:seed               # optional — demo data
 npm run dev                   # client (:5173) + server (:3000)
@@ -116,6 +116,47 @@ Open **http://localhost:5173**. The API health check is `GET /api/health`.
 > The app boots without real Google credentials in development (the OAuth vars and
 > `JWT_SECRET` have dev defaults). Actual Google sign-in needs real OAuth
 > credentials in `.env`.
+
+---
+
+## Run with Docker
+
+Two ways to use the Docker setup:
+
+**Just the database** — for host-side development with `npm run dev`:
+
+```bash
+docker compose up -d postgres
+```
+
+**The whole stack** — nginx + API + Postgres, nothing else needed on the host:
+
+```bash
+docker compose up --build      # build images and run everything
+# then open http://localhost:8080
+```
+
+| Service | Role | Port |
+|---------|------|------|
+| `client` | nginx serving the built SPA + reverse-proxying `/api` and `/uploads` | `8080:80` |
+| `server` | Express API — multi-stage build, non-root, healthchecked | internal `3000` |
+| `migrate` | one-shot: applies migrations then exits (the server waits for it) | — |
+| `postgres` | PostgreSQL 16, healthchecked | `5432:5432` |
+
+The defaults boot out-of-the-box for local evaluation. For real use, set these in
+a root `.env` (compose substitutes them):
+
+```bash
+GOOGLE_CLIENT_ID=...      # required for Google sign-in
+GOOGLE_CLIENT_SECRET=...
+JWT_SECRET=...            # a strong 32+ char secret (the built-in default is INSECURE)
+```
+
+Uploaded images persist in the `uploads` volume, database data in `pgdata`.
+
+> If host port `5432` is already in use (e.g. a local Postgres), either stop it or
+> drop the `postgres` `ports:` mapping in `docker-compose.yml` — the app reaches
+> Postgres over the internal Docker network regardless.
 
 ---
 

@@ -1,0 +1,50 @@
+# Keep the build context small and never ship secrets or local state.
+
+# Git / CI
+.git
+.github
+
+# Dependencies & build output (reinstalled / rebuilt inside the image)
+node_modules
+**/node_modules
+dist
+**/dist
+*.tsbuildinfo
+**/*.tsbuildinfo
+
+# Tests, coverage, reports
+coverage
+**/coverage
+test-results
+**/test-results
+playwright-report
+**/playwright-report
+client/e2e
+
+# Secrets & local env — NEVER ship these
+.env
+.env.*
+client_secret_*.json
+
+# Local-only data & assets
+uploads
+server/uploads
+client/public/bike-photos/*
+backups
+
+# Toolkit / editor / OS
+.session
+.idea
+.vscode
+*.swp
+*.swo
+.DS_Store
+
+# Docs & markdown (not needed inside images)
+docs
+*.md
+
+# Docker assets themselves
+docker-compose.yml
+**/Dockerfile
+.dockerignore
