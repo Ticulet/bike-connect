@@ -163,7 +163,20 @@ export const postsRepository = {
         .updateTable('posts')
         .set(data)
         .where('id', '=', id)
-        .where('updated_at', '=', new Date(expectedUpdatedAt))
+        // Optimistic lock compared at millisecond precision. updated_at is a
+        // microsecond timestamptz, but the client's token round-trips through a
+        // JS Date (millisecond precision), so an exact-equality match would
+        // (almost) always fail and raise a false "modified by another request"
+        // conflict. Truncating the stored value to milliseconds matches the
+        // token while staying an atomic compare-and-swap.
+        .where(
+          (eb) =>
+            eb(
+              sql<Date>`date_trunc('milliseconds', updated_at)`,
+              '=',
+              new Date(expectedUpdatedAt),
+            ),
+        )
         .returningAll()
         .executeTakeFirst();
 
