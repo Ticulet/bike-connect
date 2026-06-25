@@ -359,6 +359,14 @@
     margin-top: 0;
     margin-left: auto;
   }
+
+  /* Once the rail moves on top, centre the content column (it still fills the
+     width on phones, where the viewport is narrower than the cap). */
+  .settings__main {
+    width: 100%;
+    max-width: var(--max-width-prose);
+    margin-inline: auto;
+  }
 }
 
 /* Narrow phones: stack key/value so long emails get the full card width */
