@@ -469,6 +469,35 @@
   color: var(--color-bg);
   pointer-events: none;
 }
+
+/* The CTA's light forest green reads better than the dark-theme moss, so render
+   the banner and its text/topo in the light-mode colours in dark mode too. The
+   action button is intentionally left untouched. Literals are the light-mode
+   token values, fixed for this banner across themes. */
+[data-theme="dark"] .home-final-cta {
+  background: #2f5233;
+  /* Button-safe: re-scoped only so the sub-link hover veil darkens the banner
+     the way it does in light mode (the button reads --color-bg/--color-primary,
+     which are deliberately left alone). */
+  --color-text: #2a2620;
+}
+
+[data-theme="dark"] .home-final-cta__title,
+[data-theme="dark"] .home-final-cta__lead,
+[data-theme="dark"] .home-final-cta__sub,
+[data-theme="dark"] .home-final-cta__topo,
+[data-theme="dark"] .home-final-cta__sub-link,
+[data-theme="dark"] .home-final-cta__sub-link:hover {
+  color: #faf7f2;
+}
+
+[data-theme="dark"] .home-final-cta__sub-link {
+  text-decoration-color: color-mix(in srgb, #faf7f2 50%, transparent);
+}
+
+[data-theme="dark"] .home-final-cta__sub-link:hover {
+  text-decoration-color: #faf7f2;
+}
 .home-final-cta__inner {
   position: relative;
   text-align: center;
@@ -498,7 +527,25 @@
 .home-final-cta__sub-link {
   color: var(--color-bg);
   text-decoration: underline;
+  text-decoration-color: color-mix(in srgb, var(--color-bg) 50%, transparent);
   text-underline-offset: 3px;
+  /* Negative margin offsets the padding so the hover highlight has breathing
+     room without shifting the surrounding sentence. */
+  margin-inline: -0.3rem;
+  padding-inline: 0.3rem;
+  border-radius: var(--radius-sm);
+  transition: background-color var(--transition-fast), text-decoration-color var(--transition-fast);
+}
+
+.home-final-cta__sub-link:hover {
+  /* The link text stays the inverted bg colour (its best contrast on the green
+     banner). For the highlight, veil with --color-text — dark in light mode,
+     light in dark mode — so it pushes the banner AWAY from the text in both
+     themes, raising the link's contrast rather than lowering it (veiling with
+     --color-bg would pull the banner toward the text and fail AA in dark mode). */
+  color: var(--color-bg);
+  background-color: color-mix(in srgb, var(--color-text) 18%, transparent);
+  text-decoration-color: var(--color-bg);
 }
 
 /* --- Scroll-reveal motion ---
