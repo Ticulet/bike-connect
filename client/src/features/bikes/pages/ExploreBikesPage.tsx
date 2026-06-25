@@ -24,28 +24,6 @@ function BikeEmptyIcon(): React.JSX.Element {
   );
 }
 
-function GridIcon(): React.JSX.Element {
-  return (
-    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
-      <rect x="1" y="1" width="6" height="6" rx="1" stroke="currentColor" strokeWidth="1.4" />
-      <rect x="11" y="1" width="6" height="6" rx="1" stroke="currentColor" strokeWidth="1.4" />
-      <rect x="1" y="11" width="6" height="6" rx="1" stroke="currentColor" strokeWidth="1.4" />
-      <rect x="11" y="11" width="6" height="6" rx="1" stroke="currentColor" strokeWidth="1.4" />
-    </svg>
-  );
-}
-
-function MasonryIcon(): React.JSX.Element {
-  return (
-    <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
-      <rect x="1" y="1" width="6" height="9" rx="1" stroke="currentColor" strokeWidth="1.4" />
-      <rect x="11" y="1" width="6" height="5" rx="1" stroke="currentColor" strokeWidth="1.4" />
-      <rect x="1" y="13" width="6" height="4" rx="1" stroke="currentColor" strokeWidth="1.4" />
-      <rect x="11" y="9" width="6" height="8" rx="1" stroke="currentColor" strokeWidth="1.4" />
-    </svg>
-  );
-}
-
 /* ------------------------------------------------------------------ */
 /* FilterGroup component                                                */
 /* ------------------------------------------------------------------ */
@@ -75,42 +53,6 @@ function FilterGroup({ label, options, value, onChange }: FilterGroupProps): Rea
         ))}
       </div>
     </fieldset>
-  );
-}
-
-/* ------------------------------------------------------------------ */
-/* ViewSwitcher component                                               */
-/* ------------------------------------------------------------------ */
-
-type ViewMode = 'grid' | 'masonry';
-
-interface ViewSwitcherProps {
-  value: ViewMode;
-  onChange: (v: ViewMode) => void;
-}
-
-function ViewSwitcher({ value, onChange }: ViewSwitcherProps): React.JSX.Element {
-  return (
-    <div className="view-switcher" role="group" aria-label="View mode">
-      <button
-        type="button"
-        className="view-switcher__btn"
-        aria-pressed={value === 'grid'}
-        aria-label="Grid view"
-        onClick={() => { onChange('grid'); }}
-      >
-        <GridIcon />
-      </button>
-      <button
-        type="button"
-        className="view-switcher__btn"
-        aria-pressed={value === 'masonry'}
-        aria-label="Masonry view"
-        onClick={() => { onChange('masonry'); }}
-      >
-        <MasonryIcon />
-      </button>
-    </div>
   );
 }
 
@@ -228,7 +170,6 @@ export function ExploreBikesPage(): React.JSX.Element {
   const [nextCursor, setNextCursor] = useState<string | null>(null);
   const [hasMore, setHasMore] = useState(false);
   const [filters, setFilters] = useState<Filters>(EMPTY_FILTERS);
-  const [view, setView] = useState<ViewMode>('grid');
 
   const abortRef = useRef<AbortController | null>(null);
 
@@ -363,7 +304,6 @@ export function ExploreBikesPage(): React.JSX.Element {
             <p className="explore-bikes__count">
               {isLoading ? <>&nbsp;</> : `${bikes.length} bike${bikes.length !== 1 ? 's' : ''}`}
             </p>
-            <ViewSwitcher value={view} onChange={setView} />
           </div>
 
           {error && (
@@ -387,7 +327,7 @@ export function ExploreBikesPage(): React.JSX.Element {
             />
           ) : (
             <ul
-              className={`explore-bikes__list explore-bikes__list--${view}`}
+              className="explore-bikes__list explore-bikes__list--grid"
               role="list"
               aria-label="Explore bikes"
             >

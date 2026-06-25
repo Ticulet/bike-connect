@@ -570,11 +570,11 @@
     position: static;
     display: flex;
     flex-direction: row;
-    flex-wrap: nowrap;
+    /* Wrap the groups (and their chips) instead of forcing one non-wrapping row
+       with overflow-x scroll — that cropped and overlapped the chips on tablet. */
+    flex-wrap: wrap;
     gap: var(--spacing-lg);
-    overflow-x: auto;
-    padding-block-end: var(--spacing-sm);
-    scrollbar-width: thin;
+    overflow-x: visible;
   }
 }
 
@@ -609,12 +609,6 @@
   gap: var(--spacing-xs);
 }
 
-@media (max-width: 1023px) and (min-width: 768px) {
-  .filter-group__chips {
-    flex-wrap: nowrap;
-  }
-}
-
 .filter-group__reset {
   align-self: flex-start;
   font-size: var(--font-size-xs);
@@ -636,45 +630,6 @@
   min-inline-size: 4rem;
 }
 
-/* ViewSwitcher */
-.view-switcher {
-  display: flex;
-  gap: var(--spacing-xs);
-}
-
-.view-switcher__btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 36px;
-  height: 36px;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-sm);
-  background: var(--color-surface);
-  color: var(--color-text-muted);
-  cursor: pointer;
-  transition: background-color var(--motion-duration-fast) var(--motion-easing-standard),
-              color var(--motion-duration-fast) var(--motion-easing-standard),
-              border-color var(--motion-duration-fast) var(--motion-easing-standard);
-}
-
-.view-switcher__btn[aria-pressed="true"] {
-  background: var(--color-primary-light);
-  border-color: var(--color-primary);
-  color: var(--color-primary-dark);
-}
-
-.view-switcher__btn:hover:not([aria-pressed="true"]) {
-  background: var(--color-surface-2);
-  border-color: var(--color-border-strong);
-  color: var(--color-text);
-}
-
-.view-switcher__btn:focus-visible {
-  outline: 2px solid var(--color-focus);
-  outline-offset: 2px;
-}
-
 /* ---- Bike list views ---- */
 .explore-bikes__list {
   list-style: none;
@@ -688,22 +643,7 @@
   gap: var(--spacing-lg);
 }
 
-.explore-bikes__list--masonry {
-  column-count: 3;
-  column-gap: var(--spacing-lg);
-}
-
-.explore-bikes__list--masonry > li {
-  break-inside: avoid;
-  margin-block-end: var(--spacing-lg);
-}
-
-@media (max-width: 1100px) {
-  .explore-bikes__list--masonry { column-count: 2; }
-}
-
 @media (max-width: 640px) {
-  .explore-bikes__list--masonry { column-count: 1; }
   .explore-bikes__list--grid { grid-template-columns: 1fr; }
 }
 
