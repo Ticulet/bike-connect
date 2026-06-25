@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react';
 import { fetchMyBikes } from '../features/bikes/api/bikes.api.js';
 import { fetchMyPosts } from '../features/blog/api/posts.api.js';
 import { fetchMyBookmarks } from '../features/blog/api/bookmarks.api.js';
+import { fetchMyMonthlyRideStats } from '../features/rides/api/rides.api.js';
+import { formatDistanceKm } from '../lib/format.js';
 import type { ComponentReminder } from '../features/reminders/api/reminders.api.js';
 
 export interface MeStats {
@@ -46,10 +48,13 @@ export function useMeStats(): MeStats {
 
     async function load(): Promise<void> {
       try {
-        const [bikes, posts, bookmarks] = await Promise.all([
+        const [bikes, posts, bookmarks, rideStats] = await Promise.all([
           fetchMyBikes(),
           fetchMyPosts(),
           fetchMyBookmarks(),
+          // Degrade gracefully: a ride-stats failure should not blank the
+          // other hub stats, so fall back to zero distance.
+          fetchMyMonthlyRideStats().catch(() => ({ km_this_month: 0 })),
         ]);
 
         if (cancelled) return;
@@ -92,7 +97,7 @@ export function useMeStats(): MeStats {
           postsPublished,
           postsTotal: posts.length,
           bikeCount: bikes.length,
-          kmThisMonth: '0 km', // no aggregate endpoint — placeholder
+          kmThisMonth: formatDistanceKm(rideStats.km_this_month),
           bookmarkCount: bookmarks.length,
           activeReminderCount: 0, // requires per-bike fetch — omitted for hub
           recentReminders: [],

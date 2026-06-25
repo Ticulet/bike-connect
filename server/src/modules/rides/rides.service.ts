@@ -3,6 +3,7 @@ import { db } from '../../db/index.js';
 import { bikesRepository } from '../bikes/bikes.repository.js';
 import { ridesRepository } from './rides.repository.js';
 import { ApiError } from '../../lib/api-error.js';
+import { currentMonthRange } from '../../lib/month-range.js';
 import type { Database, Ride } from '../../db/types.js';
 import type { CreateRide, UpdateRide } from '@bike-connect/shared';
 
@@ -91,5 +92,18 @@ export const ridesService = {
       ridesRepository.countForBike(bikeId),
     ]);
     return { total_distance_km, ride_count };
+  },
+
+  /**
+   * Total distance (km) a user has ridden in the current calendar month,
+   * summed across all of their bikes. `now` is injectable for testing.
+   */
+  async getMonthlyDistanceForUser(
+    userId: string,
+    now: Date = new Date(),
+  ): Promise<{ km_this_month: number }> {
+    const { start, endExclusive } = currentMonthRange(now);
+    const sum = await ridesRepository.sumDistanceForUserInRange(userId, start, endExclusive);
+    return { km_this_month: Number(sum) };
   },
 };
