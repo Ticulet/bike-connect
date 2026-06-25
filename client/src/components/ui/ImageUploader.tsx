@@ -1,7 +1,7 @@
 import { useRef, useState, useCallback } from 'react';
 import { ALLOWED_IMAGE_TYPES, IMAGE_MAX_SIZE_BYTES } from '@bike-connect/shared';
-import { useToast } from '../../../components/ui/useToast.js';
-import './photo-gallery.css';
+import { useToast } from './useToast.js';
+import './image-uploader.css';
 
 export interface ImageUploaderProps {
   onUpload: (url: string) => void;

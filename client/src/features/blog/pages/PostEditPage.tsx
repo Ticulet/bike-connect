@@ -12,6 +12,7 @@ import {
 } from '../api/posts.api.js';
 import { PostEditor } from '../components/PostEditor.js';
 import { ApiClientError } from '../../../lib/api-client.js';
+import { ImageUploader } from '../../../components/ui/ImageUploader.js';
 import './post-form.css';
 
 interface FormState {
@@ -247,16 +248,26 @@ export function PostEditPage(): React.JSX.Element {
         </div>
 
         <div className="post-form__field">
-          <label className="post-form__label" htmlFor="coverImageUrl">
-            Cover Image URL
-          </label>
-          <input
-            id="coverImageUrl"
-            name="coverImageUrl"
-            type="url"
-            className="post-form__input"
-            value={form.coverImageUrl}
-            onChange={handleFieldChange}
+          <span className="post-form__label">Cover image</span>
+          {form.coverImageUrl !== '' && (
+            <div className="post-form__cover-preview">
+              <img
+                src={form.coverImageUrl}
+                alt="Cover preview"
+                className="post-form__cover-preview-img"
+              />
+              <button
+                type="button"
+                className="btn post-form__cover-remove"
+                onClick={() => setForm((prev) => ({ ...prev, coverImageUrl: '' }))}
+              >
+                Remove cover
+              </button>
+            </div>
+          )}
+          <ImageUploader
+            onUpload={(url) => setForm((prev) => ({ ...prev, coverImageUrl: url }))}
+            label={form.coverImageUrl !== '' ? 'Replace cover image' : 'Upload cover image'}
           />
         </div>
 

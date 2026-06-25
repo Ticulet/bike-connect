@@ -41,6 +41,11 @@
   --color-info: #3a6b78;
   --color-info-bg: #e4eef0;
 
+  /* Solid destructive button — a vivid red kept fixed across themes so white
+     button text stays legible (the themed --color-error is a light red in dark
+     mode, where white text would fail contrast). */
+  --color-error-solid: #c0392b;
+
   --color-focus: #2f5233;
 
   /* Spacing (4/8/16 rhythm) */

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ImageUploader } from './ImageUploader.js';
+import { ImageUploader } from '../../../components/ui/ImageUploader.js';
 import { isSafeImageUrl } from '../../../lib/safe-url.js';
 import './photo-gallery.css';
 

@@ -181,3 +181,33 @@
   border-radius: var(--radius-md);
   padding: 0.75rem var(--spacing-md);
 }
+
+/* Cover image preview — shown above the uploader once a cover is set */
+.post-form__cover-preview {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: var(--spacing-sm);
+}
+
+.post-form__cover-preview-img {
+  width: 100%;
+  max-width: 28rem;
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+}
+
+/* Destructive "Remove cover" action — solid red with white text. White is a
+   literal (not --color-text-inverse) because the red background is fixed in
+   both themes, so the text must stay white in dark mode too. */
+.post-form__cover-remove {
+  background-color: var(--color-error-solid);
+  color: #fff;
+  border-color: transparent;
+}
+
+.post-form__cover-remove:hover:not(:disabled) {
+  background-color: color-mix(in srgb, var(--color-error-solid) 88%, black);
+}
