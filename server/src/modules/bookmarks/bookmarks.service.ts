@@ -12,6 +12,13 @@ export const bookmarksService = {
     return { bookmarked };
   },
 
+  async getInfo(postId: string, userId?: string): Promise<{ bookmarked: boolean }> {
+    const bookmarked = userId
+      ? await bookmarksRepository.isBookmarkedByUser(userId, postId)
+      : false;
+    return { bookmarked };
+  },
+
   async listMine(userId: string): Promise<BookmarkedPost[]> {
     return bookmarksRepository.listByUser(userId);
   },

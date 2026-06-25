@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { toggleBookmark } from '../api/bookmarks.api.js';
+import { useState, useEffect } from 'react';
+import { toggleBookmark, fetchBookmarkInfo } from '../api/bookmarks.api.js';
 import './blog-social.css';
 
 function BookmarkFilledIcon(): React.JSX.Element {
@@ -31,6 +31,37 @@ export function BookmarkButton({
 }: BookmarkButtonProps): React.JSX.Element {
   const [isBookmarked, setIsBookmarked] = useState(initialIsBookmarked);
   const [isToggling, setIsToggling] = useState(false);
+  const [isLoading, setIsLoading] = useState(isAuthenticated);
+
+  // Load the persisted bookmark state on mount so the button reflects whether
+  // the post is already bookmarked (mirrors LikeButton). Without this it always
+  // rendered "not bookmarked" on load, regardless of the saved state.
+  useEffect(() => {
+    if (!isAuthenticated) {
+      setIsLoading(false);
+      return;
+    }
+    const controller = new AbortController();
+    setIsLoading(true);
+    fetchBookmarkInfo(postId)
+      .then((info) => {
+        if (!controller.signal.aborted) {
+          setIsBookmarked(info.bookmarked);
+        }
+      })
+      .catch(() => {
+        // Non-critical: leave the current state
+      })
+      .finally(() => {
+        if (!controller.signal.aborted) {
+          setIsLoading(false);
+        }
+      });
+
+    return () => {
+      controller.abort();
+    };
+  }, [postId, isAuthenticated]);
 
   async function handleToggle(): Promise<void> {
     if (!isAuthenticated || isToggling) return;
@@ -62,7 +93,7 @@ export function BookmarkButton({
       type="button"
       className={`btn-toggle bookmark-btn${isBookmarked ? ' bookmark-btn--bookmarked' : ''}`}
       onClick={() => void handleToggle()}
-      disabled={!isAuthenticated || isToggling}
+      disabled={!isAuthenticated || isToggling || isLoading}
       aria-label={label}
       aria-pressed={isAuthenticated ? isBookmarked : undefined}
       title={!isAuthenticated ? 'Log in to bookmark' : undefined}
