@@ -82,14 +82,15 @@
     border-right: none;
     border-bottom: 1px solid var(--color-border);
     padding: 0 var(--spacing-md);
-    overflow-x: auto;
+    /* Tabs wrap to fit the viewport instead of scrolling sideways. */
+    overflow-x: hidden;
     overflow-y: hidden;
   }
 
   .me-layout__rail-list {
     flex-direction: row;
+    flex-wrap: wrap;
     gap: 0;
-    white-space: nowrap;
   }
 
   .me-layout__rail-link {
@@ -112,6 +113,12 @@
     position: sticky;
     top: 56px; /* mobile header height */
     z-index: 50;
+    /* Tighter horizontal padding so all tabs fit in one row on phones. */
+    padding-inline: var(--spacing-sm);
+  }
+
+  .me-layout__rail-link {
+    padding-inline: var(--spacing-sm);
   }
 
   .me-layout__main {
