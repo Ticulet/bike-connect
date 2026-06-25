@@ -40,6 +40,7 @@ export function RideFormDrawer({
       width="sm"
     >
       <RideForm
+        key={rideId ?? 'new'}
         bikeId={bikeId}
         rideId={rideId}
         initialData={initialData}
