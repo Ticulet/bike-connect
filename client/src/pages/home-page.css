@@ -469,6 +469,13 @@
   color: var(--color-bg);
   pointer-events: none;
 }
+
+[data-theme="dark"] .home-final-cta__topo {
+  /* Keep the topo watermark the same cream as light mode (light-mode
+     --color-bg). A literal is used deliberately: it must stay this fixed colour
+     across themes, and --color-bg is near-black in dark mode. */
+  color: #faf7f2;
+}
 .home-final-cta__inner {
   position: relative;
   text-align: center;
