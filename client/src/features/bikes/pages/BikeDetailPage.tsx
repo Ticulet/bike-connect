@@ -205,6 +205,18 @@ export function BikeDetailPage(): React.JSX.Element {
     }
   }
 
+  // Keep the bike's cached odometer in step with refreshed ride stats. The
+  // server recomputes bikes.total_mileage_km as the same sum getStats returns,
+  // so the vertical quick-stats "Total distance" (and component wear, which
+  // both read bike.total_mileage_km) stay current after a ride change without
+  // a second request — only the horizontal RideStats refetched before.
+  function applyRideStats(next: RideStatsData | null): void {
+    setRideStats(next);
+    if (next !== null) {
+      setBike((prev) => (prev ? { ...prev, total_mileage_km: next.total_distance_km } : prev));
+    }
+  }
+
   async function handleDeleteRideConfirm(): Promise<void> {
     if (!id || !deleteRideId) return;
     setIsDeletingRide(true);
@@ -215,7 +227,7 @@ export function BikeDetailPage(): React.JSX.Element {
       await deleteRide(id, deleteRideId);
       setDeleteRideId(null);
       const updatedStats = await fetchRideStats(id).catch(() => null);
-      setRideStats(updatedStats);
+      applyRideStats(updatedStats);
     } catch {
       setRides(previousRides);
       setRidesError('Failed to delete ride. Please try again.');
@@ -317,7 +329,7 @@ export function BikeDetailPage(): React.JSX.Element {
     // Refresh stats after a ride change
     if (id) {
       fetchRideStats(id)
-        .then(setRideStats)
+        .then(applyRideStats)
         .catch(() => undefined);
     }
   }
