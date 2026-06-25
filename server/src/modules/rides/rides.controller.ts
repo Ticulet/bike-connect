@@ -52,3 +52,20 @@ export async function remove(req: Request, res: Response, next: NextFunction): P
     next(err);
   }
 }
+
+/**
+ * User-scoped aggregate: the signed-in user's total distance this month across
+ * all their bikes. Mounted at GET /users/me/ride-stats (no bike in the path).
+ */
+export async function getMyMonthlyStats(
+  req: Request,
+  res: Response,
+  next: NextFunction,
+): Promise<void> {
+  try {
+    const stats = await ridesService.getMonthlyDistanceForUser(req.user!.id);
+    res.json(stats);
+  } catch (err) {
+    next(err);
+  }
+}

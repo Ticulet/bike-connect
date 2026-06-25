@@ -16,6 +16,11 @@ export interface RideStats {
   ride_count: number;
 }
 
+/** A user's aggregate ride distance for the current calendar month. */
+export interface MonthlyRideStats {
+  km_this_month: number;
+}
+
 export interface CreateRidePayload {
   distance_km: number;
   duration_min?: number;
@@ -36,6 +41,11 @@ export function fetchRides(bikeId: string): Promise<RideItem[]> {
 
 export function fetchRideStats(bikeId: string): Promise<RideStats> {
   return apiClient<RideStats>(`/bikes/${bikeId}/rides/stats`);
+}
+
+/** The signed-in user's total distance this month across all their bikes. */
+export function fetchMyMonthlyRideStats(): Promise<MonthlyRideStats> {
+  return apiClient<MonthlyRideStats>('/users/me/ride-stats');
 }
 
 export function createRide(bikeId: string, data: CreateRidePayload): Promise<RideItem> {

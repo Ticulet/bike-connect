@@ -46,4 +46,25 @@ export const ridesRepository = {
       .executeTakeFirstOrThrow();
     return Number(result.count);
   },
+
+  /**
+   * Sum distance_km across all of a user's rides whose date falls in the
+   * half-open range [startInclusive, endExclusive). Dates are YYYY-MM-DD
+   * strings compared against the `date` column. Returns '0' when there are no
+   * matching rides.
+   */
+  async sumDistanceForUserInRange(
+    userId: string,
+    startInclusive: string,
+    endExclusive: string,
+  ): Promise<string> {
+    const result = await db
+      .selectFrom('rides')
+      .select(db.fn.sum<string>('distance_km').as('sum'))
+      .where('user_id', '=', userId)
+      .where('date', '>=', startInclusive)
+      .where('date', '<', endExclusive)
+      .executeTakeFirst();
+    return result?.sum ?? '0';
+  },
 };
