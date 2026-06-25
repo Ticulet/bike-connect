@@ -258,7 +258,7 @@ export function PostEditPage(): React.JSX.Element {
               />
               <button
                 type="button"
-                className="btn btn-ghost post-form__cover-remove"
+                className="btn post-form__cover-remove"
                 onClick={() => setForm((prev) => ({ ...prev, coverImageUrl: '' }))}
               >
                 Remove cover
