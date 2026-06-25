@@ -470,11 +470,33 @@
   pointer-events: none;
 }
 
-[data-theme="dark"] .home-final-cta__topo {
-  /* Keep the topo watermark the same cream as light mode (light-mode
-     --color-bg). A literal is used deliberately: it must stay this fixed colour
-     across themes, and --color-bg is near-black in dark mode. */
+/* The CTA's light forest green reads better than the dark-theme moss, so render
+   the banner and its text/topo in the light-mode colours in dark mode too. The
+   action button is intentionally left untouched. Literals are the light-mode
+   token values, fixed for this banner across themes. */
+[data-theme="dark"] .home-final-cta {
+  background: #2f5233;
+  /* Button-safe: re-scoped only so the sub-link hover veil darkens the banner
+     the way it does in light mode (the button reads --color-bg/--color-primary,
+     which are deliberately left alone). */
+  --color-text: #2a2620;
+}
+
+[data-theme="dark"] .home-final-cta__title,
+[data-theme="dark"] .home-final-cta__lead,
+[data-theme="dark"] .home-final-cta__sub,
+[data-theme="dark"] .home-final-cta__topo,
+[data-theme="dark"] .home-final-cta__sub-link,
+[data-theme="dark"] .home-final-cta__sub-link:hover {
   color: #faf7f2;
+}
+
+[data-theme="dark"] .home-final-cta__sub-link {
+  text-decoration-color: color-mix(in srgb, #faf7f2 50%, transparent);
+}
+
+[data-theme="dark"] .home-final-cta__sub-link:hover {
+  text-decoration-color: #faf7f2;
 }
 .home-final-cta__inner {
   position: relative;
