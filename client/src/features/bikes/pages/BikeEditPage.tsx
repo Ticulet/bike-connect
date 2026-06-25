@@ -134,6 +134,7 @@ export function BikeEditPage(): React.JSX.Element {
             year: String(bike.year),
             type: bike.type,
             description: bike.description ?? '',
+            heroImageUrl: bike.hero_image_url ?? '',
             is_public: bike.is_public,
           }}
           onSubmit={(data) => void handleSubmit(data)}

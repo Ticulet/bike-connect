@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { BIKE_TYPES, VALIDATION_LIMITS } from '@bike-connect/shared';
 import type { CreateBike } from '@bike-connect/shared';
+import { ImageUploader } from '../../../components/ui/ImageUploader.js';
 import './bikes.css';
 
 interface BikeFormValues {
@@ -10,6 +11,7 @@ interface BikeFormValues {
   year: string;
   type: string;
   description: string;
+  heroImageUrl: string;
   is_public: boolean;
 }
 
@@ -30,6 +32,7 @@ function buildDefaults(initial?: Partial<BikeFormValues>): BikeFormValues {
     year: initial?.year ?? String(CURRENT_YEAR),
     type: initial?.type ?? BIKE_TYPES[0],
     description: initial?.description ?? '',
+    heroImageUrl: initial?.heroImageUrl ?? '',
     is_public: initial?.is_public ?? false,
   };
 }
@@ -117,6 +120,7 @@ export function BikeForm({
       year: yearNum,
       type: values.type as (typeof BIKE_TYPES)[number],
       description: values.description.trim() || undefined,
+      hero_image_url: values.heroImageUrl.trim() || null,
       is_public: values.is_public,
     });
   }
@@ -270,6 +274,30 @@ export function BikeForm({
             {fieldError('description')}
           </span>
         )}
+      </div>
+
+      <div className="bike-form__field">
+        <span className="bike-form__label">Photo</span>
+        {values.heroImageUrl !== '' && (
+          <div className="bike-form__photo-preview">
+            <img
+              src={values.heroImageUrl}
+              alt="Bike photo preview"
+              className="bike-form__photo-preview-img"
+            />
+            <button
+              type="button"
+              className="btn btn-ghost"
+              onClick={() => { setValues((prev) => ({ ...prev, heroImageUrl: '' })); }}
+            >
+              Remove photo
+            </button>
+          </div>
+        )}
+        <ImageUploader
+          onUpload={(url) => { setValues((prev) => ({ ...prev, heroImageUrl: url })); }}
+          label={values.heroImageUrl !== '' ? 'Replace photo' : 'Upload photo'}
+        />
       </div>
 
       <div className="bike-form__field">
