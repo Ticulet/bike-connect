@@ -500,14 +500,22 @@
   text-decoration: underline;
   text-decoration-color: color-mix(in srgb, var(--color-bg) 50%, transparent);
   text-underline-offset: 3px;
+  /* Negative margin offsets the padding so the hover highlight has breathing
+     room without shifting the surrounding sentence. */
+  margin-inline: -0.3rem;
+  padding-inline: 0.3rem;
+  border-radius: var(--radius-sm);
+  transition: background-color var(--transition-fast), text-decoration-color var(--transition-fast);
 }
 
 .home-final-cta__sub-link:hover {
-  /* Keep the inverted (bg-coloured) text on the primary banner. The global
-     a:hover would switch it to --color-primary-dark, which is too low-contrast
-     on the green background (and too light in dark mode). Signal hover by
-     solidifying the underline instead. */
+  /* The link text stays the inverted bg colour (its best contrast on the green
+     banner). For the highlight, veil with --color-text — dark in light mode,
+     light in dark mode — so it pushes the banner AWAY from the text in both
+     themes, raising the link's contrast rather than lowering it (veiling with
+     --color-bg would pull the banner toward the text and fail AA in dark mode). */
   color: var(--color-bg);
+  background-color: color-mix(in srgb, var(--color-text) 18%, transparent);
   text-decoration-color: var(--color-bg);
 }
 
