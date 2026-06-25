@@ -38,6 +38,21 @@
   display: block;
 }
 
+/* Dark mode: the bike photos have black backgrounds, which merge into the dark
+   card and hide the bike (and its dark tyres). Frame each photo with a warm clay
+   matte — the small inset makes it show even when a photo fills the box — so the
+   bike is clearly separated. Light mode keeps its light backdrop, which already
+   frames the black photos. */
+[data-theme="dark"] .bike-card__image {
+  background-color: color-mix(in srgb, var(--color-accent) 28%, var(--color-bg-subtle));
+  padding: var(--spacing-sm);
+}
+
+[data-theme="dark"] .bike-card__image-wrap,
+[data-theme="dark"] .bike-card__image-placeholder {
+  background-color: color-mix(in srgb, var(--color-accent) 28%, var(--color-bg-subtle));
+}
+
 .bike-card__image-placeholder {
   width: 100%;
   aspect-ratio: 16 / 10;
