@@ -4,7 +4,7 @@ import type { JSONContent } from '@tiptap/react';
 import { POST_CATEGORIES, POST_STATUSES } from '@bike-connect/shared';
 import { createPost, fetchTags, type TagItem, type CreatePostPayload } from '../api/posts.api.js';
 import { PostEditor } from '../components/PostEditor.js';
-import { ImageUploader } from '../../bikes/components/ImageUploader.js';
+import { ImageUploader } from '../../../components/ui/ImageUploader.js';
 import { ApiClientError } from '../../../lib/api-client.js';
 import './post-form.css';
 
