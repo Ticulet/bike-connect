@@ -76,6 +76,9 @@
   }
 
   .me-layout__rail {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: 100%;
     height: auto;
     position: static;
@@ -115,6 +118,11 @@
     z-index: 50;
     /* Tighter horizontal padding so all tabs fit in one row on phones. */
     padding-inline: var(--spacing-sm);
+  }
+
+  /* Centre the tabs (and any wrapped rows) within the full-width strip. */
+  .me-layout__rail-list {
+    justify-content: center;
   }
 
   .me-layout__rail-link {
