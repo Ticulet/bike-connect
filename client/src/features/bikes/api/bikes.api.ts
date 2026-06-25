@@ -17,8 +17,14 @@ export interface BikeItem {
   updated_at: string;
 }
 
-export function fetchMyBikes(): Promise<BikeItem[]> {
-  return apiClient<BikeItem[]>('/bikes');
+/** A bike in the owner's garage list, enriched with workshop-card stats. */
+export interface MyBikeListItem extends BikeItem {
+  component_count: number;
+  last_ride_at: string | null;
+}
+
+export function fetchMyBikes(): Promise<MyBikeListItem[]> {
+  return apiClient<MyBikeListItem[]>('/bikes');
 }
 
 export function fetchUserPublicBikes(

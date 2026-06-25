@@ -8,6 +8,13 @@ export interface BikeWithOwner extends Bike {
   owner_avatar_url: string | null;
 }
 
+export interface BikeWithStats extends Bike {
+  /** Number of registered components on the bike. */
+  component_count: number;
+  /** Date (YYYY-MM-DD) of the most recent ride, or null if none. */
+  last_ride_at: string | null;
+}
+
 interface ExploreBikeCursor {
   created_at: string;
   id: string;
@@ -23,10 +30,21 @@ function decodeBikeCursor(encoded: string): ExploreBikeCursor {
 }
 
 export const bikesRepository = {
-  async findByUserId(userId: string): Promise<Bike[]> {
+  async findByUserId(userId: string): Promise<BikeWithStats[]> {
+    // Enrich each bike with the stats the workshop card shows. Correlated
+    // subqueries (not joins) avoid a components×rides cross product; ::int and
+    // ::text give deterministic number / 'YYYY-MM-DD' types over the wire.
     return db
       .selectFrom('bikes')
       .selectAll()
+      .select([
+        sql<number>`(select count(*)::int from bike_components where bike_components.bike_id = bikes.id)`.as(
+          'component_count',
+        ),
+        sql<string | null>`(select max(date)::text from rides where rides.bike_id = bikes.id)`.as(
+          'last_ride_at',
+        ),
+      ])
       .where('user_id', '=', userId)
       .orderBy('created_at', 'desc')
       .execute();
