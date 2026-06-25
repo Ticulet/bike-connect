@@ -103,6 +103,18 @@ describe('createPostSchema', () => {
 
     expect(result.success).toBe(false);
   });
+
+  it('accepts a null excerpt (nullable in the database)', () => {
+    const result = createPostSchema.safeParse({ ...validPost, excerpt: null });
+
+    expect(result.success).toBe(true);
+  });
+
+  it('accepts a null cover_image_url (nullable in the database)', () => {
+    const result = createPostSchema.safeParse({ ...validPost, cover_image_url: null });
+
+    expect(result.success).toBe(true);
+  });
 });
 
 describe('updatePostSchema', () => {
@@ -131,6 +143,19 @@ describe('updatePostSchema', () => {
     });
 
     expect(result.success).toBe(false);
+  });
+
+  it('accepts null excerpt and cover_image_url (editing a post that has neither)', () => {
+    // Regression: the edit form sends null for empty optional fields, which
+    // previously failed validation with "Expected string, received null".
+    const result = updatePostSchema.safeParse({
+      title: 'Updated',
+      excerpt: null,
+      cover_image_url: null,
+      expected_updated_at: '2026-01-01T12:00:00.000Z',
+    });
+
+    expect(result.success).toBe(true);
   });
 });
 

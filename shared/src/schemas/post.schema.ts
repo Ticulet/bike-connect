@@ -16,8 +16,11 @@ const coverImageRef = z
 export const createPostSchema = z.object({
   title: z.string().min(1).max(VALIDATION_LIMITS.POST_TITLE_MAX),
   content: z.record(z.unknown()),
-  excerpt: z.string().max(VALIDATION_LIMITS.POST_EXCERPT_MAX).optional(),
-  cover_image_url: coverImageRef.optional(),
+  // excerpt and cover_image_url are nullable in the database. The edit form
+  // sends null for an empty field (to clear it, not just omit it), so the
+  // schema must accept null in addition to an absent value.
+  excerpt: z.string().max(VALIDATION_LIMITS.POST_EXCERPT_MAX).nullable().optional(),
+  cover_image_url: coverImageRef.nullable().optional(),
   category: z.enum(POST_CATEGORIES),
   status: z.enum(POST_STATUSES).default('draft'),
   tag_ids: z.array(z.number().int().positive()).optional(),
