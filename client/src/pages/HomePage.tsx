@@ -370,16 +370,6 @@ export function HomePage(): React.JSX.Element {
             </div>
           </details>
           <details className="home-faq__item">
-            <summary className="home-faq__question">Can I export my data?</summary>
-            <div className="home-faq__answer">
-              <p>
-                Yes. Posts, bikes, components, maintenance logs, and rides are all owned by
-                you and can be exported. The export format is JSON today and will gain
-                common interchange formats over time.
-              </p>
-            </div>
-          </details>
-          <details className="home-faq__item">
             <summary className="home-faq__question">Is my data private?</summary>
             <div className="home-faq__answer">
               <p>
