@@ -14,7 +14,9 @@
 /* Horizontal layout */
 .stat-strip--horizontal {
   flex-direction: row;
-  flex-wrap: wrap;
+  /* Stay on one row. Wrapping left a stray left-border divider at the start of
+     each wrapped row; narrow viewports stack vertically via the @media below. */
+  flex-wrap: nowrap;
   gap: 0;
 }
 
@@ -23,6 +25,8 @@
   flex-direction: column;
   gap: var(--spacing-xs);
   padding: var(--spacing-md) var(--spacing-xl);
+  /* Allow items to shrink to fit the row instead of overflowing. */
+  min-width: 0;
 }
 
 .stat-strip--horizontal .stat-strip__item + .stat-strip__item {
