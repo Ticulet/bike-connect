@@ -247,3 +247,12 @@
     padding-inline: var(--spacing-xl);
   }
 }
+
+/* Dark mode: the default surface-2 hover sits almost on top of the header's own
+   surface, so the hover barely registers. Use a lighter step so the nav links,
+   the "you" link, and the theme toggle show a clearly visible hover state. */
+[data-theme="dark"] .site-header__nav-link:hover,
+[data-theme="dark"] .site-header__you:hover,
+[data-theme="dark"] .site-header__theme-toggle:hover {
+  background-color: var(--color-stone-300);
+}
