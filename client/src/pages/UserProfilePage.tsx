@@ -12,6 +12,7 @@ import { fetchPosts, type PostSummary } from '../features/blog/api/posts.api.js'
 import { PostCard } from '../features/blog/components/PostCard.js';
 import { fetchUserPublicBikes, type BikeItem } from '../features/bikes/api/bikes.api.js';
 import { isSafeImageUrl } from '../lib/safe-url.js';
+import { Avatar } from '../components/ui/Avatar.js';
 import { Tabs } from '../components/ui/Tabs.js';
 import { EmptyState } from '../components/ui/EmptyState.js';
 import { Skeleton } from '../components/ui/Skeleton.js';
@@ -278,7 +279,6 @@ export function UserProfilePage(): React.JSX.Element {
     );
   }
 
-  const initial = profile.display_name.charAt(0).toUpperCase();
 
   const tabItems = [
     { id: 'posts', label: 'Posts', badge: authorPosts.length > 0 ? authorPosts.length : undefined },
@@ -291,17 +291,12 @@ export function UserProfilePage(): React.JSX.Element {
       <div className="user-profile__layout">
         {/* Left: identity card */}
         <aside className="user-profile__identity-card">
-          {profile.avatar_url ? (
-            <img
-              src={profile.avatar_url}
-              alt={`${profile.display_name}'s avatar`}
-              className="user-profile__avatar"
-            />
-          ) : (
-            <div className="user-profile__avatar-fallback" aria-hidden="true">
-              {initial}
-            </div>
-          )}
+          <Avatar
+            src={profile.avatar_url}
+            name={profile.display_name}
+            className="user-profile__avatar"
+            fallbackClassName="user-profile__avatar-fallback"
+          />
           <h1 className="user-profile__display-name">{profile.display_name}</h1>
           {profile.bio && <p className="user-profile__bio">{profile.bio}</p>}
           <p className="user-profile__joined">Member since {formatMemberSince(profile.created_at)}</p>

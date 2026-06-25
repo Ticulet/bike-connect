@@ -9,6 +9,7 @@ import { BookmarkButton } from '../components/BookmarkButton.js';
 import { CommentList } from '../components/CommentList.js';
 import { ApiClientError } from '../../../lib/api-client.js';
 import { isSafeImageUrl } from '../../../lib/safe-url.js';
+import { Avatar } from '../../../components/ui/Avatar.js';
 import { CoverImage } from '../components/CoverImage.js';
 import { useAuth } from '../../auth/hooks/useAuth.js';
 import { Skeleton } from '../../../components/ui/Skeleton.js';
@@ -126,7 +127,6 @@ export function PostDetailPage(): React.JSX.Element {
   }
 
   const displayDate = post.published_at ?? post.created_at;
-  const authorInitial = post.author_display_name.charAt(0).toUpperCase();
 
   return (
     <article className="post-detail">
@@ -173,18 +173,12 @@ export function PostDetailPage(): React.JSX.Element {
             className="post-detail__author-link"
             aria-label={`View ${post.author_display_name}'s profile`}
           >
-            {isSafeImageUrl(post.author_avatar_url) ? (
-              <img
-                src={post.author_avatar_url}
-                alt=""
-                className="post-detail__author-avatar"
-                aria-hidden="true"
-              />
-            ) : (
-              <div className="post-detail__author-avatar-fallback" aria-hidden="true">
-                {authorInitial}
-              </div>
-            )}
+            <Avatar
+              src={post.author_avatar_url}
+              name={post.author_display_name}
+              className="post-detail__author-avatar"
+              fallbackClassName="post-detail__author-avatar-fallback"
+            />
             <p className="post-detail__author-name">{post.author_display_name}</p>
           </Link>
           <div className="post-detail__social">

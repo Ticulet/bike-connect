@@ -4,7 +4,7 @@ import { fetchFeed } from '../api/feed.api.js';
 import { PostCard } from '../../blog/components/PostCard.js';
 import { fetchPosts, type PostSummary } from '../../blog/api/posts.api.js';
 import { useAuth } from '../../auth/hooks/useAuth.js';
-import { isSafeImageUrl } from '../../../lib/safe-url.js';
+import { Avatar } from '../../../components/ui/Avatar.js';
 import { PageHeader } from '../../../components/ui/PageHeader.js';
 import { EmptyState } from '../../../components/ui/EmptyState.js';
 import { Skeleton } from '../../../components/ui/Skeleton.js';
@@ -67,26 +67,15 @@ function SuggestedAuthors({ authors }: SuggestedAuthorsProps): React.JSX.Element
       </h3>
       <ul className="feed-page__suggested-list">
         {authors.map((author) => {
-          const initial = author.display_name.charAt(0).toUpperCase() || '?';
           return (
             <li key={author.id}>
               <Link to={`/users/${author.id}`} className="feed-page__suggested-item">
-                {isSafeImageUrl(author.avatar_url) ? (
-                  <img
-                    src={author.avatar_url}
-                    alt=""
-                    className="feed-page__suggested-avatar"
-                    aria-hidden="true"
-                    loading="lazy"
-                  />
-                ) : (
-                  <div
-                    className="feed-page__suggested-avatar-placeholder"
-                    aria-hidden="true"
-                  >
-                    {initial}
-                  </div>
-                )}
+                <Avatar
+                  src={author.avatar_url}
+                  name={author.display_name}
+                  className="feed-page__suggested-avatar"
+                  fallbackClassName="feed-page__suggested-avatar-placeholder"
+                />
                 <span className="feed-page__suggested-name">
                   {author.display_name}
                 </span>

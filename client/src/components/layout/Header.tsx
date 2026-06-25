@@ -2,6 +2,7 @@ import { NavLink } from 'react-router';
 import { useAuth } from '../../features/auth/hooks/useAuth.js';
 import { BrandMark } from './BrandMark.js';
 import { ThemeToggle } from './ThemeToggle.js';
+import { Avatar } from '../ui/Avatar.js';
 import './header.css';
 
 export function Header(): React.JSX.Element {
@@ -65,20 +66,12 @@ export function Header(): React.JSX.Element {
               }
               aria-label={`Your hub, signed in as ${user.display_name}`}
             >
-              {user.avatar_url != null ? (
-                <img
-                  src={user.avatar_url}
-                  alt=""
-                  className="site-header__you-avatar"
-                />
-              ) : (
-                <span
-                  className="site-header__you-avatar-fallback"
-                  aria-hidden="true"
-                >
-                  {user.display_name.charAt(0).toUpperCase()}
-                </span>
-              )}
+              <Avatar
+                src={user.avatar_url}
+                name={user.display_name}
+                className="site-header__you-avatar"
+                fallbackClassName="site-header__you-avatar-fallback"
+              />
               <span className="site-header__you-name">{user.display_name}</span>
             </NavLink>
           ) : (

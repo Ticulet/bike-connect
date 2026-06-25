@@ -2,6 +2,7 @@ import { useState, useCallback, useRef, useEffect } from 'react';
 import { fetchExploreBikes, type BikeWithOwner } from '../api/explore.api.js';
 import { BIKE_TYPES } from '@bike-connect/shared';
 import { isSafeImageUrl } from '../../../lib/safe-url.js';
+import { Avatar } from '../../../components/ui/Avatar.js';
 import { PageHeader } from '../../../components/ui/PageHeader.js';
 import { EmptyState } from '../../../components/ui/EmptyState.js';
 import { Skeleton } from '../../../components/ui/Skeleton.js';
@@ -118,7 +119,6 @@ function ViewSwitcher({ value, onChange }: ViewSwitcherProps): React.JSX.Element
 /* ------------------------------------------------------------------ */
 
 function ExploreBikeCard({ bike }: { bike: BikeWithOwner }): React.JSX.Element {
-  const ownerInitial = bike.owner_display_name.charAt(0).toUpperCase();
 
   return (
     <article className="bike-card explore-bike-card">
@@ -157,18 +157,12 @@ function ExploreBikeCard({ bike }: { bike: BikeWithOwner }): React.JSX.Element {
         </p>
 
         <div className="explore-bike-card__owner">
-          {isSafeImageUrl(bike.owner_avatar_url) ? (
-            <img
-              src={bike.owner_avatar_url}
-              alt=""
-              className="explore-bike-card__owner-avatar"
-              aria-hidden="true"
-            />
-          ) : (
-            <div className="explore-bike-card__owner-avatar-placeholder" aria-hidden="true">
-              {ownerInitial}
-            </div>
-          )}
+          <Avatar
+            src={bike.owner_avatar_url}
+            name={bike.owner_display_name}
+            className="explore-bike-card__owner-avatar"
+            fallbackClassName="explore-bike-card__owner-avatar-placeholder"
+          />
           <span className="explore-bike-card__owner-name">{bike.owner_display_name}</span>
         </div>
       </div>
