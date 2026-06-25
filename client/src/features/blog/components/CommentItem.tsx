@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router';
 import { ConfirmDialog } from '../../../components/ui/ConfirmDialog.js';
+import { Avatar } from '../../../components/ui/Avatar.js';
 import { updateComment } from '../api/comments.api.js';
 import type { CommentItem as CommentItemData } from '../api/comments.api.js';
 import { CommentForm } from './CommentForm.js';
@@ -63,7 +64,6 @@ export function CommentItem({
 
   const isOwner = currentUserId === comment.user_id;
   const authorDisplayName = comment.author_display_name ?? 'Unknown';
-  const authorInitial = authorDisplayName.charAt(0).toUpperCase() || '?';
 
   async function handleSaveEdit(): Promise<void> {
     const trimmed = editContent.trim();
@@ -100,19 +100,12 @@ export function CommentItem({
         className="comment-item__avatar-link"
         aria-label={`View ${authorDisplayName}'s profile`}
       >
-        {comment.author_avatar_url ? (
-          <img
-            src={comment.author_avatar_url}
-            alt=""
-            className="comment-item__avatar"
-            aria-hidden="true"
-            loading="lazy"
-          />
-        ) : (
-          <div className="comment-item__avatar-placeholder" aria-hidden="true">
-            {authorInitial}
-          </div>
-        )}
+        <Avatar
+          src={comment.author_avatar_url}
+          name={authorDisplayName}
+          className="comment-item__avatar"
+          fallbackClassName="comment-item__avatar-placeholder"
+        />
       </Link>
 
       <div className="comment-item__body">

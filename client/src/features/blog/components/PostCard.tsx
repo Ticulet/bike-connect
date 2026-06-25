@@ -1,6 +1,7 @@
 import { Link } from 'react-router';
 import type { PostSummary } from '../api/posts.api.js';
 import { isSafeImageUrl } from '../../../lib/safe-url.js';
+import { Avatar } from '../../../components/ui/Avatar.js';
 import { CoverImage } from './CoverImage.js';
 import './post-card.css';
 
@@ -32,7 +33,6 @@ function formatCategoryLabel(category: string): string {
 
 export function PostCard({ post, variant = 'medium', dropCap = false }: PostCardProps): React.JSX.Element {
   const displayDate = post.published_at ?? post.created_at;
-  const authorInitial = post.author_display_name.charAt(0).toUpperCase();
   const showExcerpt = variant !== 'compact';
   const showCategory = variant !== 'compact';
   const articleClass = [
@@ -82,18 +82,12 @@ export function PostCard({ post, variant = 'medium', dropCap = false }: PostCard
           className="post-card__author"
           aria-label={`View ${post.author_display_name}'s profile`}
         >
-          {isSafeImageUrl(post.author_avatar_url) ? (
-            <img
-              src={post.author_avatar_url}
-              alt=""
-              className="post-card__avatar"
-              aria-hidden="true"
-            />
-          ) : (
-            <div className="post-card__avatar-placeholder" aria-hidden="true">
-              {authorInitial}
-            </div>
-          )}
+          <Avatar
+            src={post.author_avatar_url}
+            name={post.author_display_name}
+            className="post-card__avatar"
+            fallbackClassName="post-card__avatar-placeholder"
+          />
           <span className="post-card__author-name">{post.author_display_name}</span>
         </Link>
       </div>
